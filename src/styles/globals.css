@@ -1,0 +1,42 @@
+/* Global Tailwind imports */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Google fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata&display=swap");
+
+/* Define custom fonts */
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/JetBrainsMono-Regular.ttf");
+}
+
+/* Ensure proper body and html sizing for responsiveness */
+html,
+body {
+  width: 100%; /* Ensure full width */
+  min-height: 100vh; /* Full height */
+  font-family: "JetBrains Mono", monospace; /* Custom font */
+  background-color: theme("colors.epic-black"); /* Use your defined background */
+}
+
+/* Styling for images */
+img {
+  user-drag: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* For centering views (example: if you have a center-aligned div) */
+.coolViews {
+  align-self: center;
+}
+
+/* Text selection styling */
+::selection {
+  background-color: theme("colors.pastel.green"); 
+  color: #000;
+}
