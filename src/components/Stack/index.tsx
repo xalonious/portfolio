@@ -1,15 +1,19 @@
-import Highlight from "@components/Highlight";
 import { STACK } from "@root/libs/config/stack";
 import { motion } from "framer-motion";
 import { FC } from "react";
 
 export const Stack: FC = () => {
 	return (
-		<div className="w-full">
+		<div className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 min-h-screen">
 			{/* Full width container */}
 
 			{/* Header Section */}
-			<div className="flex flex-col text-white px-4 md:px-16 pt-24 md:pt-0"> {/* Add padding on top for mobile */}
+			<motion.div
+				className="flex flex-col text-white px-4 md:px-16 pt-24 md:pt-0"
+				initial={{ opacity: 0, y: -20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.8 }}
+			>
 				<h1 className="mx-auto text-2xl md:text-3xl font-bold text-center tracking-tight">
 					Technologies I use &amp; support
 				</h1>
@@ -19,7 +23,7 @@ export const Stack: FC = () => {
 					my most-used technologies below. I use these technologies to
 					build my own projects and to support my work.
 				</p>
-			</div>
+			</motion.div>
 
 			{/* Grid Section */}
 			<div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-16 px-4 md:px-16">
@@ -50,17 +54,17 @@ const StackCard = ({ name, logo, lang }: IStackCard) => {
 		<motion.div
 			className={`bg-epic-black-light ${
 				lang.hoverColor
-			} flex flex-col rounded-md p-4 h-40 ${
+			} flex flex-col rounded-md p-4 h-40 shadow-lg transform transition-transform duration-300 ${
 				lang.name == "Github" ? "hover:cursor-pointer" : ""
 			}`}
-			whileHover={{ y: -5 }}
+			whileHover={{ y: -5, scale: 1.05 }}
 			onClick={() => {
 				window.location.href = lang.href;
 			}}
 		>
 			<img
 				src={`./assets/langs/${logo}`}
-				className="w-16 h-16 mx-auto mt-2 rounded-md" 
+				className="w-16 h-16 mx-auto mt-2 rounded-md"
 			/>
 			<p className="mx-auto mt-2 text-white">{name}</p>
 		</motion.div>

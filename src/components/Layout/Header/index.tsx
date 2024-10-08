@@ -21,6 +21,13 @@ const links = [
 		newTab: false,
 	},
 	{
+		name: "projects",
+		href: "/projects",
+		slash: "slash",
+		open: true,
+		newTab: false,
+	},
+	{
 		name: "stack",
 		href: "/stack",
 		slash: "slash",

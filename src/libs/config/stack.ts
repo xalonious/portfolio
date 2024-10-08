@@ -84,4 +84,10 @@ export const STACK = [
 		href: "",
 		hoverColor: "hover:bg-epic-black-light",
 	},
+	{
+		name: "Lua",
+		logo: "lua.png",
+		href: "",
+		hoverColor: "hover:bg-epic-black-light",
+	}
 ];
