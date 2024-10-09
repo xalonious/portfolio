@@ -5,9 +5,6 @@ import { FC } from "react";
 export const Stack: FC = () => {
 	return (
 		<div className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 min-h-screen">
-			{/* Full width container */}
-
-			{/* Header Section */}
 			<motion.div
 				className="flex flex-col text-white px-4 md:px-16 pt-24 md:pt-0"
 				initial={{ opacity: 0, y: -20 }}
@@ -25,7 +22,6 @@ export const Stack: FC = () => {
 				</p>
 			</motion.div>
 
-			{/* Grid Section */}
 			<div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-16 px-4 md:px-16">
 				{STACK.map((lang, key) => (
 					<StackCard
@@ -37,8 +33,7 @@ export const Stack: FC = () => {
 				))}
 			</div>
 
-			{/* Additional Space */}
-			<div className="w-full mb-12"></div> {/* Adds bottom spacing */}
+			<div className="w-full mb-12"></div> 
 		</div>
 	);
 };

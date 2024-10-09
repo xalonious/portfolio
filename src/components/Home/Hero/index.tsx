@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import { CONFIG } from "@root/libs/config";
 import useMediaQuery from "@utils/useMediaQuery";
-import { motion, useAnimation } from "framer-motion";
+import { motion } from "framer-motion";
 import Highlight from "@components/Highlight";
 
 export const Hero: FC = () => {
@@ -65,7 +65,7 @@ export const Hero: FC = () => {
 						whileHover={{ scale: 1.025 }}
 					>
 						<img
-							src={CONFIG.AVATAR_URL} // Can be changed with "CONFIG.AVATAR_URL" (i use downloaded image cause my grandparent's internet is complete garbage)
+							src={CONFIG.AVATAR_URL} 
 							alt="xander"
 							className="mx-auto md:h-128 md:w-128 w-full max-w-lg object-cover rounded-3xl"
 						/>

@@ -46,7 +46,6 @@ export const About: FC = () => {
 				</div>
 			</div>
 
-			{/* TODO: Merge these two to make one responsive component */}
 			{!useMediaQuery(1200) ? (
 				<div className="flex flex-col items-center justify-center mx-auto mr-24 2xl:mr-56 pt-0">
 			<DesktopCodeComponent
@@ -117,56 +116,6 @@ type ICodeComponent = {
 	logo: string;
 };
 
-const MobileCodeComponent = ({ lang, level, logo }: ICodeComponent) => {
-	let fLevel;
-	if (level == "w-full") {
-		fLevel = "100%";
-	} else if (level == "w-2/3") {
-		fLevel = "66.6%";
-	} else if (level == "w-1/3") {
-		fLevel = "33.3%";
-	} else {
-		fLevel = "0%";
-	}
-
-	return (
-		<motion.div
-			className="bg-epic-black-light mx-auto w-4/5 h-16 rounded-lg mt-4 flex flex-row relative"
-			whileHover={{ y: -5 }}
-		>
-			<img
-				src={`./assets/langs/${logo}.svg`}
-				className={`rounded-md mt-3 flex flex-row ${
-					logo == "typescript" ? "h-10 w-10 ml-3" : null
-				} ${logo == "java" ? "w-8 ml-4 mb-3" : null} ${
-					logo == "C++Logo" ? "w-10 ml-3 mb-3" : null
-				} ${
-					logo == "javascript"
-						? "h-10 w-10 ml-3 bg-pastel-yellow"
-						: null
-				}`}
-			></img>
-			<p
-				className={`text-white flex flex-row my-auto ml-4 ${
-					logo == ("java")
-				}`}
-			>
-				{lang[0].toUpperCase() + lang.substring(1)}
-			</p>
-			<div
-				className={`bg-epic-black h-2 ${
-					useMediaQuery(550) ? "w-1/4" : "w-60"
-				} my-auto flex flex-row rounded-full absolute right-4 top-[44%]`}
-			>
-				<motion.div
-					animate={{ width: fLevel }}
-					transition={{ duration: 5 }}
-					className={`bg-pastel-green rounded-full`}
-				></motion.div>
-			</div>
-		</motion.div>
-	);
-};
 
 const DesktopCodeComponent = ({ lang, level, logo, ikey }: ICodeComponent) => {
 	let fLevel;
@@ -218,10 +167,5 @@ const DesktopCodeComponent = ({ lang, level, logo, ikey }: ICodeComponent) => {
 	);
 };
 
-interface LanguageLinkProps {
-	name: string;
-	href: string;
-	color: string;
-}
 
 export default About;
