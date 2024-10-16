@@ -40,3 +40,9 @@ img {
   background-color: theme("colors.pastel.green"); 
   color: #000;
 }
+
+
+
+.bg-pastel-yellow {
+  background-color: #ffd600; 
+}
