@@ -19,7 +19,7 @@ const projects = [
     {
         name: "Teks cafe Helper",
         description: "Teks cafe helper is mainly a bot that revolves around economy, with some fun and silly commands as well. It offers a variety of features to enhance user engagement and interaction within the community.",
-        github: "https://github.com/saadih/tekscafebot",
+        github: "https://github.com/xalonious/teks-cafe-helper",
         image: "tekscafe.png",
         languages: ["javascript", "nodejs"],
     },
