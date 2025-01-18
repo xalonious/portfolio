@@ -31,6 +31,13 @@ const projects = [
         languages: ["typescript", "react", "nextjs", "css"],
     },
     {
+        name: "Barber App",
+        description: "This was a school project, I created a simple barber app that allows users to book appointments with barbers. The site was built with React and Express, providing a seamless user experience and efficient booking process.",
+        github: "https://github.com/xalonious/barber-app",
+        image: "barber.png",
+        languages: ["typescript", "react", "nodejs"],
+    },
+    {
         name: "Backup Code Encryptor",
         description: "A simple python program that allows you to encrypt your 2FA backup codes with a password. This tool ensures that your backup codes are securely stored and protected from unauthorized access.",
         github: "https://github.com/xalonious/backup-code-encryptor",

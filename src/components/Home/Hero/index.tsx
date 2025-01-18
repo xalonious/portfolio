@@ -29,7 +29,7 @@ export const Hero: FC = () => {
 					) : null}
 				</h1>
 				<p className="mt-6 text-white text-md">
-					I am a {date - 2005} year old software developer living{" "}
+					I am a 19 year old software developer living{" "}
 					{!useMediaQuery(980) && <br />}in&nbsp;{CONFIG.LOCATION}.
 					<br />
 					<br />I have <Highlight>
