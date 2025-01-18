@@ -35,7 +35,7 @@ const projects = [
         description: "This was a school project, I created a simple barber app that allows users to book appointments with barbers. The site was built with React and Express, providing a seamless user experience and efficient booking process.",
         github: "https://github.com/xalonious/barber-app",
         image: "barber.png",
-        languages: ["typescript", "react", "nodejs"],
+        languages: ["typescript", "react", "javascript", "nodejs"],
     },
     {
         name: "Backup Code Encryptor",
