@@ -67,7 +67,7 @@ export const Hero: FC = () => {
 						<img
 							src={CONFIG.AVATAR_URL} 
 							alt="xander"
-							className="mx-auto md:h-128 md:w-128 w-full max-w-lg object-cover rounded-3xl"
+							className="mx-auto md:h-96 md:w-96 w-full max-w-md object-cover rounded-3xl"
 						/>
 					</motion.div>
 				</div>

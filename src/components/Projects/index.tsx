@@ -45,6 +45,14 @@ const projects = [
         languages: ["python"],
     },
     {
+        name: "Image Converter",
+        description: "A simple image converter that allows you to convert images to different formats. This tool supports a wide range of image formats, making it easy to convert images for various purposes.",
+        github: "https://github.com/xalonious/image_converter",
+        image: "imageconverter.png",
+        languages: ["python"]
+
+    },
+    {
         name: "Roblox in-game promote command",
         description: "A simple roblox in-game promote command that allows you to promote users in-game, with the backend being made in nodejs with express. This tool streamlines the promotion process, making it more efficient and user-friendly.",
         github: "https://github.com/xalonious/roblox-in-game-promote-command",
