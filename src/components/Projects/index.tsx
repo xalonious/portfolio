@@ -28,14 +28,14 @@ const projects = [
         description: "The website you're currently on, built with Next.js and Tailwind CSS. It showcases my projects, skills, and experiences, providing a comprehensive overview of my work and capabilities.",
         github: "https://github.com/xalonious/portfolio",
         image: "portfolio.png",
-        languages: ["typescript", "react", "nextjs", "css"],
+        languages: ["typescript", "react", "nextjs", "tailwindcss"],
     },
     {
         name: "Barber App",
         description: "This was a school project, I created a simple barber app that allows users to book appointments with barbers. The site was built with React and Express, providing a seamless user experience and efficient booking process.",
         github: "https://github.com/xalonious/barber-app",
         image: "barber.png",
-        languages: ["typescript", "react", "javascript", "nodejs"],
+        languages: ["typescript", "react", "javascript", "nodejs", "bootstrap", "express"],
     },
     {
         name: "AutoClicker",

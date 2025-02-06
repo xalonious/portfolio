@@ -86,7 +86,7 @@ export const STACK = [
 	},
 	{
 		name: "Lua",
-		logo: "lua.png",
+		logo: "lua.svg",
 		href: "",
 		hoverColor: "hover:bg-epic-black-light",
 	},
@@ -98,7 +98,7 @@ export const STACK = [
 	},
 	{
 		name: "Tailwind CSS",
-		logo: "tailwindcss.png",
+		logo: "tailwindcss.svg",
 		href: "",
 		hoverColor: "hover:bg-epic-black-light",
 	},
@@ -110,13 +110,13 @@ export const STACK = [
 	},
 	{
 		name: ".NET",
-		logo: "dotnet.png",
+		logo: "dotnet.svg",
 		href: "",
 		hoverColor: "hover:bg-epic-black-light",
 	},
 	{
 		name: "MySQL",
-		logo: "mysql.png",
+		logo: "mysql.svg",
 		href: "",
 		hoverColor: "hover:bg-epic-black-light",
 	}
