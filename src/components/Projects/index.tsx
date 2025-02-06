@@ -79,7 +79,7 @@ const projects = [
       "A simple roblox in-game promote command that allows you to promote users in-game, with the backend being made in nodejs with express. This tool streamlines the promotion process, making it more efficient and user-friendly.",
     github: "https://github.com/xalonious/roblox-in-game-promote-command",
     image: "roblox.png",
-    languages: ["javascript", "nodejs", "lua"],
+    languages: ["javascript", "nodejs", "lua", "express"],
   },
 ];
 
