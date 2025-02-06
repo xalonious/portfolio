@@ -31,17 +31,14 @@ export const Header: FC = () => {
 
   return (
     <>
-      {/* Top Bar */}
       <div id="top" className="h-2 w-full bg-pastel-green"></div>
 
-      {/* Header Container */}
       <motion.div
         className={`fixed md:static top-0 w-screen md:w-auto h-24 md:h-48 px-8 md:px-24 2xl:px-56
           flex flex-row lg:relative
           ${mobileMenuOpen ? "bg-epic-black-light" : "bg-epic-black"}
-          z-50`} // Added z-50 to ensure the header is on top
+          z-50`} 
       >
-        {/* Logo / Brand Name */}
         <h1
           onClick={() => {
             window.location.href = "/";
@@ -53,7 +50,6 @@ export const Header: FC = () => {
           </div>
         </h1>
 
-        {/* Navigation Links (Desktop) */}
         {!isBreakPoint &&
           links.map((link, key) => {
             if (!link.open) return null;
@@ -69,7 +65,6 @@ export const Header: FC = () => {
             );
           })}
 
-        {/* Mobile Menu Button or Contact Button */}
         {isBreakPoint ? (
           <MobileNavButton
             func={setMobileMenuOpen}
@@ -80,7 +75,6 @@ export const Header: FC = () => {
         )}
       </motion.div>
 
-      {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && isBreakPoint ? <MobileDropDown /> : null}
     </>
   );
@@ -138,8 +132,8 @@ const ContactButton = () => {
           ml-auto hover:cursor-pointer"
         onClick={() => {
           const email = "contact.xalonious@gmail.com";
-          const subject = "Your Inquiry"; // You can customize the subject
-          const body = "Hey xander!"; // You can customize the default email body
+          const subject = "Your Inquiry"; 
+          const body = "Hey xander!"; 
           window.location.href = `mailto:${email}?subject=${encodeURIComponent(
             subject
           )}&body=${encodeURIComponent(body)}`;
@@ -193,12 +187,10 @@ const Ref = ({ name, href, slash, newTab }: RefProps) => {
   }
   return (
     <Link href={href}>
-      <a>
-        {slash === "slash" && <Highlight>/</Highlight>}
-        {slash === "hash" && <Highlight>#</Highlight>}
-        {slash === "arrow" && <Highlight>&#8594;&nbsp;</Highlight>}
-        {name}
-      </a>
+      {slash === "slash" && <Highlight>/</Highlight>}
+      {slash === "hash" && <Highlight>#</Highlight>}
+      {slash === "arrow" && <Highlight>&#8594;&nbsp;</Highlight>}
+      {name}
     </Link>
   );
 };
@@ -253,7 +245,7 @@ const MobileDropDown = () => {
       className="fixed top-20 w-screen px-10
         flex flex-col overflow-y-scroll
         bg-epic-black-light shadow-epic-black-light shadow-xl
-        z-40" // Ensure dropdown is below the header's z-50
+        z-40" 
     >
       {links.map((link, key) => {
         if (!link.open) return null;
@@ -284,8 +276,8 @@ const MobileDropDown = () => {
         }}
         onClick={() => {
           const email = "contact.xalonious@gmail.com";
-          const subject = "Your Inquiry"; // You can customize the subject
-          const body = "Hey xander!"; // You can customize the default email body
+          const subject = "Your Inquiry"; 
+          const body = "Hey xander!"; 
           window.location.href = `mailto:${email}?subject=${encodeURIComponent(
             subject
           )}&body=${encodeURIComponent(body)}`;
