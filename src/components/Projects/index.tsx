@@ -38,6 +38,13 @@ const projects = [
         languages: ["typescript", "react", "javascript", "nodejs"],
     },
     {
+        name: "AutoClicker",
+        description: "A simple autoclicker written in C# that allows you to automate mouse clicks. This tool is useful for repetitive tasks that require multiple clicks, saving you time and effort.",
+        github: "https://github.com/xalonious/autoclicker",
+        image: "autoclicker.png",
+        languages: ["csharp", "dotnet"],
+    },
+    {
         name: "Backup Code Encryptor",
         description: "A simple python program that allows you to encrypt your 2FA backup codes with a password. This tool ensures that your backup codes are securely stored and protected from unauthorized access.",
         github: "https://github.com/xalonious/backup-code-encryptor",
