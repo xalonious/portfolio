@@ -153,13 +153,11 @@ export const ProjectsComponent: FC = () => {
                     className="w-8 h-8"
                     alt={lang}
                   />
-                  {/* Enhanced tooltip with gradient background and animated scale */}
                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 pointer-events-none z-10">
                     <div className="relative">
                       <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-semibold rounded-lg px-3 py-1 shadow-xl">
                         {lang.toUpperCase()}
                       </div>
-                      {/* SVG arrow with gradient fill */}
                       <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                         <svg width="12" height="12" viewBox="0 0 12 12">
                           <defs>
@@ -187,7 +185,7 @@ export const ProjectsComponent: FC = () => {
             </div>
             <a
               href={project.github}
-              className="mt-6 text-pastel-green font-semibold underline hover:no-underline"
+              className="mt-8 text-pastel-green font-semibold underline hover:no-underline"
               target="_blank"
               rel="noopener noreferrer"
             >
