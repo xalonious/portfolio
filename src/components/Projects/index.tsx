@@ -40,14 +40,7 @@ const projects = [
       "This was a school project, I created a simple barber app that allows users to book appointments with barbers. The site was built with React and Express, providing a seamless user experience and efficient booking process.",
     github: "https://github.com/xalonious/barber-app",
     image: "barber.png",
-    languages: [
-      "typescript",
-      "react",
-      "javascript",
-      "nodejs",
-      "bootstrap",
-      "express",
-    ],
+    languages: ["typescript", "react", "javascript", "nodejs", "bootstrap", "express"],
   },
   {
     name: "AutoClicker",
@@ -56,6 +49,14 @@ const projects = [
     github: "https://github.com/xalonious/autoclicker",
     image: "autoclicker.png",
     languages: ["csharp", "dotnet"],
+  },
+  {
+    name: "Web server file uploader",
+    description:
+      "A minimal file uploader web page that enables quick and secure file transfers. This project features a sleek, animated interface with progress tracking, designed for easy integration with devices like Raspberry Pi.",
+    github: "https://github.com/xalonious/web-server-file-uploader",
+    image: "uploader.png",
+    languages: ["javascript", "nodejs", "express", "html", "css"],
   },
   {
     name: "Backup Code Encryptor",
@@ -82,6 +83,7 @@ const projects = [
     languages: ["javascript", "nodejs", "lua", "express"],
   },
 ];
+
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
