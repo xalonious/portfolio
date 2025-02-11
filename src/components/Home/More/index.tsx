@@ -38,10 +38,10 @@ export const More: FC = () => {
                     Not in front of my <Highlight>IDE</Highlight>?
                 </h1>
                 <p className="mt-4">
-                    I go touch some <Highlight>Grass</Highlight>, petting my
+                    I go touch some <Highlight>grass</Highlight>, pet my
                     cat, or&nbsp;
-                    <span className="hover:cursor-pointer text-pastel-green underline hover:no-underline">
-                        playing some games
+                    <span className="hover:cursor-pointer text-pastel-green hover:no-underline">
+                        play some games
                     </span>
                     .<br />
                 </p>
