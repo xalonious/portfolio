@@ -43,6 +43,14 @@ const projects = [
     languages: ["typescript", "react", "javascript", "nodejs", "bootstrap", "express"],
   },
   {
+    name: "Password Manager",
+    description:
+      "A simple password manager built with Electron and SQLite. This tool allows you to securely store and manage your passwords, ensuring that your sensitive information is protected and easily accessible.",
+    github: "https://github.com/xalonious/password-manager",
+    "image": "passwordmanager.png",
+    languages: ["javascript", "html", "css", "mysql"],
+  },
+  {
     name: "AutoClicker",
     description:
       "A simple autoclicker written in C# that allows you to automate mouse clicks. This tool is useful for repetitive tasks that require multiple clicks, saving you time and effort.",
