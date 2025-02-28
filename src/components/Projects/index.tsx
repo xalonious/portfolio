@@ -43,9 +43,9 @@ const projects = [
     languages: ["typescript", "react", "javascript", "nodejs", "bootstrap", "express"],
   },
   {
-    name: "Password Manager",
+    name: "PassGuard",
     description:
-      "A simple password manager built with Electron and SQLite. This tool allows you to securely store and manage your passwords, ensuring that your sensitive information is protected and easily accessible.",
+      "PassGuard is a simple password manager built with Electron and SQLite. This tool allows you to securely store and manage your passwords, ensuring that your sensitive information is protected and easily accessible.",
     github: "https://github.com/xalonious/password-manager",
     "image": "passwordmanager.png",
     languages: ["javascript", "html", "css", "mysql"],
