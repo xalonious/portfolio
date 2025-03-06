@@ -8,7 +8,7 @@ const projects = [
       "Rexx is a multi-purpose Discord bot that I started working on back in 2020. It was my first major project. The development was discontinued when Discord announced the mandatory switch to slash commands, and I decided not to rewrite the entire codebase.",
     github: "https://github.com/xalonious/rexx",
     image: "rexx.png",
-    languages: ["javascript", "nodejs"],
+    languages: ["javascript", "nodejs", "mongodb"],
   },
   {
     name: "Krestia",
@@ -16,7 +16,7 @@ const projects = [
       "Krestia is a discord to roblox ranking bot that allows you to remotely manage your roblox group ranks. It provides a seamless integration between Discord and Roblox, making group management easier and more efficient.",
     github: "https://github.com/xalonious/Krestia",
     image: "krestia.png",
-    languages: ["javascript", "nodejs"],
+    languages: ["javascript", "nodejs", "mongodb"],
   },
   {
     name: "Teks cafe Helper",
@@ -24,7 +24,7 @@ const projects = [
       "Teks cafe helper is mainly a bot that revolves around economy, with some fun and silly commands as well. It offers a variety of features to enhance user engagement and interaction within the community.",
     github: "https://github.com/xalonious/teks-cafe-helper",
     image: "tekscafe.png",
-    languages: ["javascript", "nodejs"],
+    languages: ["javascript", "nodejs", "mongodb"],
   },
   {
     name: "My portfolio website",
@@ -81,15 +81,7 @@ const projects = [
     github: "https://github.com/xalonious/image_converter",
     image: "imageconverter.png",
     languages: ["python"],
-  },
-  {
-    name: "Roblox in-game promote command",
-    description:
-      "A simple roblox in-game promote command that allows you to promote users in-game, with the backend being made in nodejs with express. This tool streamlines the promotion process, making it more efficient and user-friendly.",
-    github: "https://github.com/xalonious/roblox-in-game-promote-command",
-    image: "roblox.png",
-    languages: ["javascript", "nodejs", "lua", "express"],
-  },
+  }
 ];
 
 

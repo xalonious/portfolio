@@ -85,8 +85,8 @@ export const STACK = [
 		hoverColor: "hover:bg-epic-black-light",
 	},
 	{
-		name: "Lua",
-		logo: "lua.svg",
+		name: "MongoDB",
+		logo: "mongodb.svg",
 		href: "",
 		hoverColor: "hover:bg-epic-black-light",
 	},
