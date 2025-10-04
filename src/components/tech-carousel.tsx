@@ -41,14 +41,16 @@ export function TechCarousel() {
 
       <div className="relative mx-auto max-w-6xl px-6">
         <div className="mb-6 text-center">
-          <h2 className="text-3xl font-semibold tracking-tight text-[--foreground]">My Tech Stack</h2>
+          <h2 className="text-3xl font-semibold tracking-tight text-[--foreground]">
+            My Tech Stack
+          </h2>
           <p className="mt-2 text-sm text-muted-foreground">Tools I build with</p>
         </div>
 
         <motion.div
           className="flex min-w-max gap-6 pl-[max(6vw,2rem)] pr-[max(6vw,2rem)] whitespace-nowrap will-change-transform"
           animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: 22, ease: "linear", repeat: Infinity }}
+          transition={{ duration: 80, ease: "linear", repeat: Infinity }}
         >
           {looped(technologies).map((t, i) => (
             <TechCard key={`r1-${i}`} {...t} />
@@ -58,7 +60,7 @@ export function TechCarousel() {
         <motion.div
           className="mt-6 flex min-w-max gap-6 pl-[max(6vw,2rem)] pr-[max(6vw,2rem)] whitespace-nowrap will-change-transform"
           animate={{ x: ["-50%", "0%"] }}
-          transition={{ duration: 26, ease: "linear", repeat: Infinity }}
+          transition={{ duration: 90, ease: "linear", repeat: Infinity }}
         >
           {looped(technologies).map((t, i) => (
             <TechCard key={`r2-${i}`} {...t} />
