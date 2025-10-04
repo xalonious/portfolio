@@ -9,9 +9,7 @@ import { Separator } from "@/components/ui/separator"
 import { TechCarousel } from "@/components/tech-carousel"
 import { FeaturedProjects } from "@/components/featured-projects"
 
-/* ─────────────────────────────────────────────
-   Motion helpers
-   ───────────────────────────────────────────── */
+
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
   show: (i: number = 0) => ({
@@ -33,18 +31,13 @@ const pop: Variants = {
   show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 }
 
-/* ─────────────────────────────────────────────
-   Page
-   ───────────────────────────────────────────── */
 export default function Page() {
   return (
     <main className="relative overflow-hidden">
       <BGDecor />
 
-      {/* HERO SECTION */}
       <section className="relative mx-auto max-w-6xl px-6 pt-28 pb-16 md:pt-36 md:pb-20">
         <div className="grid items-center gap-12 md:grid-cols-2">
-          {/* LEFT */}
           <div>
             <motion.div initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }} className="space-y-6">
               <motion.div variants={fadeUp}>
@@ -94,7 +87,6 @@ export default function Page() {
             </motion.div>
           </div>
 
-          {/* RIGHT */}
           <div className="relative">
             <div className="pointer-events-none absolute -left-10 -top-10 h-64 w-64 rounded-full bg-[--primary]/20 blur-3xl" />
             <motion.div variants={float} initial="initial" animate="animate" className="relative flex flex-col items-end gap-6">
@@ -114,38 +106,31 @@ export default function Page() {
 
       <Divider />
 
-      {/* TECH CAROUSEL */}
       <section id="stack" className="relative mx-auto w-full max-w-6xl px-6 py-10">
         <TechCarousel />
       </section>
 
       <Divider />
 
-      {/* FEATURED PROJECTS */}
       <FeaturedProjects />
 
       <Divider />
 
-      {/* CONTACT SECTION */}
       <ContactSection />
     </main>
   )
 }
 
-/* ─────────────────────────────────────────────
-   Contact Section (with 5-minute cooldown)
-   ───────────────────────────────────────────── */
 function ContactSection() {
   const [sent, setSent] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({}) // NEW: per-field errors
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({}) 
   const [loading, setLoading] = useState(false)
-  const [cooldownLeft, setCooldownLeft] = useState(0) // seconds remaining
+  const [cooldownLeft, setCooldownLeft] = useState(0) 
 
   const COOLDOWN_SEC = 5 * 60
   const STORAGE_KEY = "contact:lastSent"
 
-  // initialize & tick countdown
   useEffect(() => {
     const last = Number(localStorage.getItem(STORAGE_KEY) || 0)
     const now = Date.now()
@@ -161,7 +146,7 @@ function ContactSection() {
       }, 1000)
       return () => clearInterval(id)
     }
-  }, []) // run once
+  }, []) 
 
   const cooldownLabel = useMemo(() => {
     if (cooldownLeft <= 0) return ""
@@ -173,7 +158,7 @@ function ContactSection() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError(null)
-    setFieldErrors({}) // clear per-field errors
+    setFieldErrors({}) 
 
     if (cooldownLeft > 0) {
       setError(`Please wait ${cooldownLabel} before sending another message.`)
@@ -185,7 +170,6 @@ function ContactSection() {
       name: (form.elements.namedItem("name") as HTMLInputElement)?.value?.trim(),
       email: (form.elements.namedItem("email") as HTMLInputElement)?.value?.trim(),
       message: (form.elements.namedItem("message") as HTMLTextAreaElement)?.value?.trim(),
-      // honeypot
       company: (form.elements.namedItem("company") as HTMLInputElement)?.value?.trim() || "",
     }
 
@@ -202,11 +186,9 @@ function ContactSection() {
         body: JSON.stringify(data),
       })
 
-      // Parse JSON even on non-2xx to read server messages
       let json: any = null
       try { json = await res.json() } catch {}
 
-      // --- Handle cooldown explicitly (429) ---
       if (res.status === 429) {
         const retryAfterSec =
           Number(res.headers.get("Retry-After")) ||
@@ -215,14 +197,12 @@ function ContactSection() {
         setError(json?.error || "You’ve sent a message recently. Please wait before trying again.")
         if (retryAfterSec > 0) {
           setCooldownLeft(retryAfterSec)
-          // Align local storage timestamp with server cookie cooldown
           const now = Date.now()
           localStorage.setItem(STORAGE_KEY, String(now - (COOLDOWN_SEC - retryAfterSec) * 1000))
         }
         return
       }
 
-      // --- Zod validation errors (400) ---
       if (res.status === 400 && json?.issues?.length) {
         const fe: Record<string, string> = {}
         for (const i of json.issues) {
@@ -233,18 +213,15 @@ function ContactSection() {
         return
       }
 
-      // --- Other non-OK responses ---
       if (!res.ok) {
         setError(json?.error || `Server error (${res.status}). Please try again.`)
         return
       }
 
-      // --- Success ---
       if (json?.ok) {
         setSent(true)
         form.reset()
 
-        // Start local cooldown (server sets HttpOnly cookie too)
         const now = Date.now()
         localStorage.setItem(STORAGE_KEY, String(now))
         setCooldownLeft(COOLDOWN_SEC)
@@ -260,7 +237,6 @@ function ContactSection() {
 
   return (
     <section id="contact" className="relative mx-auto max-w-3xl px-6 pb-28">
-      {/* aurora backdrop */}
       <div
         aria-hidden
         className="absolute -inset-x-10 -top-10 -bottom-10 -z-10 rounded-[40px] opacity-60"
@@ -283,7 +259,6 @@ function ContactSection() {
               </motion.p>
 
               <motion.form variants={staggerIn} onSubmit={onSubmit} className="mt-6 space-y-4" noValidate>
-                {/* Honeypot (hidden) */}
                 <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" />
 
                 <motion.div variants={pop} className="grid gap-4 sm:grid-cols-2">
@@ -367,9 +342,6 @@ function ContactSection() {
   )
 }
 
-/* ─────────────────────────────────────────────
-   Reusable Components (icons fixed)
-   ───────────────────────────────────────────── */
 function HeroBadge({ children }: { children: React.ReactNode }) {
   return (
     <span className="relative inline-flex whitespace-nowrap rounded-full p-[1px] bg-[linear-gradient(90deg,var(--primary)_0%,var(--secondary)_50%,var(--accent)_100%)] [background-size:200%_100%] [animation:gradientShift_8s_linear_infinite]">
@@ -394,7 +366,6 @@ function InputWithIcon({
       >
         {icon}
       </span>
-      {/* IMPORTANT: pl-10 is now respected because Input merges className */}
       <Input {...props} className={`pl-10 ${className}`} />
     </div>
   )
@@ -411,7 +382,7 @@ function Input({
         "w-full rounded-md border border-border/50 bg-[--canvas] py-2 px-4 text-[--foreground] outline-none transition",
         "focus:border-[--primary] focus:ring-2 focus:ring-[--primary]/50",
         "dark:bg-[--muted]",
-        className, // <- merge, don’t overwrite
+        className, 
       ].join(" ")}
     />
   )
@@ -478,9 +449,6 @@ function TiltCard({ children, className = "" }: { children: React.ReactNode; cla
   )
 }
 
-/* ─────────────────────────────────────────────
-   Icons + Background
-   ───────────────────────────────────────────── */
 function MailIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
