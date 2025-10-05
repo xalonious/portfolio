@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import { Heart } from "lucide-react"
 
-export function SiteFooter() {
+export function Footer() {
   return (
     <footer className="border-t border-[--border]/40 bg-[--card]/70 backdrop-blur-sm">
       <motion.div

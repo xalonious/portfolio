@@ -1,482 +1,306 @@
 "use client"
 
-import Image from "next/image"
-import { useEffect, useMemo, useState, type ButtonHTMLAttributes, type ReactNode } from "react"
-import { motion, Variants, type MotionProps } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { TechCarousel } from "@/components/tech-carousel"
-import { FeaturedProjects } from "@/components/featured-projects"
+import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
 
+import { TechCarousel } from "@/components/TechCarousel"
+import { FeaturedProjects } from "@/components/FeaturedProjects"
+import { Header } from "@/components/Header"
+import { ContactSection } from "@/components/ContactSection"
 
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: (i: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 },
-  }),
-}
-const float: Variants = {
-  initial: { y: 0 },
-  animate: {
-    y: [-4, 4, -4],
-    transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-  },
-}
-const staggerIn: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } } }
-const pop: Variants = {
-  hidden: { opacity: 0, y: 14, scale: 0.98 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
-}
-
-export default function Page() {
-  return (
-    <main className="relative overflow-hidden">
-      <BGDecor />
-
-      <section className="relative mx-auto max-w-6xl px-6 pt-28 pb-16 md:pt-36 md:pb-20">
-        <div className="grid items-center gap-12 md:grid-cols-2">
-          <div>
-            <motion.div initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }} className="space-y-6">
-              <motion.div variants={fadeUp}>
-                <HeroBadge>Full-Stack Developer • Belgium</HeroBadge>
-              </motion.div>
-
-              <motion.h1 variants={fadeUp} className="text-5xl font-extrabold leading-[1.05] tracking-tight md:text-6xl">
-                <span className="text-[--foreground]">Xander</span>{" "}
-                <span className="text-[--foreground]">aka</span>{" "}
-                <span className="text-[--primary]">xalonious</span>
-              </motion.h1>
-
-              <motion.p variants={fadeUp} className="text-base leading-7 text-muted-foreground md:max-w-[52ch]">
-                I’m a <b>19-year-old software developer</b> in Belgium. Over <b>6 years</b> in,
-                building with <b>JavaScript</b>, <b>TypeScript</b>, <b>Java</b>, and <b>C#</b>.
-              </motion.p>
-
-              <motion.div variants={fadeUp} className="space-y-4 text-muted-foreground md:max-w-[58ch]">
-                <p>
-                  I’m a <b>self-taught</b> developer who dove head-first into code and never looked back. I love to{" "}
-                  <i>design, innovate, and experiment</i> — especially around web apps and UX.
-                </p>
-                <p>
-                  I build <b>full-stack</b> experiences with modern, scalable tech and contribute to{" "}
-                  <b>open-source</b> whenever I can.
-                </p>
-              </motion.div>
-
-              <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-3 pt-2">
-                <Button
-                  size="lg"
-                  className="bg-[--primary] text-[--background] hover:bg-[--secondary] transition-colors"
-                  onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-                >
-                  Contact Me
-                </Button>
-
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <span className="inline-flex items-center gap-2">
-                    <Dot /> 6+ yrs experience
-                  </span>
-                  <span className="hidden md:inline-flex items-center gap-2">
-                    <Dot /> Self-taught
-                  </span>
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-
-          <div className="relative">
-            <div className="pointer-events-none absolute -left-10 -top-10 h-64 w-64 rounded-full bg-[--primary]/20 blur-3xl" />
-            <motion.div variants={float} initial="initial" animate="animate" className="relative flex flex-col items-end gap-6">
-              <TiltCard className="w-[280px] rotate-[-2.5deg]">
-                <Image src="/headshot.png" alt="Xander headshot" width={560} height={560} className="h-64 w-full rounded-lg object-cover" />
-                <div className="px-3 pb-3 pt-2 text-sm text-muted-foreground">It me 👋</div>
-              </TiltCard>
-
-              <TiltCard className="w-[220px] -mr-8 rotate-[6deg]">
-                <Image src="/cat.png" alt="My cat" width={440} height={440} className="h-48 w-full rounded-lg object-cover" />
-                <div className="px-3 pb-3 pt-2 text-sm text-muted-foreground">CTO (Chief Treat Officer)</div>
-              </TiltCard>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      <Divider />
-
-      <section id="stack" className="relative mx-auto w-full max-w-6xl px-6 py-10">
-        <TechCarousel />
-      </section>
-
-      <Divider />
-
-      <FeaturedProjects />
-
-      <Divider />
-
-      <ContactSection />
-    </main>
-  )
-}
-
-function ContactSection() {
-  const [sent, setSent] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({}) 
-  const [loading, setLoading] = useState(false)
-  const [cooldownLeft, setCooldownLeft] = useState(0) 
-
-  const COOLDOWN_SEC = 5 * 60
-  const STORAGE_KEY = "contact:lastSent"
+export default function Portfolio() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [isMobile, setIsMobile] = useState(false)
+  const [particles, setParticles] = useState<Array<{ x: number; y: number; duration: number; delay: number }>>([])
 
   useEffect(() => {
-    const last = Number(localStorage.getItem(STORAGE_KEY) || 0)
-    const now = Date.now()
-    const diff = Math.max(0, Math.floor((last + COOLDOWN_SEC * 1000 - now) / 1000))
-    setCooldownLeft(diff)
-
-    if (diff > 0) {
-      const id = setInterval(() => {
-        setCooldownLeft((s) => {
-          if (s <= 1) { clearInterval(id); return 0 }
-          return s - 1
-        })
-      }, 1000)
-      return () => clearInterval(id)
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
     }
-  }, []) 
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
 
-  const cooldownLabel = useMemo(() => {
-    if (cooldownLeft <= 0) return ""
-    const m = Math.floor(cooldownLeft / 60)
-    const s = cooldownLeft % 60
-    return `${m}:${s.toString().padStart(2, "0")}`
-  }, [cooldownLeft])
-
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setError(null)
-    setFieldErrors({}) 
-
-    if (cooldownLeft > 0) {
-      setError(`Please wait ${cooldownLabel} before sending another message.`)
-      return
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY })
     }
-
-    const form = e.currentTarget
-    const data = {
-      name: (form.elements.namedItem("name") as HTMLInputElement)?.value?.trim(),
-      email: (form.elements.namedItem("email") as HTMLInputElement)?.value?.trim(),
-      message: (form.elements.namedItem("message") as HTMLTextAreaElement)?.value?.trim(),
-      company: (form.elements.namedItem("company") as HTMLInputElement)?.value?.trim() || "",
+    window.addEventListener("mousemove", handleMouseMove)
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("resize", checkMobile)
     }
+  }, [])
 
-    if (!data.name || !data.email || !data.message) {
-      setError("Please fill out all fields.")
-      return
-    }
+  useEffect(() => {
+    setParticles(
+      Array.from({ length: 40 }, () => ({
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        duration: 3 + Math.random() * 4,
+        delay: Math.random() * 2,
+      }))
+    )
+  }, [])
 
-    setLoading(true)
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
+  const technologies = [
+    { name: "React", icon: "/tech/react.svg" },
+    { name: "Next.js", icon: "/tech/nextjs.svg" },
+    { name: "TypeScript", icon: "/tech/typescript.svg" },
+    { name: "TailwindCSS", icon: "/tech/tailwindcss.svg" },
+    { name: "Node.js", icon: "/tech/nodejs.svg" },
+    { name: "Framer Motion", icon: "/tech/framer.svg" },
+    { name: "Java", icon: "/tech/java.svg" },
+    { name: "C#", icon: "/tech/csharp.svg" },
+    { name: "JavaScript", icon: "/tech/javascript.svg" },
+    { name: "GitHub", icon: "/tech/github.svg" },
+    { name: "Linux", icon: "/tech/linux.svg" },
+    { name: "Git", icon: "/tech/git.svg" },
+    { name: "Python", icon: "/tech/python.svg" },
+    { name: "CSS", icon: "/tech/css.svg" },
+    { name: "HTML", icon: "/tech/html.svg" },
+    { name: "Docker", icon: "/tech/docker.svg" },
+    { name: "MongoDB", icon: "/tech/mongodb.svg" },
+    { name: "Express", icon: "/tech/express.svg" },
+    { name: "Bootstrap", icon: "/tech/bootstrap.svg" },
+    { name: "MySQL", icon: "/tech/mysql.svg" },
+    { name: ".NET", icon: "/tech/dotnet.svg" },
+  ]
 
-      let json: any = null
-      try { json = await res.json() } catch {}
-
-      if (res.status === 429) {
-        const retryAfterSec =
-          Number(res.headers.get("Retry-After")) ||
-          (json?.retryAfter ? Number(json.retryAfter) : 0)
-
-        setError(json?.error || "You’ve sent a message recently. Please wait before trying again.")
-        if (retryAfterSec > 0) {
-          setCooldownLeft(retryAfterSec)
-          const now = Date.now()
-          localStorage.setItem(STORAGE_KEY, String(now - (COOLDOWN_SEC - retryAfterSec) * 1000))
-        }
-        return
-      }
-
-      if (res.status === 400 && json?.issues?.length) {
-        const fe: Record<string, string> = {}
-        for (const i of json.issues) {
-          if (i?.path && i?.message) fe[i.path] = i.message
-        }
-        setFieldErrors(fe)
-        setError(json?.error || "Please correct the highlighted fields.")
-        return
-      }
-
-      if (!res.ok) {
-        setError(json?.error || `Server error (${res.status}). Please try again.`)
-        return
-      }
-
-      if (json?.ok) {
-        setSent(true)
-        form.reset()
-
-        const now = Date.now()
-        localStorage.setItem(STORAGE_KEY, String(now))
-        setCooldownLeft(COOLDOWN_SEC)
-      } else {
-        setError(json?.error || "Something went wrong.")
-      }
-    } catch {
-      setError("Network error. Please check your connection and try again.")
-    } finally {
-      setLoading(false)
-    }
-  }
+  const loopedTech = [...technologies, ...technologies, ...technologies]
 
   return (
-    <section id="contact" className="relative mx-auto max-w-3xl px-6 pb-28">
-      <div
-        aria-hidden
-        className="absolute -inset-x-10 -top-10 -bottom-10 -z-10 rounded-[40px] opacity-60"
+    <div className="min-h-screen bg-[#0a0a0f] text-white overflow-hidden">
+      <Header />
+
+      <motion.div
+        className="fixed inset-0 opacity-30 pointer-events-none"
         style={{
-          background:
-            "radial-gradient(40% 60% at 15% 20%, var(--primary)/14%, transparent 60%), radial-gradient(40% 60% at 85% 70%, var(--secondary)/18%, transparent 60%)",
-          filter: "blur(40px)",
+          background: `radial-gradient(circle 800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(62, 228, 255, 0.15), transparent)`,
         }}
       />
 
-      <motion.div variants={staggerIn} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
-        <motion.div variants={pop}>
-          <Card className="relative overflow-hidden border-border/40 shadow-[0_10px_40px_-20px_rgba(0,0,0,0.45)]">
-            <CardContent className="p-6 sm:p-8 md:p-10">
-              <motion.h3 variants={pop} className="text-2xl font-semibold text-[--foreground]">
-                Get in Touch
-              </motion.h3>
-              <motion.p variants={pop} className="mt-2 text-sm text-muted-foreground">
-                Got a project or an idea? Let’s build something great.
+      <div className="fixed inset-0 pointer-events-none">
+        {particles.map((particle, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-cyan-400/20 rounded-full"
+            style={{
+              left: `${particle.x}%`,
+              top: `${particle.y}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0.2, 0.5, 0.2],
+            }}
+            transition={{
+              duration: particle.duration,
+              repeat: Infinity,
+              delay: particle.delay,
+            }}
+          />
+        ))}
+      </div>
+
+      <section className="relative min-h-screen flex items-center justify-center px-6 py-20">
+        <div className="max-w-7xl w-full">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+              className="space-y-8"
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 backdrop-blur-xl"
+              >
+                <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
+                <span className="text-sm text-cyan-300 font-medium">Available for opportunities</span>
+              </motion.div>
+
+              <div className="space-y-4">
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.8 }}
+                  className="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tighter leading-none"
+                >
+                  <span className="bg-gradient-to-r from-white via-cyan-200 to-purple-300 bg-clip-text text-transparent">
+                    XANDER
+                  </span>
+                </motion.h1>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="flex items-center gap-4"
+                >
+                  <div className="h-[2px] w-16 bg-gradient-to-r from-cyan-500 to-purple-500" />
+                  <p className="text-lg sm:text-xl text-gray-400 font-light">Full-Stack Developer & Designer</p>
+                </motion.div>
+              </div>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                className="text-lg sm:text-xl text-gray-300 max-w-2xl leading-relaxed"
+              >
+                Crafting <span className="text-cyan-400 font-semibold">exceptional digital experiences</span> with modern
+                tech. <span className="text-purple-400 font-semibold"> 6+ years</span> of turning ideas into reality.
               </motion.p>
 
-              <motion.form variants={staggerIn} onSubmit={onSubmit} className="mt-6 space-y-4" noValidate>
-                <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9 }}
+                className="flex flex-wrap gap-4 pt-4"
+              >
+                <button
+                  onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
+                  className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold text-base sm:text-lg overflow-hidden transition-transform hover:scale-105"
+                >
+                  <span className="relative z-10">View My Work</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
 
-                <motion.div variants={pop} className="grid gap-4 sm:grid-cols-2">
-                  <div className="sm:col-span-1">
-                    <InputWithIcon
-                      name="name"
-                      placeholder="Your Name"
-                      icon={<UserIcon />}
-                      required
-                      aria-invalid={!!fieldErrors.name}
-                      aria-describedby={fieldErrors.name ? "name-error" : undefined}
-                    />
-                    {fieldErrors.name && (
-                      <p id="name-error" className="mt-1 text-xs text-red-400">{fieldErrors.name}</p>
-                    )}
+                <button
+                  onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+                  className="px-6 sm:px-8 py-3 sm:py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-lg font-semibold text-base sm:text-lg hover:bg-white/10 hover:border-white/20 transition-all"
+                >
+                  Get In Touch
+                </button>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.1 }}
+                className="flex flex-wrap gap-6 sm:gap-8 pt-8"
+              >
+                {[
+                  { label: "Years Experience", value: "6+" },
+                  { label: "Projects Completed", value: "10+" },
+                  { label: "Technologies", value: "20+" },
+                ].map((stat, i) => (
+                  <div key={i} className="space-y-1">
+                    <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                      {stat.value}
+                    </div>
+                    <div className="text-xs sm:text-sm text-gray-500 uppercase tracking-wider">{stat.label}</div>
                   </div>
+                ))}
+              </motion.div>
+            </motion.div>
 
-                  <div className="sm:col-span-1">
-                    <InputWithIcon
-                      type="email"
-                      name="email"
-                      placeholder="Your Email"
-                      icon={<MailIcon />}
-                      required
-                      aria-invalid={!!fieldErrors.email}
-                      aria-describedby={fieldErrors.email ? "email-error" : undefined}
-                    />
-                    {fieldErrors.email && (
-                      <p id="email-error" className="mt-1 text-xs text-red-400">{fieldErrors.email}</p>
-                    )}
-                  </div>
-                </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              className="relative flex flex-col items-center lg:items-end gap-6"
+            >
+              <motion.div
+                whileHover={{ rotateX: 6, rotateY: -6, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                className="w-[280px] rotate-[-2.5deg] rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-3 shadow-2xl"
+              >
+                <img src="/headshot.png" alt="Xander headshot" className="w-full h-64 object-cover rounded-xl" />
+                <div className="px-3 pb-2 pt-3 text-sm text-gray-400">It me 👋</div>
+              </motion.div>
 
-                <motion.div variants={pop}>
-                  <Textarea
-                    name="message"
-                    rows={5}
-                    placeholder="Your Message"
-                    required
-                    className="resize-none"
-                    aria-invalid={!!fieldErrors.message}
-                    aria-describedby={fieldErrors.message ? "message-error" : undefined}
-                  />
-                  {fieldErrors.message && (
-                    <p id="message-error" className="mt-1 text-xs text-red-400">{fieldErrors.message}</p>
-                  )}
-                </motion.div>
+              <motion.div
+                whileHover={{ rotateX: 6, rotateY: -6, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                className="w-[220px] lg:-mr-8 rotate-[6deg] rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-3 shadow-2xl"
+              >
+                <img src="/cat.png" alt="My cat" className="w-full h-48 object-cover rounded-xl" />
+                <div className="px-3 pb-2 pt-3 text-sm text-gray-400">CTO (Chief Treat Officer)</div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
 
-                <motion.div variants={pop}>
-                  <ShimmerButton type="submit" className="w-full" disabled={loading || cooldownLeft > 0}>
-                    {loading ? "Sending..." : cooldownLeft > 0 ? `Please wait ${cooldownLabel}` : "Send Message"}
-                  </ShimmerButton>
-                </motion.div>
-
-                {error && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="mt-2 rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-400"
-                    role="alert"
-                  >
-                    ❌ {error}
-                  </motion.div>
-                )}
-                {sent && !error && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="mt-2 rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300"
-                    role="status"
-                  >
-                    ✅ Your message has been sent! I’ll get back to you as soon as I can.
-                  </motion.div>
-                )}
-              </motion.form>
-            </CardContent>
-          </Card>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 hidden sm:block"
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center p-2"
+          >
+            <motion.div className="w-1 h-2 bg-white/60 rounded-full" />
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </section>
-  )
-}
+      </section>
 
-function HeroBadge({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="relative inline-flex whitespace-nowrap rounded-full p-[1px] bg-[linear-gradient(90deg,var(--primary)_0%,var(--secondary)_50%,var(--accent)_100%)] [background-size:200%_100%] [animation:gradientShift_8s_linear_infinite]">
-      <span className="inline-flex items-center gap-2 rounded-full bg-[color-mix(in_oklab,var(--muted)_80%,transparent)] border border-white/5 backdrop-blur-[2px] px-3 py-1.5 text-[12px] sm:text-xs font-medium tracking-wide text-[--foreground]/90">
-        <span aria-hidden className="h-2 w-2 rounded-full bg-[linear-gradient(135deg,var(--primary),var(--secondary))]" />
-        {children}
-      </span>
-    </span>
-  )
-}
+      <section id="stack" className="relative py-20 overflow-hidden scroll-mt-24">
+        <div className="max-w-6xl mx-auto px-6 mb-12">
+          <div className="text-center space-y-4">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold">
+              <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                Tech Arsenal
+              </span>
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-400">Technologies I master</p>
+          </div>
+        </div>
 
-function InputWithIcon({
-  icon,
-  className = "",
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement> & { icon?: React.ReactNode }) {
-  return (
-    <div className="relative">
-      <span
-        aria-hidden
-        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/80"
-      >
-        {icon}
-      </span>
-      <Input {...props} className={`pl-10 ${className}`} />
+        <TechCarousel items={loopedTech} />
+      </section>
+
+      <section id="projects" className="relative py-20 sm:py-32 px-6 scroll-mt-24">
+        <div className="max-w-6xl mx-auto space-y-12 sm:space-y-16">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center space-y-4"
+          >
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold">
+              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Featured Projects
+              </span>
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-400">A few things I’m proud of</p>
+          </motion.div>
+
+          <FeaturedProjects
+            projects={[
+              {
+                title: "My Portfolio Website",
+                description:
+                  "The site you're on — built with Next.js and Tailwind CSS. It showcases my projects, skills, and development journey.",
+                repo: "https://github.com/xalonious/portfolio",
+                image: "/projects/portfolio.png",
+                tech: ["TypeScript", "React", "Next.js", "Tailwind CSS"],
+              },
+              {
+                title: "Barber App",
+                description:
+                  "A school project — a simple barber booking app where users can schedule appointments. Built with React, Express, and TypeScript for a smooth UX.",
+                repo: "https://github.com/xalonious/barber-app",
+                image: "/projects/barber.png",
+                tech: ["TypeScript", "React", "JavaScript", "Node.js", "Bootstrap", "Express"],
+              },
+              {
+                title: "PassGuard",
+                description:
+                  "A lightweight password manager built with Electron and SQLite (MySQL in repo). Securely stores credentials locally in an intuitive interface.",
+                repo: "https://github.com/xalonious/password-manager",
+                image: "/projects/passwordmanager.png",
+                tech: ["JavaScript", "HTML", "CSS", "MySQL"],
+              },
+            ]}
+          />
+        </div>
+      </section>
+
+      <ContactSection />
     </div>
-  )
-}
-
-function Input({
-  className = "",
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <input
-      {...props}
-      className={[
-        "w-full rounded-md border border-border/50 bg-[--canvas] py-2 px-4 text-[--foreground] outline-none transition",
-        "focus:border-[--primary] focus:ring-2 focus:ring-[--primary]/50",
-        "dark:bg-[--muted]",
-        className, 
-      ].join(" ")}
-    />
-  )
-}
-
-function Textarea({
-  className = "",
-  ...props
-}: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return (
-    <textarea
-      {...props}
-      className={[
-        "w-full rounded-md border border-border/50 bg-[--canvas] py-2 px-4 text-[--foreground] outline-none transition",
-        "focus:border-[--primary] focus:ring-2 focus:ring-[--primary]/50",
-        "dark:bg-[--muted]",
-        className,
-      ].join(" ")}
-    />
-  )
-}
-
-function ShimmerButton({
-  className = "",
-  children,
-  ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & MotionProps & { children: ReactNode }) {
-  return (
-    <motion.button
-      whileHover={{ y: -1 }}
-      whileTap={{ scale: 0.98 }}
-      className={`group relative inline-flex items-center justify-center overflow-hidden rounded-md px-4 py-2 text-sm font-medium text-[--coal] transition focus:outline-none ${className}`}
-      style={{ background: "var(--primary)" }}
-      {...props}
-    >
-      <span className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(110deg,transparent,rgba(255,255,255,.45),transparent)] opacity-0 transition duration-700 group-hover:translate-x-full group-hover:opacity-100" />
-      {children}
-    </motion.button>
-  )
-}
-
-function Dot() {
-  return <span className="inline-block h-2 w-2 rounded-full bg-[--primary]" />
-}
-
-function Divider() {
-  return (
-    <div className="mx-auto flex max-w-6xl items-center px-6">
-      <Separator className="my-6 h-[1.5px] w-full bg-gradient-to-r from-transparent via-[--primary] to-transparent" />
-    </div>
-  )
-}
-
-function TiltCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return (
-    <motion.div
-      whileHover={{ rotateX: 6, rotateY: -6, translateZ: 6 }}
-      transition={{ type: "spring", stiffness: 200, damping: 15 }}
-      className={`group relative rounded-xl border border-border/60 bg-[--card] p-2 shadow-lg will-change-transform ${className}`}
-    >
-      <div className="pointer-events-none absolute inset-0 rounded-xl ring-0 transition group-hover:ring-2 group-hover:ring-[--primary]/50" />
-      {children}
-    </motion.div>
-  )
-}
-
-function MailIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M4 6h16v12H4z" stroke="currentColor" strokeWidth="1.5" />
-      <path d="m4 7 8 6 8-6" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  )
-}
-function UserIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M19 19a7 7 0 1 0-14 0" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  )
-}
-
-function BGDecor() {
-  return (
-    <>
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-40 left-1/2 h-[60rem] w-[60rem] -translate-x-1/2 rounded-full [background:radial-gradient(closest-side,var(--primary)/20%,transparent_70%)]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.05] [background-image:radial-gradient(#fff_0.5px,transparent_0.5px)] [background-size:8px_8px]"
-      />
-    </>
   )
 }

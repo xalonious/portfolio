@@ -1,6 +1,6 @@
 import "./globals.css"
-import { SiteHeader } from "@/components/site-header"
-import { SiteFooter } from "@/components/site-footer"
+import { Header } from "@/components/Header"
+import { Footer } from "@/components/Footer"
 import { Baskervville } from "next/font/google"
 
 export const metadata = {
@@ -17,11 +17,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning className={baskervville.className}>
       <body className="min-h-screen bg-[--background] text-[--foreground] antialiased selection:bg-[--brass]/30 selection:text-[--coal]">
-        <SiteHeader />
+        <Header />
 
         <main className="flex-1">{children}</main>
 
-        <SiteFooter />
+        <Footer />
       </body>
     </html>
   )

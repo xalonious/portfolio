@@ -1,16 +1,8 @@
 "use client"
 
-import Image from "next/image"
+import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
 import Link from "next/link"
-import { useRef } from "react"
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useTransform,
-  type Variants,
-} from "framer-motion"
-import { Button } from "@/components/ui/button"
 
 export type Project = {
   title: string
@@ -103,160 +95,177 @@ const PROJECTS: Project[] = [
   },
 ]
 
-const container: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.12, delayChildren: 0.08 } },
-}
-
-const item: Variants = {
-  hidden: { opacity: 0, y: 22, scale: 0.98 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
-  },
-}
-
 export default function ProjectsPage() {
-  return (
-    <main className="relative overflow-hidden">
-      <HeaderGlow />
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [particles, setParticles] = useState<Array<{ x: number; y: number; duration: number; delay: number }>>([])
 
-      <section className="relative mx-auto w-full max-w-6xl px-6 pt-24 pb-6 md:pt-28">
-        <div className="mb-8 md:mb-10">
-          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
-            Projects
-          </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Here are some of the projects I've worked on. Click on the links to view the code on GitHub.
-          </p>
-        </div>
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY })
+    }
+    window.addEventListener("mousemove", handleMouseMove)
+    return () => window.removeEventListener("mousemove", handleMouseMove)
+  }, [])
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {PROJECTS.map((p) => (
-            <ProjectCard key={p.title} project={p} />
-          ))}
-        </motion.div>
-      </section>
-    </main>
-  )
-}
-
-function ProjectCard({ project }: { project: Project }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const mx = useMotionValue(0.5)
-  const my = useMotionValue(0.5)
-
-  const rx = useSpring(useTransform(my, [0, 1], [6, -6]), { stiffness: 160, damping: 18 })
-  const ry = useSpring(useTransform(mx, [0, 1], [-10, 10]), { stiffness: 160, damping: 18 })
-  const imgY = useSpring(useTransform(my, [0, 1], [-6, 6]), { stiffness: 220, damping: 22 })
-
-  function onMove(e: React.PointerEvent) {
-    if (e.pointerType !== "mouse") return
-    const el = ref.current
-    if (!el) return
-    const r = el.getBoundingClientRect()
-    mx.set((e.clientX - r.left) / r.width)
-    my.set((e.clientY - r.top) / r.height)
-  }
-  function onLeave() {
-    mx.set(0.5)
-    my.set(0.5)
-  }
+  useEffect(() => {
+    setParticles(
+      Array.from({ length: 40 }, () => ({
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        duration: 3 + Math.random() * 4,
+        delay: Math.random() * 2,
+      }))
+    )
+  }, [])
 
   return (
-    <motion.article
-      variants={item}
-      className="group relative mx-auto w-full max-w-[22rem] overflow-hidden rounded-xl border border-[--border]/40 bg-[--card] shadow-[0_4px_14px_-8px_rgba(0,0,0,0.5)] sm:max-w-none sm:rounded-2xl"
-      style={{ transformStyle: "preserve-3d" as any }}
-    >
-      <div
-        className="relative h-40 sm:h-44 md:h-48 overflow-hidden rounded-t-xl"
-        style={{ perspective: 1000 }}
-      >
-        <motion.div
-          ref={ref}
-          onPointerMove={onMove}
-          onPointerLeave={onLeave}
-          style={{
-            rotateX: rx,
-            rotateY: ry,
-            transformPerspective: 1000,
-          }}
-          className="relative h-full w-full"
-        >
+    <div className="min-h-screen bg-[#0a0a0f] text-white overflow-hidden">
+      <motion.div
+        className="fixed inset-0 opacity-30 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle 800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(62, 228, 255, 0.15), transparent)`,
+        }}
+      />
+
+      <div className="fixed inset-0 pointer-events-none">
+        {particles.map((particle, i) => (
           <motion.div
-            style={{ y: imgY }}
-            className="absolute inset-0 will-change-transform [transform:translateZ(0)] [backface-visibility:hidden]"
+            key={i}
+            className="absolute w-1 h-1 bg-cyan-400/20 rounded-full"
+            style={{
+              left: `${particle.x}%`,
+              top: `${particle.y}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0.2, 0.5, 0.2],
+            }}
+            transition={{
+              duration: particle.duration,
+              repeat: Infinity,
+              delay: particle.delay,
+            }}
+          />
+        ))}
+      </div>
+
+      <main className="relative px-6 py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="mb-16 text-center space-y-4"
           >
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-              className="pointer-events-none select-none object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-              priority={false}
-            />
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight">
+              <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                My Projects
+              </span>
+            </h1>
+            <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto">
+              A collection of projects I've built over the years. Each one taught me something new.
+            </p>
           </motion.div>
 
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          <div className="pointer-events-none absolute inset-0 rounded-xl ring-0 transition group-hover:ring-2 group-hover:ring-[--primary]/40" />
-        </motion.div>
-      </div>
-
-      <div className="p-3 sm:p-4 text-[13px] sm:text-sm leading-relaxed">
-        <h3 className="text-base sm:text-lg font-semibold tracking-tight mb-1">
-          {project.title}
-        </h3>
-        <p className="text-muted-foreground line-clamp-2 sm:line-clamp-3 mb-2">
-          {project.description}
-        </p>
-
-        <div className="mb-3 flex flex-wrap gap-1.5 sm:gap-2">
-          {project.tech.map((t) => (
-            <span
-              key={t}
-              className="rounded-full border border-[--border]/50 bg-[--muted] px-2 py-[2px] text-[10px] sm:text-xs text-[--foreground]/90"
-            >
-              {t}
-            </span>
-          ))}
-        </div>
-
-        {project.repo && (
-          <Button
-            asChild
-            size="sm"
-            className="h-8 w-full sm:w-auto text-xs bg-[--primary] text-[--background] hover:bg-[--secondary]"
+          <motion.div
+            initial="hidden"
+            animate="show"
+            variants={{
+              hidden: {},
+              show: {
+                transition: {
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
+            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
           >
-            <Link href={project.repo} target="_blank" rel="noreferrer">
-              View on GitHub
-            </Link>
-          </Button>
-        )}
-      </div>
-    </motion.article>
+            {PROJECTS.map((project, index) => (
+              <ProjectCard key={project.title} project={project} index={index} />
+            ))}
+          </motion.div>
+        </div>
+      </main>
+    </div>
   )
 }
 
-function HeaderGlow() {
+function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
-    <>
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-52 left-1/2 h-[50rem] w-[50rem] -translate-x-1/2 rounded-full opacity-60 blur-3xl
-        [background:radial-gradient(closest-side,var(--primary)/16%,transparent_70%)]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.05] [background-image:radial-gradient(#fff_0.5px,transparent_0.5px)] [background-size:8px_8px]"
-      />
-    </>
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 30 },
+        show: { opacity: 1, y: 0 },
+      }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="group relative"
+    >
+      <div className="relative h-full rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden transition-all hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-500/20">
+        <div className="relative h-48 sm:h-56 overflow-hidden">
+          <motion.img
+            src={project.image}
+            alt={project.title}
+            className="w-full h-full object-cover"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.4 }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          
+          <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5">
+            {project.tech.slice(0, 3).map((tech) => (
+              <span
+                key={tech}
+                className="text-[10px] px-2 py-1 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 text-white/90"
+              >
+                {tech}
+              </span>
+            ))}
+            {project.tech.length > 3 && (
+              <span className="text-[10px] px-2 py-1 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 text-white/90">
+                +{project.tech.length - 3}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="p-5 space-y-3">
+          <h3 className="text-xl font-bold bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
+            {project.title}
+          </h3>
+          
+          <p className="text-sm text-gray-400 line-clamp-3 leading-relaxed">
+            {project.description}
+          </p>
+
+          {project.repo && (
+            <Link
+              href={project.repo}
+              target="_blank"
+              rel="noreferrer"
+              className="group/btn inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/30 hover:border-cyan-500/60 transition-all text-sm font-medium text-cyan-300 hover:text-cyan-200"
+            >
+              <span>View on GitHub</span>
+              <svg
+                className="w-4 h-4 transition-transform group-hover/btn:translate-x-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </Link>
+          )}
+        </div>
+
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-purple-500/5" />
+        </div>
+      </div>
+    </motion.div>
   )
 }
