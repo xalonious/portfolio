@@ -246,7 +246,7 @@ export default function Portfolio() {
                 Tech Arsenal
               </span>
             </h2>
-            <p className="text-lg sm:text-xl text-gray-400">Technologies I master</p>
+            <p className="text-lg sm:text-xl text-gray-400">Technologies I use</p>
           </div>
         </div>
 
