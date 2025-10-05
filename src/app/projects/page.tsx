@@ -56,10 +56,10 @@ const PROJECTS: Project[] = [
   {
     title: "PassGuard",
     description:
-      "A simple password manager built with Electron and SQLite (repo lists MySQL). Securely store and manage credentials locally.",
+      "A simple password manager built with Electron and SQLite. Securely store and manage credentials locally.",
     repo: "https://github.com/xalonious/password-manager",
     image: "/projects/passwordmanager.png",
-    tech: ["JavaScript", "HTML", "CSS", "MySQL"],
+    tech: ["JavaScript", "Electron", "HTML", "CSS", "SQLite"],
   },
   {
     title: "AutoClicker",

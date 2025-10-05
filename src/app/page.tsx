@@ -63,6 +63,9 @@ export default function Portfolio() {
     { name: "Bootstrap", icon: "/tech/bootstrap.svg" },
     { name: "MySQL", icon: "/tech/mysql.svg" },
     { name: ".NET", icon: "/tech/dotnet.svg" },
+    { name: "SQLite", icon: "/tech/sqlite.svg"},
+    { name: "Prisma", icon: "/tech/prisma.svg"},
+    { name: "Nginx", icon: "/tech/nginx.svg"}
   ]
 
   const loopedTech = [...technologies, ...technologies, ...technologies]
@@ -290,10 +293,10 @@ export default function Portfolio() {
               {
                 title: "PassGuard",
                 description:
-                  "A lightweight password manager built with Electron and SQLite (MySQL in repo). Securely stores credentials locally in an intuitive interface.",
+                  "A lightweight password manager built with Electron and SQLite. Securely stores credentials locally in an intuitive interface.",
                 repo: "https://github.com/xalonious/password-manager",
                 image: "/projects/passwordmanager.png",
-                tech: ["JavaScript", "HTML", "CSS", "MySQL"],
+                tech: ["JavaScript", "Electron", "HTML", "CSS", "SQLitee"],
               },
             ]}
           />
