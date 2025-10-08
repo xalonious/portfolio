@@ -68,7 +68,9 @@ export default function Portfolio() {
     { name: ".NET", icon: "/tech/dotnet.svg" },
     { name: "SQLite", icon: "/tech/sqlite.svg"},
     { name: "Prisma", icon: "/tech/prisma.svg"},
-    { name: "Nginx", icon: "/tech/nginx.svg"}
+    { name: "Nginx", icon: "/tech/nginx.svg"},
+    { name: "Bash", icon: "/tech/bash.svg"},
+    { name: "Figma", icon: "/tech/figma.svg"},
   ]
 
   const loopedTech = [...technologies, ...technologies, ...technologies]
