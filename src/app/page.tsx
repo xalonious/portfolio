@@ -178,7 +178,7 @@ export default function Portfolio() {
                 className="flex flex-wrap gap-6 sm:gap-8 pt-8"
               >
                 {[
-                  { label: "Years Experience", value: "6+" },
+                  { label: "Years Experience", value: "7+" },
                   { label: "Projects Completed", value: "10+" },
                   { label: "Technologies", value: "20+" },
                 ].map((stat, i) => (
