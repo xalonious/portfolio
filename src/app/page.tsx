@@ -146,7 +146,7 @@ export default function Portfolio() {
                 className="text-lg sm:text-xl text-gray-300 max-w-2xl leading-relaxed"
               >
                 Crafting <span className="text-cyan-400 font-semibold">exceptional digital experiences</span> with modern
-                tech. <span className="text-purple-400 font-semibold">6+ years</span> of turning ideas into reality.
+                tech. <span className="text-purple-400 font-semibold">7+ years</span> of turning ideas into reality.
               </motion.p>
 
               <motion.div
