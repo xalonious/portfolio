@@ -14,9 +14,25 @@ export type Project = {
 
 const PROJECTS: Project[] = [
   {
+    title: "Serendipity Scheduling App",
+    description:
+      "A centralized scheduling web app and API for managing staff shifts and trainings for a Roblox roleplay group.",
+    repo: "https://github.com/xalonious/serendipity-scheduling-app",
+    image: "/projects/serendipity.png",
+    tech: ["Typescript", "React", "Express", "Tailwind", "Prisma"],
+  },
+  {
+    title: "Serendipity Assistant",
+    description:
+      "A general purpose Discord bot featuring moderation tools, fun/community commands, and automation utilities.",
+    repo: "https://github.com/xalonious/serendipity-assistant",
+    image: "/projects/serendipity-assistant.png",
+    tech: ["JavaScript", "Node.js", "MongoDB"],
+  },
+  {
     title: "Rexx",
     description:
-      "Rexx is a multi-purpose Discord bot I started back in 2020. It was my first major project. Development was discontinued when Discord switched to slash commands, and I decided not to rewrite the whole codebase.",
+      "Rexx is a multi-purpose Discord bot I started back in 2020. It was my first major project. Development was unfortunately discontinued.",
     repo: "https://github.com/xalonious/rexx",
     image: "/projects/rexx.png",
     tech: ["JavaScript", "Node.js", "MongoDB"],
@@ -27,14 +43,6 @@ const PROJECTS: Project[] = [
       "A Discord ↔ Roblox ranking bot to remotely manage group ranks. It bridges the two platforms to make group management faster and easier.",
     repo: "https://github.com/xalonious/Krestia",
     image: "/projects/krestia.png",
-    tech: ["JavaScript", "Node.js", "MongoDB"],
-  },
-  {
-    title: "Teks Cafe Helper",
-    description:
-      "A Discord bot centered around an economy system with extra fun commands. Built to boost community engagement and add playful features.",
-    repo: "https://github.com/xalonious/teks-cafe-helper",
-    image: "/projects/tekscafe.png",
     tech: ["JavaScript", "Node.js", "MongoDB"],
   },
   {

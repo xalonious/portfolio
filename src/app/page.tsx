@@ -286,12 +286,12 @@ export default function Portfolio() {
                 tech: ["TypeScript", "React", "JavaScript", "Node.js", "Bootstrap", "Express"],
               },
               {
-                title: "PassGuard",
+                title: "Serendipity Scheduling App",
                 description:
-                  "A lightweight password manager built with Electron and SQLite. Securely stores credentials locally in an intuitive interface.",
-                repo: "https://github.com/xalonious/password-manager",
-                image: "/projects/passwordmanager.png",
-                tech: ["JavaScript", "Electron", "HTML", "CSS", "SQLite"],
+                  "A centralized scheduling web app and API for managing staff shifts and trainings for a Roblox roleplay group.",
+                repo: "https://github.com/xalonious/serendipity-scheduling-app",
+                image: "/projects/serendipity.png",
+                tech: ["Typescript", "React", "Express", "Tailwind", "Prisma"],
               },
             ]}
           />
