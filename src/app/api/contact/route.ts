@@ -95,8 +95,6 @@ export async function POST(req: Request) {
 
     const payload = {
       username: "Portfolio Contact",
-      avatar_url:
-        "https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4e9.svg",
       embeds: [
         {
           title: "📩 New portfolio message",
@@ -107,7 +105,7 @@ export async function POST(req: Request) {
             { name: "Email", value: clip(email, 256), inline: true },
             { name: "Message", value: clip(message, 1900) },
           ],
-          footer: { text: "xalonious.dev" },
+          footer: { text: "whoisxander.dev" },
         },
       ],
     }
