@@ -59,7 +59,7 @@ const PROJECTS: Project[] = [
       "A school project—a simple booking app where users schedule appointments with barbers. Built with React and Express for a smooth UX.",
     repo: "https://github.com/xalonious/barber-app",
     image: "/projects/barber.png",
-    tech: ["TypeScript", "React", "JavaScript", "Node.js", "Bootstrap", "Express"],
+    tech: ["TypeScript", "React", "Node.js", "Bootstrap", "Express"],
   },
   {
     title: "PassGuard",

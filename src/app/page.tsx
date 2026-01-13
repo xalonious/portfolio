@@ -283,7 +283,7 @@ export default function Portfolio() {
                   "A school project — a simple barber booking app where users can schedule appointments. Built with React, Express, and TypeScript for a smooth UX.",
                 repo: "https://github.com/xalonious/barber-app",
                 image: "/projects/barber.png",
-                tech: ["TypeScript", "React", "JavaScript", "Node.js", "Bootstrap", "Express"],
+                tech: ["TypeScript", "React", "Node.js", "Bootstrap", "Express"],
               },
               {
                 title: "Serendipity Scheduling App",
