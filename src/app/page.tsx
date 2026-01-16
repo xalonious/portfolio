@@ -270,12 +270,12 @@ export default function Portfolio() {
           <FeaturedProjects
             projects={[
               {
-                title: "My Portfolio Website",
+                title: "Streaming App",
                 description:
-                  "The site you're on — built with Next.js and Tailwind CSS. It showcases my projects, skills, and development journey.",
-                repo: "https://github.com/xalonious/portfolio",
-                image: "/projects/portfolio.png",
-                tech: ["TypeScript", "React", "Next.js", "Tailwind CSS"],
+                  "A self-hosted media streaming web app for discovering and playing movies and TV shows from user-configured sources.",
+                repo: "https://github.com/xalonious/streaming-app",
+                image: "/projects/streamingapp.png",
+                tech: ["Typescript", "React", "Node.js", "Express", "Tailwind"],
               },
               {
                 title: "Barber App",
@@ -283,7 +283,7 @@ export default function Portfolio() {
                   "A school project — a simple barber booking app where users can schedule appointments. Built with React, Express, and TypeScript for a smooth UX.",
                 repo: "https://github.com/xalonious/barber-app",
                 image: "/projects/barber.png",
-                tech: ["TypeScript", "React", "Node.js", "Bootstrap", "Express"],
+                tech: ["TypeScript", "React", "Node.js", "Bootstrap", "Express", "MySQL"],
               },
               {
                 title: "Serendipity Scheduling App",
@@ -291,7 +291,7 @@ export default function Portfolio() {
                   "A centralized scheduling web app and API for managing staff shifts and trainings for a Roblox roleplay group.",
                 repo: "https://github.com/xalonious/serendipity-scheduling-app",
                 image: "/projects/serendipity.png",
-                tech: ["Typescript", "React", "Express", "Tailwind", "Prisma"],
+                tech: ["Typescript", "React", "Node.js", "Express", "Tailwind", "Prisma", "MySQL"],
               },
             ]}
           />

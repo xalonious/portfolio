@@ -19,7 +19,7 @@ const PROJECTS: Project[] = [
       "A centralized scheduling web app and API for managing staff shifts and trainings for a Roblox roleplay group.",
     repo: "https://github.com/xalonious/serendipity-scheduling-app",
     image: "/projects/serendipity.png",
-    tech: ["Typescript", "React", "Express", "Tailwind", "Prisma"],
+    tech: ["Typescript", "React", "Node.js", "Express", "Tailwind", "Prisma", "MySQL"],
   },
   {
     title: "Serendipity Assistant",
@@ -28,6 +28,14 @@ const PROJECTS: Project[] = [
     repo: "https://github.com/xalonious/serendipity-assistant",
     image: "/projects/serendipity-assistant.png",
     tech: ["JavaScript", "Node.js", "MongoDB"],
+  },
+  {
+    title: "Streaming App",
+    description:
+    "A self-hosted media streaming web app for discovering and playing movies and TV shows from user-configured sources.",
+    repo: "https://github.com/xalonious/streaming-app",
+    image: "/projects/streamingapp.png",
+    tech: ["Typescript", "React", "Node.js", "Express", "Tailwind"],
   },
   {
     title: "Rexx",
@@ -59,7 +67,7 @@ const PROJECTS: Project[] = [
       "A school project—a simple booking app where users schedule appointments with barbers. Built with React and Express for a smooth UX.",
     repo: "https://github.com/xalonious/barber-app",
     image: "/projects/barber.png",
-    tech: ["TypeScript", "React", "Node.js", "Bootstrap", "Express"],
+    tech: ["TypeScript", "React", "Node.js", "Bootstrap", "Express", "MySQL"],
   },
   {
     title: "PassGuard",
