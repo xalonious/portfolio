@@ -102,10 +102,10 @@ const PROJECTS: Project[] = [
     tech: ["Python"],
   },
   {
-    title: "Image Converter",
+    title: "Image tool",
     description:
-      "A simple image converter to quickly change formats. Handy for batch tweaks and asset prep.",
-    repo: "https://github.com/xalonious/image_converter",
+      "A simple CLI tool to convert and compress images with sensible defaults.",
+    repo: "https://github.com/xalonious/image_tool",
     image: "/projects/imageconverter.png",
     tech: ["Python"],
   },
