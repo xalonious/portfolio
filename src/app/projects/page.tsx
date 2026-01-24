@@ -30,28 +30,12 @@ const PROJECTS: Project[] = [
     tech: ["JavaScript", "Node.js", "MongoDB"],
   },
   {
-    title: "Streaming App",
+    title: "Barber App",
     description:
-    "A self-hosted media streaming web app for discovering and playing movies and TV shows from user-configured sources.",
-    repo: "https://github.com/xalonious/streaming-app",
-    image: "/projects/streamingapp.png",
-    tech: ["Typescript", "React", "Node.js", "Express", "Tailwind"],
-  },
-  {
-    title: "Rexx",
-    description:
-      "Rexx is a multi-purpose Discord bot I started back in 2020. It was my first major project. Development was unfortunately discontinued.",
-    repo: "https://github.com/xalonious/rexx",
-    image: "/projects/rexx.png",
-    tech: ["JavaScript", "Node.js", "MongoDB"],
-  },
-  {
-    title: "Krestia",
-    description:
-      "A Discord ↔ Roblox ranking bot to remotely manage group ranks. It bridges the two platforms to make group management faster and easier.",
-    repo: "https://github.com/xalonious/Krestia",
-    image: "/projects/krestia.png",
-    tech: ["JavaScript", "Node.js", "MongoDB"],
+      "A school project—a simple booking app where users schedule appointments with barbers. Built with React and Express for a smooth UX.",
+    repo: "https://github.com/xalonious/barber-app",
+    image: "/projects/barber.png",
+    tech: ["TypeScript", "React", "Node.js", "Bootstrap", "Express", "MySQL"],
   },
   {
     title: "My Portfolio Website",
@@ -62,20 +46,20 @@ const PROJECTS: Project[] = [
     tech: ["TypeScript", "React", "Next.js", "Tailwind CSS", "Shadcn UI", "Framer Motion"],
   },
   {
-    title: "Barber App",
+    title: "Robux Spent Calculator",
     description:
-      "A school project—a simple booking app where users schedule appointments with barbers. Built with React and Express for a smooth UX.",
-    repo: "https://github.com/xalonious/barber-app",
-    image: "/projects/barber.png",
-    tech: ["TypeScript", "React", "Node.js", "Bootstrap", "Express", "MySQL"],
+      "An Electron desktop app that analyzes Roblox purchases, visualizes Robux spending over time, and estimates USD value.",
+    repo: "https://github.com/xalonious/robux-spent",
+    image: "/projects/roblox.png",
+    tech: ["JavaScript", "Node.js", "Electron", "HTML", "CSS"],
   },
   {
-    title: "PassGuard",
+    title: "Image tool",
     description:
-      "A simple password manager built with Electron and SQLite. Securely store and manage credentials locally.",
-    repo: "https://github.com/xalonious/password-manager",
-    image: "/projects/passwordmanager.png",
-    tech: ["JavaScript", "Electron", "HTML", "CSS", "SQLite"],
+      "A simple CLI tool to convert and compress images with sensible defaults.",
+    repo: "https://github.com/xalonious/image_tool",
+    image: "/projects/imageconverter.png",
+    tech: ["Python"],
   },
   {
     title: "AutoClicker",
@@ -86,12 +70,12 @@ const PROJECTS: Project[] = [
     tech: ["C#", ".NET"],
   },
   {
-    title: "Web Server File Uploader",
+    title: "PassGuard",
     description:
-      "A minimal file uploader with progress tracking—great for quick transfers (e.g., to a Raspberry Pi) with a clean animated UI.",
-    repo: "https://github.com/xalonious/web-server-file-uploader",
-    image: "/projects/uploader.png",
-    tech: ["JavaScript", "Node.js", "Express", "HTML", "CSS"],
+      "A simple password manager built with Electron and SQLite. Securely store and manage credentials locally.",
+    repo: "https://github.com/xalonious/password-manager",
+    image: "/projects/passwordmanager.png",
+    tech: ["JavaScript", "Electron", "HTML", "CSS", "SQLite"],
   },
   {
     title: "Backup Code Encryptor",
@@ -102,14 +86,15 @@ const PROJECTS: Project[] = [
     tech: ["Python"],
   },
   {
-    title: "Image tool",
+    title: "Web Server File Uploader",
     description:
-      "A simple CLI tool to convert and compress images with sensible defaults.",
-    repo: "https://github.com/xalonious/image_tool",
-    image: "/projects/imageconverter.png",
-    tech: ["Python"],
+      "A minimal file uploader with progress tracking—great for quick transfers (e.g., to a Raspberry Pi) with a clean animated UI.",
+    repo: "https://github.com/xalonious/web-server-file-uploader",
+    image: "/projects/uploader.png",
+    tech: ["JavaScript", "Node.js", "Express", "HTML", "CSS"],
   },
-]
+];
+
 
 export default function ProjectsPage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
