@@ -50,7 +50,7 @@ const PROJECTS: Project[] = [
     description:
       "An Electron desktop app that analyzes Roblox purchases, visualizes Robux spending over time, and estimates USD value.",
     repo: "https://github.com/xalonious/robux-spent",
-    image: "/projects/roblox.png",
+    image: "/projects/robuxspent.png",
     tech: ["JavaScript", "Node.js", "Electron", "HTML", "CSS"],
   },
   {
