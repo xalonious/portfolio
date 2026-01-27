@@ -85,14 +85,6 @@ const PROJECTS: Project[] = [
     image: "/projects/encryption.png",
     tech: ["Python"],
   },
-  {
-    title: "Web Server File Uploader",
-    description:
-      "A minimal file uploader with progress tracking—great for quick transfers (e.g., to a Raspberry Pi) with a clean animated UI.",
-    repo: "https://github.com/xalonious/web-server-file-uploader",
-    image: "/projects/uploader.png",
-    tech: ["JavaScript", "Node.js", "Express", "HTML", "CSS"],
-  },
 ];
 
 
