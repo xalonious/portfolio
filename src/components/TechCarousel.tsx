@@ -1,57 +1,60 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useMemo } from "react"
+import Marquee from "react-fast-marquee"
 
 type Tech = { name: string; icon: string }
 
+function mulberry32(seed: number) {
+  return function () {
+    let t = (seed += 0x6d2b79f5)
+    t = Math.imul(t ^ (t >>> 15), t | 1)
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+function seededShuffle<T>(arr: T[], seed: number) {
+  const a = [...arr]
+  const rand = mulberry32(seed)
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
 export function TechCarousel({ items }: { items: Tech[] }) {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 768px)")
-    const update = () => setIsMobile(mq.matches)
-    update()
-    mq.addEventListener?.("change", update)
-    return () => mq.removeEventListener?.("change", update)
-  }, [])
-
-  const D1 = isMobile ? 300 : 240  
-  const D2 = isMobile ? 360 : 300  
-
-  const looped = [...items, ...items, ...items]
+  const row1 = items
+  const row2 = useMemo(() => (items.length ? seededShuffle(items, 1337) : []), [items])
 
   return (
     <section className="relative isolate w-full overflow-hidden py-14">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0
-        [-webkit-mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]
-        [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]"
+        [-webkit-mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]
+        [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]"
       />
 
-      <div className="relative mx-auto max-w-6xl px-6">
-        <motion.div
-          key={`row1-${D1}`}
-          className="flex min-w-max gap-6 pl-[max(6vw,2rem)] pr-[max(6vw,2rem)] whitespace-nowrap will-change-transform"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: D1, ease: "linear", repeat: Infinity, repeatType: "loop" }}
-        >
-          {looped.map((t, i) => (
-            <TechCard key={`r1-${i}-${t.name}`} name={t.name} icon={t.icon} />
-          ))}
-        </motion.div>
+      <div className="relative w-full">
+        <Marquee speed={55} gradient={false} pauseOnHover autoFill>
+          <div className="flex gap-6 pr-6">
+            {row1.map((t) => (
+              <TechCard key={`r1-${t.name}`} name={t.name} icon={t.icon} />
+            ))}
+          </div>
+        </Marquee>
 
-        <motion.div
-          key={`row2-${D2}`}
-          className="mt-6 flex min-w-max gap-6 pl-[max(6vw,2rem)] pr-[max(6vw,2rem)] whitespace-nowrap will-change-transform"
-          animate={{ x: ["-50%", "0%"] }}
-          transition={{ duration: D2, ease: "linear", repeat: Infinity, repeatType: "loop" }}
-        >
-          {looped.map((t, i) => (
-            <TechCard key={`r2-${i}-${t.name}`} name={t.name} icon={t.icon} />
-          ))}
-        </motion.div>
+        <div className="mt-6">
+          <Marquee speed={48} direction="right" gradient={false} pauseOnHover autoFill>
+            <div className="flex gap-6 pr-6">
+              {row2.map((t) => (
+                <TechCard key={`r2-${t.name}`} name={t.name} icon={t.icon} />
+              ))}
+            </div>
+          </Marquee>
+        </div>
       </div>
     </section>
   )
@@ -59,11 +62,7 @@ export function TechCarousel({ items }: { items: Tech[] }) {
 
 function TechCard({ name, icon }: { name: string; icon: string }) {
   return (
-    <div
-      className="shrink-0 flex h-20 w-44 flex-col items-center justify-center gap-2 rounded-xl
-                 border border-[--border]/50 bg-[--muted]
-                 shadow-sm transition-all hover:-translate-y-[2px] hover:border-[--primary]/60 hover:shadow-md"
-    >
+    <div className="shrink-0 flex h-20 w-44 flex-col items-center justify-center gap-2 rounded-xl border border-[--border]/50 bg-[--muted] shadow-sm transition-all hover:-translate-y-[2px] hover:border-[--primary]/60 hover:shadow-md">
       <img src={icon} alt={name} width={32} height={32} className="h-8 w-8 object-contain opacity-90" loading="lazy" />
       <span className="text-sm font-medium text-[--foreground]">{name}</span>
     </div>

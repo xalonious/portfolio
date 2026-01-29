@@ -7,7 +7,7 @@ import { TechCarousel } from "@/components/TechCarousel"
 import { FeaturedProjects } from "@/components/FeaturedProjects"
 import { Header } from "@/components/Header"
 import { ContactSection } from "@/components/ContactSection"
-import { Story } from "@/components/Story" 
+import { Story } from "@/components/Story"
 
 export default function Portfolio() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -70,8 +70,6 @@ export default function Portfolio() {
     { name: "Bash", icon: "/tech/bash.svg" },
     { name: "Figma", icon: "/tech/figma.svg" },
   ]
-
-  const loopedTech = [...technologies, ...technologies, ...technologies]
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white overflow-hidden">
@@ -248,7 +246,7 @@ export default function Portfolio() {
             <p className="text-lg sm:text-xl text-gray-400">Technologies I use</p>
           </div>
         </div>
-        <TechCarousel items={loopedTech} />
+        <TechCarousel items={technologies} />
       </section>
 
       <section id="projects" className="relative py-20 sm:py-32 px-6 scroll-mt-24">
