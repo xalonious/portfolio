@@ -29,26 +29,26 @@ export function TechCarousel({ items }: { items: Tech[] }) {
   const row2 = useMemo(() => (items.length ? seededShuffle(items, 1337) : []), [items])
 
   return (
-    <section className="relative isolate w-full overflow-hidden py-14">
+    <section className="relative isolate w-full overflow-hidden py-10 sm:py-14">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0
-        [-webkit-mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]
-        [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]"
+        [-webkit-mask-image:linear-gradient(to_right,transparent,black_2%,black_98%,transparent)]
+        [mask-image:linear-gradient(to_right,transparent,black_2%,black_98%,transparent)]"
       />
 
       <div className="relative w-full">
-        <Marquee speed={55} gradient={false} pauseOnHover autoFill>
-          <div className="flex gap-6 pr-6">
+        <Marquee speed={60} gradient={false} pauseOnHover autoFill>
+          <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6">
             {row1.map((t) => (
               <TechCard key={`r1-${t.name}`} name={t.name} icon={t.icon} />
             ))}
           </div>
         </Marquee>
 
-        <div className="mt-6">
-          <Marquee speed={48} direction="right" gradient={false} pauseOnHover autoFill>
-            <div className="flex gap-6 pr-6">
+        <div className="mt-4 sm:mt-6">
+          <Marquee speed={52} direction="right" gradient={false} pauseOnHover autoFill>
+            <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6">
               {row2.map((t) => (
                 <TechCard key={`r2-${t.name}`} name={t.name} icon={t.icon} />
               ))}
@@ -62,9 +62,16 @@ export function TechCarousel({ items }: { items: Tech[] }) {
 
 function TechCard({ name, icon }: { name: string; icon: string }) {
   return (
-    <div className="shrink-0 flex h-20 w-44 flex-col items-center justify-center gap-2 rounded-xl border border-[--border]/50 bg-[--muted] shadow-sm transition-all hover:-translate-y-[2px] hover:border-[--primary]/60 hover:shadow-md">
-      <img src={icon} alt={name} width={32} height={32} className="h-8 w-8 object-contain opacity-90" loading="lazy" />
-      <span className="text-sm font-medium text-[--foreground]">{name}</span>
+    <div className="shrink-0 flex h-16 w-36 sm:h-20 sm:w-44 flex-col items-center justify-center gap-2 rounded-xl border border-[--border]/50 bg-[--muted] shadow-sm transition-all hover:-translate-y-[2px] hover:border-[--primary]/60 hover:shadow-md">
+      <img
+        src={icon}
+        alt={name}
+        width={32}
+        height={32}
+        className="h-7 w-7 sm:h-8 sm:w-8 object-contain opacity-90"
+        loading="lazy"
+      />
+      <span className="text-xs sm:text-sm font-medium text-[--foreground]">{name}</span>
     </div>
   )
 }
