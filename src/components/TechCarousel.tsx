@@ -38,8 +38,8 @@ export function TechCarousel({ items }: { items: Tech[] }) {
       />
 
       <div className="relative w-full">
-        <Marquee speed={60} gradient={false} pauseOnHover autoFill>
-          <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6">
+        <Marquee speed={60} gradient={false} autoFill>
+          <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6 py-1">
             {row1.map((t) => (
               <TechCard key={`r1-${t.name}`} name={t.name} icon={t.icon} />
             ))}
@@ -47,8 +47,8 @@ export function TechCarousel({ items }: { items: Tech[] }) {
         </Marquee>
 
         <div className="mt-4 sm:mt-6">
-          <Marquee speed={52} direction="right" gradient={false} pauseOnHover autoFill>
-            <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6">
+          <Marquee speed={52} direction="right" gradient={false} autoFill>
+            <div className="flex gap-4 sm:gap-6 pr-4 sm:pr-6 py-1">
               {row2.map((t) => (
                 <TechCard key={`r2-${t.name}`} name={t.name} icon={t.icon} />
               ))}
