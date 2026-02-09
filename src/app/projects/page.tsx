@@ -48,7 +48,7 @@ const PROJECTS: Project[] = [
   {
     title: "Robux Spent Calculator",
     description:
-      "An Electron desktop app that analyzes Roblox purchases, visualizes Robux spending over time, and estimates USD value.",
+      "An Electron desktop app that tracks Robux inflow, outflow, and current balance, with charts and spending insights.",
     repo: "https://github.com/xalonious/robux-spent",
     image: "/projects/robuxspent.png",
     tech: ["JavaScript", "Node.js", "Electron", "HTML", "CSS"],
