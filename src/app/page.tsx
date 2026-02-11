@@ -69,6 +69,7 @@ export default function Portfolio() {
     { name: "Nginx", icon: "/tech/nginx.svg" },
     { name: "Bash", icon: "/tech/bash.svg" },
     { name: "Figma", icon: "/tech/figma.svg" },
+    { name: "Electron", icon: "/tech/electron.svg" },
   ]
 
   return (
