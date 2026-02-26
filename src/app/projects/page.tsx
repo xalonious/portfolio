@@ -30,6 +30,14 @@ const PROJECTS: Project[] = [
     tech: ["JavaScript", "Node.js", "MongoDB"],
   },
   {
+    title: "xanderGPT",
+    description:
+      "A ChatGPT-style web app powered by a local LLM via Ollama, featuring real-time streaming responses, persistent conversations & web search.",
+    repo: "https://github.com/xalonious/xanderGPT",
+    image: "/projects/xandergpt.png",
+    tech: ["Typescript", "React", "Node.js", "Express", "Tailwind", "Prisma", "MySQL"],
+  },
+  {
     title: "Barber App",
     description:
       "A school project—a simple booking app where users schedule appointments with barbers. Built with React and Express for a smooth UX.",

@@ -277,12 +277,12 @@ export default function Portfolio() {
                 tech: ["Typescript", "React", "Node.js", "Express", "Tailwind"],
               },
               {
-                title: "Barber App",
+                title: "xanderGPT",
                 description:
-                  "A school project — a simple barber booking app where users can schedule appointments. Built with React, Express, and TypeScript for a smooth UX.",
-                repo: "https://github.com/xalonious/barber-app",
-                image: "/projects/barber.png",
-                tech: ["TypeScript", "React", "Node.js", "Bootstrap", "Express", "MySQL"],
+                  "A ChatGPT-style web app powered by a local LLM via Ollama, featuring real-time streaming responses, persistent conversations & web search.",
+                repo: "https://github.com/xalonious/xanderGPT",
+                image: "/projects/xandergpt.png",
+                tech: ["Typescript", "React", "Node.js", "Express", "Tailwind", "Prisma", "MySQL"],
               },
               {
                 title: "Serendipity Scheduling App",
