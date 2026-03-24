@@ -1,8 +1,7 @@
-import { NextResponse } from "next/server"
-import { cookies } from "next/headers"
+import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
+import { rateLimit } from "@/lib/rate-limit"
 
-const COOLDOWN_MS = 5 * 60_000 
 
 const ContactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -11,7 +10,7 @@ const ContactSchema = z.object({
     .string()
     .min(10, "Message must be at least 10 characters.")
     .max(5000, "Message is too long."),
-  company: z.string().optional().default(""), 
+  company: z.string().optional().default(""),
 })
 
 const isSpammy = (text: string) =>
@@ -21,14 +20,28 @@ function clip(s: string, max = 1900) {
   return s.length > max ? s.slice(0, max - 1) + "…" : s
 }
 
-export async function POST(req: Request) {
+function getClientIp(req: NextRequest) {
+  const cfIp = req.headers.get("cf-connecting-ip")
+  if (cfIp) return cfIp.trim()
+
+  const xff = req.headers.get("x-forwarded-for")
+  if (xff) return xff.split(",")[0]?.trim() || "unknown"
+
+  const realIp = req.headers.get("x-real-ip")
+  if (realIp) return realIp.trim()
+
+  return "unknown"
+}
+
+export async function POST(req: NextRequest) {
   try {
-    const jar = await cookies()
-    const last = jar.get("contact_last")?.value
+    const ip = getClientIp(req)
     const now = Date.now()
 
-    if (last && now - Number(last) < COOLDOWN_MS) {
-      const remainingMs = COOLDOWN_MS - (now - Number(last))
+    const rl = rateLimit(`contact:${ip}`)
+
+    if (!rl.success) {
+      const remainingMs = Math.max(0, rl.resetAt - now)
       const retryAfterSec = Math.ceil(remainingMs / 1000)
       const retryAfterMin = Math.ceil(retryAfterSec / 60)
 
@@ -50,11 +63,13 @@ export async function POST(req: Request) {
 
     const body = await req.json().catch(() => ({}))
     const parsed = ContactSchema.safeParse(body)
+
     if (!parsed.success) {
       const issues = parsed.error.issues.map((i) => ({
         path: i.path.join("."),
         message: i.message,
       }))
+
       return NextResponse.json(
         { ok: false, error: "Invalid form data.", issues },
         { status: 400 }
@@ -64,28 +79,13 @@ export async function POST(req: Request) {
     const { name, email, message, company } = parsed.data
 
     if (company && company.trim() !== "") {
-      const res = NextResponse.json({ ok: true })
-      res.cookies.set("contact_last", String(now), {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: true,
-        path: "/",
-        maxAge: 60 * 60 * 24,
-      })
-      return res
+      return NextResponse.json({ ok: true })
     }
 
     if (isSpammy(`${name} ${message}`)) {
-      const res = NextResponse.json({ ok: true })
-      res.cookies.set("contact_last", String(now), {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: true,
-        path: "/",
-        maxAge: 60 * 60 * 24,
-      })
-      return res
+      return NextResponse.json({ ok: true })
     }
+
     if (!process.env.DISCORD_WEBHOOK_URL) {
       return NextResponse.json(
         { ok: false, error: "Webhook not configured." },
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
       embeds: [
         {
           title: "📩 New portfolio message",
-          color: 0xc0a060, 
+          color: 0xc0a060,
           timestamp: new Date().toISOString(),
           fields: [
             { name: "From", value: clip(name, 256), inline: true },
@@ -119,21 +119,14 @@ export async function POST(req: Request) {
     if (!r.ok) {
       const t = await r.text().catch(() => "")
       console.error("Discord webhook error:", r.status, t)
+
       return NextResponse.json(
         { ok: false, error: "Failed to deliver message." },
         { status: 502 }
       )
     }
 
-    const res = NextResponse.json({ ok: true })
-    res.cookies.set("contact_last", String(now), {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: true,
-      path: "/",
-      maxAge: 60 * 60 * 24, 
-    })
-    return res
+    return NextResponse.json({ ok: true })
   } catch (err) {
     console.error(err)
     return NextResponse.json(
