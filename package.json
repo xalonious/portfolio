@@ -17,7 +17,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.22",
     "lucide-react": "^0.544.0",
-    "next": "^16.1.6",
+    "next": "^16.2.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-fast-marquee": "^1.6.5",
