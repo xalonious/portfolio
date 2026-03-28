@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
+import { TransitionLink } from "@/components/TransitionLink"
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
@@ -15,39 +17,41 @@ export function Header() {
   return (
     <header
       className={[
-        "fixed inset-x-0 top-0 z-50 transition",
-        "backdrop-blur-xl",
-        scrolled ? "bg-black/20 border-b border-white/10" : "bg-transparent border-b border-transparent",
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        scrolled
+          ? "bg-[--background]/90 backdrop-blur-md border-b border-[--border]"
+          : "bg-transparent border-b border-transparent",
       ].join(" ")}
     >
-      <div className="max-w-7xl mx-auto h-16 px-6 flex items-center justify-between">
-        <a href="/" className="font-bold tracking-tight text-white/90 hover:text-white transition">
-          xalonious<span className="text-cyan-300">.</span>
-        </a>
+      <div className="max-w-6xl mx-auto h-14 px-6 flex items-center justify-between">
+        <TransitionLink
+          href="/"
+          className="font-display text-lg font-semibold tracking-tight text-[--foreground] hover:text-[--primary] transition-colors duration-200"
+        >
+          xalonious
+        </TransitionLink>
 
-        <nav className="flex items-center gap-1">
-          <a
+        <nav className="flex items-center gap-6 text-sm font-medium text-[--muted-foreground]">
+          <TransitionLink
             href="/"
-            className="px-3 py-2 rounded-md text-sm text-white/80 hover:text-white hover:bg-white/5 transition"
+            className="hover:text-[--foreground] transition-colors duration-200"
           >
             Home
-          </a>
-
-          <a
+          </TransitionLink>
+          <TransitionLink
             href="/projects"
-            className="px-3 py-2 rounded-md text-sm text-white/80 hover:text-white hover:bg-white/5 transition"
+            className="hover:text-[--foreground] transition-colors duration-200"
           >
             Projects
-          </a>
-
-          <a
+          </TransitionLink>
+          <Link
             href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3 py-2 rounded-md text-sm text-white/80 hover:text-white hover:bg-white/5 transition"
+            className="hover:text-[--foreground] transition-colors duration-200"
           >
             lol
-          </a>
+          </Link>
         </nav>
       </div>
     </header>

@@ -1,5 +1,18 @@
+"use client"
+
 import { useState, useEffect, useMemo } from "react"
 import { motion } from "framer-motion"
+import { MagneticButton } from "@/components/MagneticButton"
+
+interface ApiResponse {
+  ok?: boolean
+  error?: string
+  retryAfter?: number
+  issues?: Array<{ path: string; message: string }>
+}
+
+const COOLDOWN_SEC = 5 * 60
+const STORAGE_KEY = "contact:lastSent"
 
 export function ContactSection() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" })
@@ -8,9 +21,6 @@ export function ContactSection() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
   const [cooldownLeft, setCooldownLeft] = useState(0)
-
-  const COOLDOWN_SEC = 5 * 60
-  const STORAGE_KEY = "contact:lastSent"
 
   useEffect(() => {
     const last = Number(localStorage.getItem(STORAGE_KEY) || 0)
@@ -21,10 +31,7 @@ export function ContactSection() {
     if (diff > 0) {
       const id = setInterval(() => {
         setCooldownLeft((s) => {
-          if (s <= 1) {
-            clearInterval(id)
-            return 0
-          }
+          if (s <= 1) { clearInterval(id); return 0 }
           return s - 1
         })
       }, 1000)
@@ -51,7 +58,6 @@ export function ContactSection() {
     }
 
     const { name, email, message } = formData
-
     if (!name.trim() || !email.trim() || !message.trim()) {
       setError("Please fill out all fields.")
       return
@@ -66,19 +72,16 @@ export function ContactSection() {
           name: name.trim(),
           email: email.trim(),
           message: message.trim(),
-          company: "", 
+          company: "",
         }),
       })
 
-      let json: any = null
-      try {
-        json = await res.json()
-      } catch {}
+      let json: ApiResponse | null = null
+      try { json = await res.json() as ApiResponse } catch {}
 
       if (res.status === 429) {
         const retryAfterSec =
           Number(res.headers.get("Retry-After")) || (json?.retryAfter ? Number(json.retryAfter) : 0)
-
         setError(json?.error || "You've sent a message recently. Please wait before trying again.")
         if (retryAfterSec > 0) {
           setCooldownLeft(retryAfterSec)
@@ -106,7 +109,6 @@ export function ContactSection() {
       if (json?.ok) {
         setSent(true)
         setFormData({ name: "", email: "", message: "" })
-
         const now = Date.now()
         localStorage.setItem(STORAGE_KEY, String(now))
         setCooldownLeft(COOLDOWN_SEC)
@@ -120,145 +122,177 @@ export function ContactSection() {
     }
   }
 
+  const inputClass = (field: string) =>
+    [
+      "w-full px-4 py-3 rounded-sm border bg-[--muted] text-[--foreground] text-sm",
+      "placeholder:text-[--muted-foreground] focus:outline-none focus:ring-1 transition-all duration-150",
+      fieldErrors[field]
+        ? "border-red-400 focus:border-red-400 focus:ring-red-400/30"
+        : "border-[--border] focus:border-[--primary] focus:ring-[--primary]/20",
+    ].join(" ")
+
   return (
-    <section id="contact" className="relative py-20 sm:py-32 px-6 scroll-mt-24">
-      <div className="max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="space-y-12"
-        >
-          <div className="text-center space-y-4">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold">
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                 Get In Touch
-              </span>
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-400">Have a project in mind? Let's make it happen.</p>
-          </div>
+    <section id="contact" className="py-20 sm:py-28 px-6 scroll-mt-24 border-t border-[--border]">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-[1fr_1.2fr] gap-16 lg:gap-24 items-start">
 
-          <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-            <input
-              type="text"
-              name="company"
-              tabIndex={-1}
-              autoComplete="off"
-              className="hidden"
-              aria-hidden="true"
-            />
-
-            <div className="grid sm:grid-cols-2 gap-6">
-              <div>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Your Name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
-                  aria-invalid={!!fieldErrors.name}
-                  aria-describedby={fieldErrors.name ? "name-error" : undefined}
-                  className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-white/5 backdrop-blur-xl border rounded-xl focus:outline-none focus:ring-2 transition-all text-sm sm:text-base ${
-                    fieldErrors.name
-                      ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/20"
-                      : "border-white/10 focus:border-cyan-500/50 focus:ring-cyan-500/20"
-                  }`}
-                />
-                {fieldErrors.name && (
-                  <p id="name-error" className="mt-2 text-xs text-red-400">
-                    {fieldErrors.name}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Your Email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  required
-                  aria-invalid={!!fieldErrors.email}
-                  aria-describedby={fieldErrors.email ? "email-error" : undefined}
-                  className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-white/5 backdrop-blur-xl border rounded-xl focus:outline-none focus:ring-2 transition-all text-sm sm:text-base ${
-                    fieldErrors.email
-                      ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/20"
-                      : "border-white/10 focus:border-cyan-500/50 focus:ring-cyan-500/20"
-                  }`}
-                />
-                {fieldErrors.email && (
-                  <p id="email-error" className="mt-2 text-xs text-red-400">
-                    {fieldErrors.email}
-                  </p>
-                )}
-              </div>
-            </div>
-
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="lg:sticky lg:top-28 space-y-6"
+          >
             <div>
-              <textarea
-                rows={6}
-                name="message"
-                placeholder="Your Message"
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                required
-                aria-invalid={!!fieldErrors.message}
-                aria-describedby={fieldErrors.message ? "message-error" : undefined}
-                className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-white/5 backdrop-blur-xl border rounded-xl focus:outline-none focus:ring-2 transition-all resize-none text-sm sm:text-base ${
-                  fieldErrors.message
-                    ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/20"
-                    : "border-white/10 focus:border-cyan-500/50 focus:ring-cyan-500/20"
-                }`}
-              />
-              {fieldErrors.message && (
-                <p id="message-error" className="mt-2 text-xs text-red-400">
-                  {fieldErrors.message}
-                </p>
-              )}
+              <p className="text-xs uppercase tracking-[0.2em] text-[--primary] font-medium mb-2">Contact</p>
+              <h2 className="font-display text-4xl sm:text-5xl font-bold text-[--foreground]">
+                Let&apos;s work<br />
+                <em className="italic font-display">together.</em>
+              </h2>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading || cooldownLeft > 0}
-              className="group relative w-full py-3 sm:py-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-xl font-semibold text-base sm:text-lg overflow-hidden transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-cyan-500/50"
-            >
-              <span className="relative z-10">
-                {loading
-                  ? "Sending..."
-                  : cooldownLeft > 0
-                  ? `Please wait ${cooldownLabel}`
-                  : "Send Message"}
-              </span>
-              {!loading && cooldownLeft === 0 && (
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <p className="text-[--muted-foreground] leading-relaxed max-w-sm">
+              Have a project in mind, a question, or just want to say hello? Fill in the form and I&apos;ll get back to you.
+            </p>
+
+            <div className="pt-2 space-y-2 text-sm">
+              <p className="text-xs uppercase tracking-[0.2em] text-[--muted-foreground]">Or find me at</p>
+              <a
+                href="https://github.com/xalonious"
+                target="_blank"
+                rel="noreferrer"
+                className="block text-[--foreground] font-medium underline underline-offset-4 decoration-[--border] hover:decoration-[--primary] hover:text-[--primary] transition-colors duration-200"
+              >
+                github.com/xalonious
+              </a>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+              <input
+                type="text"
+                name="company"
+                tabIndex={-1}
+                autoComplete="off"
+                className="hidden"
+                aria-hidden="true"
+              />
+
+              <div className="grid sm:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-xs font-medium text-[--muted-foreground] uppercase tracking-wider mb-1.5">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    required
+                    aria-invalid={!!fieldErrors.name}
+                    className={inputClass("name")}
+                  />
+                  {fieldErrors.name && (
+                    <p className="mt-1.5 text-xs text-red-500">{fieldErrors.name}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-[--muted-foreground] uppercase tracking-wider mb-1.5">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="your@email.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    required
+                    aria-invalid={!!fieldErrors.email}
+                    className={inputClass("email")}
+                  />
+                  {fieldErrors.email && (
+                    <p className="mt-1.5 text-xs text-red-500">{fieldErrors.email}</p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-[--muted-foreground] uppercase tracking-wider mb-1.5">
+                  Message
+                </label>
+                <textarea
+                  rows={6}
+                  name="message"
+                  placeholder="What's on your mind?"
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  required
+                  aria-invalid={!!fieldErrors.message}
+                  className={`${inputClass("message")} resize-none`}
+                />
+                {fieldErrors.message && (
+                  <p className="mt-1.5 text-xs text-red-500">{fieldErrors.message}</p>
+                )}
+              </div>
+
+              <MagneticButton
+                type="submit"
+                disabled={loading || cooldownLeft > 0}
+                className={`
+                  group relative overflow-hidden w-full py-3.5 rounded-sm
+                  bg-[--primary] text-[--primary-foreground]
+                  text-sm font-semibold tracking-wide
+                  transition-colors duration-200
+                  hover:bg-[--foreground]
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                `.trim()}
+                style={{ display: "block" }}
+              >
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-20deg] bg-white/20 transition-transform duration-500 group-hover:translate-x-[200%]"
+                />
+                <span className="relative">
+                  {loading
+                    ? "Sending…"
+                    : cooldownLeft > 0
+                    ? `Wait ${cooldownLabel}`
+                    : "Send message"}
+                </span>
+              </MagneticButton>
+
+              {error && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-sm text-red-500"
+                  role="alert"
+                >
+                  {error}
+                </motion.p>
               )}
-            </button>
 
-            {error && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400"
-                role="alert"
-              >
-                ❌ {error}
-              </motion.div>
-            )}
-
-            {sent && !error && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
-                role="status"
-              >
-                ✅ Your message has been sent! I'll get back to you as soon as I can.
-              </motion.div>
-            )}
-          </form>
-        </motion.div>
+              {sent && !error && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-sm text-[--foreground] font-medium"
+                  role="status"
+                >
+                  Message sent — I&apos;ll be in touch soon.
+                </motion.p>
+              )}
+            </form>
+          </motion.div>
+        </div>
       </div>
     </section>
   )

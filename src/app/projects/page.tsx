@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { useRef, useState, useCallback } from "react"
+import { motion, type Variants, useMotionValue, useSpring } from "framer-motion"
 import Link from "next/link"
+import Image from "next/image"
 
 export type Project = {
   title: string
@@ -19,7 +20,7 @@ const PROJECTS: Project[] = [
       "A centralized scheduling web app and API for managing staff shifts and trainings for a Roblox roleplay group.",
     repo: "https://github.com/xalonious/serendipity-scheduling-app",
     image: "/projects/serendipity.png",
-    tech: ["Typescript", "React", "Node.js", "Express", "Tailwind", "Prisma", "MySQL"],
+    tech: ["TypeScript", "React", "Node.js", "Express", "Tailwind", "Prisma", "MySQL"],
   },
   {
     title: "Serendipity Assistant",
@@ -35,12 +36,12 @@ const PROJECTS: Project[] = [
       "A ChatGPT-style web app powered by a local LLM via Ollama, featuring real-time streaming responses, persistent conversations & web search.",
     repo: "https://github.com/xalonious/xanderGPT",
     image: "/projects/xandergpt.png",
-    tech: ["Typescript", "React", "Node.js", "Express", "Tailwind", "Prisma", "MySQL"],
+    tech: ["TypeScript", "React", "Node.js", "Express", "Tailwind", "Prisma", "MySQL"],
   },
   {
     title: "Barber App",
     description:
-      "A school project—a simple booking app where users schedule appointments with barbers. Built with React and Express for a smooth UX.",
+      "A school project — a simple booking app where users schedule appointments with barbers. Built with React and Express for a smooth UX.",
     repo: "https://github.com/xalonious/barber-app",
     image: "/projects/barber.png",
     tech: ["TypeScript", "React", "Node.js", "Bootstrap", "Express", "MySQL"],
@@ -48,7 +49,7 @@ const PROJECTS: Project[] = [
   {
     title: "My Portfolio Website",
     description:
-      "The site you're on—built with Next.js and Tailwind CSS. It showcases my projects, skills, and journey as a developer.",
+      "The site you're on — built with Next.js and Tailwind CSS. Showcases my projects, skills, and journey as a developer.",
     repo: "https://github.com/xalonious/portfolio",
     image: "/projects/portfolio.png",
     tech: ["TypeScript", "React", "Next.js", "Tailwind CSS", "Shadcn UI", "Framer Motion"],
@@ -62,7 +63,7 @@ const PROJECTS: Project[] = [
     tech: ["JavaScript", "Node.js", "Electron", "HTML", "CSS"],
   },
   {
-    title: "Image tool",
+    title: "Image Tool",
     description:
       "A simple CLI tool to convert and compress images with sensible defaults.",
     repo: "https://github.com/xalonious/image_tool",
@@ -88,185 +89,152 @@ const PROJECTS: Project[] = [
   {
     title: "Backup Code Encryptor",
     description:
-      "CLI tool to encrypt your 2FA backup codes with a password—keep them safe from prying eyes.",
+      "CLI tool to encrypt your 2FA backup codes with a password — keep them safe from prying eyes.",
     repo: "https://github.com/xalonious/backup-code-encryptor",
     image: "/projects/encryption.png",
     tech: ["Python"],
   },
-];
+]
 
+const container: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.1 } },
+}
+
+const item: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
+}
 
 export default function ProjectsPage() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [particles, setParticles] = useState<Array<{ x: number; y: number; duration: number; delay: number }>>([])
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-    window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
-  }, [])
-
-  useEffect(() => {
-    setParticles(
-      Array.from({ length: 40 }, () => ({
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        duration: 3 + Math.random() * 4,
-        delay: Math.random() * 2,
-      }))
-    )
-  }, [])
-
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white overflow-hidden">
-      <motion.div
-        className="fixed inset-0 opacity-30 pointer-events-none"
-        style={{
-          background: `radial-gradient(circle 800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(62, 228, 255, 0.15), transparent)`,
-        }}
-      />
+    <div className="min-h-screen" style={{ backgroundColor: "#1C1C1E" }}>
+      <main className="px-6 pt-28 pb-24 max-w-6xl mx-auto">
 
-      <div className="fixed inset-0 pointer-events-none">
-        {particles.map((particle, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-cyan-400/20 rounded-full"
-            style={{
-              left: `${particle.x}%`,
-              top: `${particle.y}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              opacity: [0.2, 0.5, 0.2],
-            }}
-            transition={{
-              duration: particle.duration,
-              repeat: Infinity,
-              delay: particle.delay,
-            }}
-          />
-        ))}
-      </div>
+        {/* Page header */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-16"
+        >
+          <p className="text-xs uppercase tracking-[0.2em] text-[--primary] font-medium mb-2">
+            All work
+          </p>
+          <h1 className="font-display text-5xl sm:text-6xl font-bold text-[--foreground] mb-4">
+            Projects
+          </h1>
+          <p className="text-[--muted-foreground] text-lg max-w-xl leading-relaxed">
+            Everything I&apos;ve built over the years. Each one taught me something new.
+          </p>
+        </motion.div>
 
-      <main className="relative px-6 py-20 sm:py-28">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="mb-16 text-center space-y-4"
-          >
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight">
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                My Projects
-              </span>
-            </h1>
-            <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto">
-              A collection of projects I've built over the years. Each one taught me something new.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial="hidden"
-            animate="show"
-            variants={{
-              hidden: {},
-              show: {
-                transition: {
-                  staggerChildren: 0.1,
-                },
-              },
-            }}
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-          >
-            {PROJECTS.map((project, index) => (
-              <ProjectCard key={project.title} project={project} index={index} />
-            ))}
-          </motion.div>
-        </div>
+        {/* Project list — same row pattern as FeaturedProjects */}
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="divide-y divide-[--border] border-y border-[--border]"
+        >
+          {PROJECTS.map((project, index) => (
+            <ProjectRow key={project.title} project={project} index={index} />
+          ))}
+        </motion.div>
       </main>
     </div>
   )
 }
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectRow({ project, index }: { project: Project; index: number }) {
+  const rowRef = useRef<HTMLElement>(null)
+  const [hovered, setHovered] = useState(false)
+
+  const rawX = useMotionValue(0)
+  const rawY = useMotionValue(0)
+  const springConfig = { stiffness: 120, damping: 18, mass: 0.8 }
+  const x = useSpring(rawX, springConfig)
+  const y = useSpring(rawY, springConfig)
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const row = rowRef.current
+    if (!row) return
+    const rect = row.getBoundingClientRect()
+    rawX.set(e.clientX - rect.left + 24)
+    rawY.set(e.clientY - rect.top - 160)
+  }, [rawX, rawY])
+
   return (
-    <motion.div
-      variants={{
-        hidden: { opacity: 0, y: 30 },
-        show: { opacity: 1, y: 0 },
-      }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative"
+    <motion.article
+      ref={rowRef}
+      variants={item}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onMouseMove={handleMouseMove}
+      className="group relative grid sm:grid-cols-[auto_1fr_auto] gap-6 sm:gap-10 items-center py-7 sm:py-9"
     >
-      <div className="relative h-full rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden transition-all hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-500/20">
-        <div className="relative h-48 sm:h-56 overflow-hidden">
-          <motion.img
+      {/* Floating image reveal */}
+      <motion.div
+        className="pointer-events-none absolute z-20 w-52 h-36 rounded-sm overflow-hidden border border-[--border] shadow-xl"
+        style={{ x, y, left: 0, top: 0 }}
+        animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.88 }}
+        transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <Image
+          src={project.image}
+          alt={project.title}
+          fill
+          sizes="208px"
+          className="object-cover"
+        />
+        <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[--primary]/10 to-transparent" />
+      </motion.div>
+
+      {/* Index */}
+      <span className="hidden sm:block font-mono text-xs text-[--primary] w-6 shrink-0 select-none">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+
+      {/* Text */}
+      <div className="min-w-0 space-y-2">
+        {/* Mobile-only static thumbnail */}
+        <div className="relative w-full h-40 rounded-sm overflow-hidden border border-[--border] mb-3 sm:hidden">
+          <Image
             src={project.image}
             alt={project.title}
-            className="w-full h-full object-cover"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.4 }}
+            fill
+            sizes="100vw"
+            className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-          
-          <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5">
-            {project.tech.slice(0, 3).map((tech) => (
-              <span
-                key={tech}
-                className="text-[10px] px-2 py-1 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 text-white/90"
-              >
-                {tech}
-              </span>
-            ))}
-            {project.tech.length > 3 && (
-              <span className="text-[10px] px-2 py-1 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 text-white/90">
-                +{project.tech.length - 3}
-              </span>
-            )}
-          </div>
         </div>
-
-        <div className="p-5 space-y-3">
-          <h3 className="text-xl font-bold bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
-            {project.title}
-          </h3>
-          
-          <p className="text-sm text-gray-400 line-clamp-3 leading-relaxed">
-            {project.description}
-          </p>
-
-          {project.repo && (
-            <Link
-              href={project.repo}
-              target="_blank"
-              rel="noreferrer"
-              className="group/btn inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/30 hover:border-cyan-500/60 transition-all text-sm font-medium text-cyan-300 hover:text-cyan-200"
+        <h2 className="font-display text-xl sm:text-2xl font-bold leading-tight transition-colors duration-200 text-[--foreground] group-hover:text-[--primary]">
+          {project.title}
+        </h2>
+        <p className="text-sm text-[--muted-foreground] leading-relaxed line-clamp-2 max-w-prose">
+          {project.description}
+        </p>
+        <div className="flex flex-wrap gap-1.5 pt-0.5">
+          {project.tech.map((t) => (
+            <span
+              key={t}
+              className="px-2 py-1 rounded-sm border border-[--border] bg-[--card] text-[10px] font-medium text-[--muted-foreground] uppercase tracking-wide"
             >
-              <span>View on GitHub</span>
-              <svg
-                className="w-4 h-4 transition-transform group-hover/btn:translate-x-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
-            </Link>
-          )}
-        </div>
-
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-purple-500/5" />
+              {t}
+            </span>
+          ))}
         </div>
       </div>
-    </motion.div>
+
+      {/* CTA */}
+      {project.repo && (
+        <Link
+          href={project.repo}
+          target="_blank"
+          rel="noreferrer"
+          className="shrink-0 text-sm font-medium text-[--muted-foreground] underline underline-offset-4 decoration-[--border] hover:text-[--primary] hover:decoration-[--primary] transition-colors duration-200 whitespace-nowrap"
+        >
+          View →
+        </Link>
+      )}
+    </motion.article>
   )
 }

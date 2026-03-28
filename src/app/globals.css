@@ -24,7 +24,8 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
 
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-dm-sans);
+  --font-display: var(--font-playfair);
   --font-mono: var(--font-geist-mono);
 
   --radius-sm: calc(var(--radius) - 4px);
@@ -33,60 +34,127 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-
 :root {
-  --radius: 0.625rem;
+  --radius: 0.375rem;
+  --background:        #1C1C1E;
+  --foreground:        #F2F0ED;
 
-  --background: #0b0d10; 
-  --foreground: #e6e7eb;
+  --card:              #242426;
+  --card-foreground:   #F2F0ED;
 
-  --card: #111418;
-  --card-foreground: #e6e7eb;
-  --popover: #111418;
-  --popover-foreground: #e6e7eb;
+  --popover:           #242426;
+  --popover-foreground:#F2F0ED;
 
-  --muted: #191c21;
-  --muted-foreground: #9ca3af;
+  --muted:             #2C2C2E;
+  --muted-foreground:  #8E8E93;
 
-  --primary: #3ee4ff;
-  --primary-foreground: #081217;
+  --primary:           #C8B400;
+  --primary-foreground:#1C1C1E;
 
-  --secondary: #a855f7;
-  --secondary-foreground: #f4f4f5;
+  --secondary:         #F2F0ED;
+  --secondary-foreground: #1C1C1E;
 
-  --accent: #caa458;
-  --accent-foreground: #0b0d10;
+  --accent:            #C8B400;
+  --accent-foreground: #1C1C1E;
 
-  --destructive: #ef4444;
-  --destructive-foreground: #fff;
+  --destructive:       #FF453A;
+  --destructive-foreground: #F2F0ED;
 
-  --border: #23262d;
-  --input: #23262d;
-  --ring: #3ee4ff;
-  --sidebar: var(--background);
-  --sidebar-foreground: var(--foreground);
-  --sidebar-primary: var(--primary);
-  --sidebar-primary-foreground: var(--background);
-  --sidebar-accent: var(--accent);
-  --sidebar-accent-foreground: var(--background);
-  --sidebar-border: var(--border);
-  --sidebar-ring: var(--ring);
+  --border:            #3A3A3C;
+  --input:             #3A3A3C;
+  --ring:              #C8B400;
+
+  --sidebar:               var(--background);
+  --sidebar-foreground:    var(--foreground);
+  --sidebar-primary:       var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent:        var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border:        var(--border);
+  --sidebar-ring:          var(--ring);
 }
 
-.dark {
-  --background: #0b0d10;
-  --foreground: #e6e7eb;
-}
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  * {
+    cursor: none !important;
+  }
+
+  @media (pointer: coarse) {
+    * {
+      cursor: auto !important;
+    }
+  }
+
   body {
-    @apply bg-background text-foreground antialiased;
-    background-image: radial-gradient(circle at 25% 15%, rgba(62, 228, 255, 0.04), transparent 60%),
-      radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.04), transparent 60%);
-    background-attachment: fixed;
+    @apply text-foreground;
+    background-color: #1C1C1E;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+  }
+
+  ::selection {
+    background-color: #C8B40033;
+    color: #F2F0ED;
   }
 }
 
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+
+::view-transition-old(root) {
+  animation: 220ms cubic-bezier(0.22, 1, 0.36, 1) both fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 320ms cubic-bezier(0.22, 1, 0.36, 1) both fade-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  }
+
+  .surface {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+  }
+
+  .link-editorial {
+    text-decoration: underline;
+    text-decoration-color: var(--primary);
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1.5px;
+    transition: text-decoration-color 150ms ease;
+  }
+  .link-editorial:hover {
+    text-decoration-color: var(--foreground);
+  }
+}
