@@ -13,13 +13,9 @@ import { DiscordStatus } from "@/components/DiscordStatus"
 export default function Portfolio() {
   return (
     <div className="min-h-screen text-[--foreground]" style={{ backgroundColor: "#1A1618" }}>
-
       <section className="relative min-h-screen flex flex-col justify-center px-6 pt-28 pb-20 max-w-6xl mx-auto">
 
-
-
         <div className="grid lg:grid-cols-[1fr_auto] gap-16 items-end">
-
           <div>
             <motion.p
               initial={{ opacity: 0, y: 10 }}
@@ -29,15 +25,13 @@ export default function Portfolio() {
             >
               Full-Stack Developer & Designer
             </motion.p>
-
             <h1 className="font-display text-[clamp(3.5rem,10vw,8rem)] font-black leading-[0.9] tracking-tight text-[--foreground] mb-8">
               <ScrambleText
                 text="Xander"
-                delay={400}
+                delay={2200}
                 duration={900}
               />
             </h1>
-
             <motion.span
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
@@ -45,7 +39,6 @@ export default function Portfolio() {
               style={{ originX: 0 }}
               className="block h-[2px] w-16 bg-[--primary] mb-8"
             />
-
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -58,7 +51,6 @@ export default function Portfolio() {
               </em>
               {" "}and still hooked.
             </motion.p>
-
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -66,7 +58,6 @@ export default function Portfolio() {
             >
               <DiscordStatus />
             </motion.div>
-
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -85,7 +76,6 @@ export default function Portfolio() {
               </GhostButton>
             </motion.div>
           </div>
-
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -110,7 +100,6 @@ export default function Portfolio() {
             </div>
           </motion.div>
         </div>
-
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -120,9 +109,7 @@ export default function Portfolio() {
           Scroll ↓
         </motion.p>
       </section>
-
       <Story />
-
       <section id="stack" className="py-20 scroll-mt-24">
         <div className="max-w-6xl mx-auto px-6 mb-10">
           <p className="text-xs uppercase tracking-[0.2em] text-[--primary] font-medium mb-2">Tools of the trade</p>
@@ -130,10 +117,8 @@ export default function Portfolio() {
         </div>
         <TechRadar />
       </section>
-
       <section id="projects" className="py-20 sm:py-28 px-6 scroll-mt-24">
         <div className="max-w-6xl mx-auto">
-
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-14">
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-[--primary] font-medium mb-2">Selected work</p>
@@ -174,7 +159,6 @@ export default function Portfolio() {
           />
         </div>
       </section>
-
       <ContactSection />
     </div>
   )

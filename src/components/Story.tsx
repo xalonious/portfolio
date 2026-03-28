@@ -7,7 +7,6 @@ export function Story() {
   return (
     <section id="about" className="py-20 sm:py-28 px-6 scroll-mt-24 border-t border-[--border]">
       <div className="max-w-6xl mx-auto">
-
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -29,7 +28,6 @@ export function Story() {
         </motion.h2>
 
         <div className="grid lg:grid-cols-[1fr_1fr] gap-16 lg:gap-24 items-start">
-
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -52,7 +50,6 @@ export function Story() {
               <span className="text-[--foreground] font-medium">open-source community</span> and I&apos;m
               always experimenting with something new. Currently available for the right opportunity.
             </p>
-
             <div className="pt-4 grid grid-cols-3 gap-6 border-t border-[--border]">
               {[
                 { value: "1000+", label: "Coffees" },
@@ -66,7 +63,6 @@ export function Story() {
               ))}
             </div>
           </motion.div>
-
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -74,7 +70,6 @@ export function Story() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="space-y-10"
           >
-
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-[--muted-foreground] mb-5">What I do</p>
               <ul className="space-y-0 divide-y divide-[--border]">
@@ -92,11 +87,10 @@ export function Story() {
                 ))}
               </ul>
             </div>
-
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-[--muted-foreground] mb-5">Primary stack</p>
               <div className="flex flex-wrap gap-2">
-                {["TypeScript", "React", "Node.js", "Tailwind", "Prisma", "MySQL"].map((tech) => (
+                {["TypeScript", "React", "Next.js", "Node.js", "Java", "Tailwind", "Prisma", "MySQL"].map((tech) => (
                   <span
                     key={tech}
                     className="px-3 py-1.5 rounded-sm border border-[--border] bg-[--card] text-xs text-[--foreground] font-medium"
@@ -109,7 +103,6 @@ export function Story() {
 
           </motion.div>
         </div>
-
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
