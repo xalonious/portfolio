@@ -84,7 +84,7 @@ export default function Portfolio() {
           >
             <div className="w-52 rotate-[2deg] rounded-sm overflow-hidden border border-[--border] shadow-md">
               <div className="relative w-full h-64">
-                <Image src="/headshot.png" alt="Xander" fill className="object-cover" />
+                <Image src="/headshot.png" alt="Xander" fill sizes="208px" className="object-cover" />
               </div>
               <div className="bg-[--card] px-3 py-2 text-xs text-[--muted-foreground] font-medium">
                 It me 👋
@@ -92,7 +92,7 @@ export default function Portfolio() {
             </div>
             <div className="w-40 -rotate-[3deg] rounded-sm overflow-hidden border border-[--border] shadow-md self-start ml-8">
               <div className="relative w-full h-36">
-                <Image src="/cat.png" alt="My cat" fill className="object-cover" />
+                <Image src="/cat.png" alt="My cat" fill sizes="160px" className="object-cover" />
               </div>
               <div className="bg-[--card] px-3 py-2 text-xs text-[--muted-foreground] font-medium">
                 CTO 🐱

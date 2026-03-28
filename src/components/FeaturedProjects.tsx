@@ -89,18 +89,16 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
         />
         <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[--primary]/10 to-transparent" />
       </motion.div>
-
       <span className="hidden sm:block font-mono text-xs text-[--primary] w-6 shrink-0 select-none">
         {String(index + 1).padStart(2, "0")}
       </span>
-
       <div className="min-w-0 space-y-2">
         <div className="relative w-full h-40 rounded-sm overflow-hidden border border-[--border] mb-3 sm:hidden">
           <Image
             src={project.image}
             alt={project.title}
             fill
-            sizes="100vw"
+            sizes="(min-width: 640px) 0px, calc(100vw - 48px)"
             className="object-cover"
           />
         </div>
@@ -121,7 +119,6 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
           ))}
         </div>
       </div>
-
       {link && (
         <Link
           href={link}

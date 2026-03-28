@@ -37,6 +37,7 @@
 :root {
   --radius: 0.375rem;
 
+  
   --background:        #1A1618;
   --foreground:        #F2ECF0;
 
@@ -49,9 +50,11 @@
   --muted:             #2E2629;
   --muted-foreground:  #7A6B72;
 
+  
   --primary:           #C47A8A;
   --primary-foreground:#1A1618;
 
+  
   --secondary:         #F2ECF0;
   --secondary-foreground: #1A1618;
 
@@ -65,6 +68,7 @@
   --input:             #3D3238;
   --ring:              #C47A8A;
 
+  
   --sidebar:               var(--background);
   --sidebar-foreground:    var(--foreground);
   --sidebar-primary:       var(--primary);
@@ -75,7 +79,6 @@
   --sidebar-ring:          var(--ring);
 }
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -85,7 +88,6 @@
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    scroll-behavior: smooth;
   }
 
   * {
@@ -111,7 +113,6 @@
     color: #F2ECF0;
   }
 }
-
 
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(8px); }
