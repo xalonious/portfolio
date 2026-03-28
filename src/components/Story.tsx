@@ -41,7 +41,7 @@ export function Story() {
             </p>
             <p>
               My background is in{" "}
-              <span className="text-[--foreground] font-medium">JavaScript, TypeScript, and Java</span>.I
+              <span className="text-[--foreground] font-medium">JavaScript, TypeScript, and Java</span>. I
               build full-stack applications with a focus on clean architecture and interfaces
               that actually feel good to use.
             </p>
