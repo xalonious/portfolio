@@ -1,0 +1,40 @@
+name: Deploy portfolio
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: portfolio-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Raspberry Pi
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.PI_HOST }}
+          username: ${{ secrets.PI_USER }}
+          key: ${{ secrets.PI_SSH_KEY }}
+          script: |
+            set -e
+            cd /home/xalonious/projects/portfolio
+
+            pm2 stop portfolio || true
+            pm2 flush portfolio || true
+
+            git fetch origin main
+            git reset --hard origin/main
+            git clean -fd
+
+            rm -rf node_modules
+            npm install
+
+            npm run build
+
+            pm2 start portfolio
+            pm2 save
