@@ -20,6 +20,7 @@ jobs:
           host: ${{ secrets.PI_HOST }}
           username: ${{ secrets.PI_USER }}
           key: ${{ secrets.PI_SSH_KEY }}
+          port: ${{ secrets.PI_PORT }}
           script: |
             set -e
             cd /home/xalonious/projects/portfolio
