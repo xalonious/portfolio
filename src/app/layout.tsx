@@ -9,7 +9,7 @@ import { Playfair_Display, DM_Sans } from "next/font/google"
 
 export const metadata = {
   title: {
-    default: "Xander — Full-Stack Developer & Designer",
+    default: "Xander's Portfolio",
     template: "%s · xalonious",
   },
   description:

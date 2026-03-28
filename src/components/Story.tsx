@@ -41,13 +41,14 @@ export function Story() {
             </p>
             <p>
               My background is in{" "}
-              <span className="text-[--foreground] font-medium">JavaScript, TypeScript, and Java</span> — I
+              <span className="text-[--foreground] font-medium">JavaScript, TypeScript, and Java</span>.I
               build full-stack applications with a focus on clean architecture and interfaces
               that actually feel good to use.
             </p>
             <p>
               I care about the{" "}
-              <span className="text-[--foreground] font-medium">open-source community</span> and I&apos;m
+              <span className="text-[--foreground] font-medium">open-source community</span>{" "}
+              and I&apos;m
               always experimenting with something new. Currently available for the right opportunity.
             </p>
             <div className="pt-4 grid grid-cols-3 gap-6 border-t border-[--border]">
