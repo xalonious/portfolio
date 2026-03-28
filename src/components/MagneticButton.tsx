@@ -61,19 +61,22 @@ export function MagneticButton({
     ...style,
   }
 
-  const buttonProps = {
-    ref,
-    className,
-    style: motionStyle,
-    onMouseMove: handleMouseMove,
-    onMouseLeave: handleMouseLeave,
-    onClick,
-    type,
-    disabled,
+  if (Tag === "button") {
+    const buttonProps = {
+      ref,
+      className,
+      style: motionStyle,
+      onMouseMove: handleMouseMove,
+      onMouseLeave: handleMouseLeave,
+      onClick,
+      type,
+      disabled,
+    }
+    return <button {...buttonProps}>{children}</button>
   }
 
   const anchorProps = {
-    ref,
+    ref: ref as React.RefObject<HTMLAnchorElement>,
     className,
     style: motionStyle,
     onMouseMove: handleMouseMove,
@@ -83,12 +86,8 @@ export function MagneticButton({
     target,
     rel,
   }
-
-  return Tag === "button" 
-    ? <button {...buttonProps}>{children}</button>
-    : <a {...anchorProps}>{children}</a>
+  return <a {...anchorProps}>{children}</a>
 }
-
 
 export function PrimaryButton({
   children,
@@ -104,21 +103,24 @@ export function PrimaryButton({
       onClick={onClick}
       className={`
         group relative overflow-hidden
-        px-7 py-3.5
-        bg-[--primary] text-[--primary-foreground]
-        text-sm font-semibold tracking-wide
+        px-8 py-3.5
+        text-sm font-semibold tracking-[0.06em]
         rounded-sm
-        transition-colors duration-200
-        hover:bg-[--foreground]
+        transition-all duration-200
         ${className}
       `.trim()}
+      style={{
+        backgroundColor: "#C47A8A",
+        color: "#F2ECF0",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 1px 3px rgba(0,0,0,0.3)",
+      }}
     >
       <span
         aria-hidden
         className="
           pointer-events-none absolute inset-0
           -translate-x-full skew-x-[-20deg]
-          bg-white/20
+          bg-white/15
           transition-transform duration-500
           group-hover:translate-x-[200%]
         "
@@ -142,24 +144,28 @@ export function GhostButton({
       onClick={onClick}
       className={`
         group relative overflow-hidden
-        px-7 py-3.5
-        border border-[--border] text-[--foreground]
-        text-sm font-medium tracking-wide
+        px-8 py-3.5
+        text-sm font-medium tracking-[0.06em]
         rounded-sm
-        transition-colors duration-200
+        transition-all duration-200
         hover:border-[--foreground]
         ${className}
       `.trim()}
+      style={{
+        border: "1px solid #3D3238",
+        color: "#F2ECF0",
+        backgroundColor: "transparent",
+      }}
     >
       <span
         aria-hidden
         className="
           pointer-events-none absolute inset-0
           -translate-x-full
-          bg-[--foreground]/8
           transition-transform duration-300 ease-out
           group-hover:translate-x-0
         "
+        style={{ backgroundColor: "rgba(196, 122, 138, 0.12)" }}
       />
       <span className="relative">{children}</span>
     </MagneticButton>

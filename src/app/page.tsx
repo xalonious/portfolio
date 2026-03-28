@@ -12,7 +12,7 @@ import { DiscordStatus } from "@/components/DiscordStatus"
 
 export default function Portfolio() {
   return (
-    <div className="min-h-screen text-[--foreground]" style={{ backgroundColor: "#1C1C1E" }}>
+    <div className="min-h-screen text-[--foreground]" style={{ backgroundColor: "#1A1618" }}>
 
       <section className="relative min-h-screen flex flex-col justify-center px-6 pt-28 pb-20 max-w-6xl mx-auto">
 

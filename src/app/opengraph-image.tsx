@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og"
+
 export const runtime = "edge"
 export const alt = "Xander — Full-Stack Developer & Designer"
 export const size = { width: 1200, height: 630 }
@@ -14,7 +15,7 @@ export default function OGImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          backgroundColor: "#1C1C1E",
+          backgroundColor: "#1A1618",
           padding: "64px 72px",
           fontFamily: "serif",
           position: "relative",
@@ -25,8 +26,8 @@ export default function OGImage() {
             position: "absolute",
             inset: 0,
             backgroundImage:
-              "radial-gradient(circle at 15% 20%, rgba(200,180,0,0.06) 0%, transparent 50%), " +
-              "radial-gradient(circle at 85% 80%, rgba(200,180,0,0.04) 0%, transparent 50%)",
+              "radial-gradient(circle at 15% 20%, rgba(196,122,138,0.08) 0%, transparent 50%), " +
+              "radial-gradient(circle at 85% 80%, rgba(196,122,138,0.05) 0%, transparent 50%)",
           }}
         />
 
@@ -41,13 +42,13 @@ export default function OGImage() {
             style={{
               fontSize: "20px",
               fontWeight: 600,
-              color: "#F2F0ED",
+              color: "#F2ECF0",
               letterSpacing: "-0.02em",
             }}
           >
             xalonious
           </span>
-          <span style={{ fontSize: "20px", fontWeight: 600, color: "#C8B400" }}>
+          <span style={{ fontSize: "20px", fontWeight: 600, color: "#C47A8A" }}>
             .
           </span>
         </div>
@@ -57,7 +58,7 @@ export default function OGImage() {
             style={{
               width: "48px",
               height: "2px",
-              backgroundColor: "#C8B400",
+              backgroundColor: "#C47A8A",
             }}
           />
 
@@ -65,7 +66,7 @@ export default function OGImage() {
             style={{
               fontSize: "88px",
               fontWeight: 900,
-              color: "#F2F0ED",
+              color: "#F2ECF0",
               letterSpacing: "-0.04em",
               lineHeight: 0.9,
             }}
@@ -76,7 +77,7 @@ export default function OGImage() {
           <div
             style={{
               fontSize: "22px",
-              color: "#8E8E93",
+              color: "#7A6B72",
               letterSpacing: "0.06em",
               textTransform: "uppercase",
               fontWeight: 400,
@@ -106,7 +107,7 @@ export default function OGImage() {
                 style={{
                   fontSize: "24px",
                   fontWeight: 700,
-                  color: "#C8B400",
+                  color: "#C47A8A",
                   letterSpacing: "-0.02em",
                 }}
               >

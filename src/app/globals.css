@@ -36,33 +36,34 @@
 
 :root {
   --radius: 0.375rem;
-  --background:        #1C1C1E;
-  --foreground:        #F2F0ED;
 
-  --card:              #242426;
-  --card-foreground:   #F2F0ED;
+  --background:        #1A1618;
+  --foreground:        #F2ECF0;
 
-  --popover:           #242426;
-  --popover-foreground:#F2F0ED;
+  --card:              #231E21;
+  --card-foreground:   #F2ECF0;
 
-  --muted:             #2C2C2E;
-  --muted-foreground:  #8E8E93;
+  --popover:           #231E21;
+  --popover-foreground:#F2ECF0;
 
-  --primary:           #C8B400;
-  --primary-foreground:#1C1C1E;
+  --muted:             #2E2629;
+  --muted-foreground:  #7A6B72;
 
-  --secondary:         #F2F0ED;
-  --secondary-foreground: #1C1C1E;
+  --primary:           #C47A8A;
+  --primary-foreground:#1A1618;
 
-  --accent:            #C8B400;
-  --accent-foreground: #1C1C1E;
+  --secondary:         #F2ECF0;
+  --secondary-foreground: #1A1618;
+
+  --accent:            #C47A8A;
+  --accent-foreground: #1A1618;
 
   --destructive:       #FF453A;
-  --destructive-foreground: #F2F0ED;
+  --destructive-foreground: #F2ECF0;
 
-  --border:            #3A3A3C;
-  --input:             #3A3A3C;
-  --ring:              #C8B400;
+  --border:            #3D3238;
+  --input:             #3D3238;
+  --ring:              #C47A8A;
 
   --sidebar:               var(--background);
   --sidebar-foreground:    var(--foreground);
@@ -99,15 +100,15 @@
 
   body {
     @apply text-foreground;
-    background-color: #1C1C1E;
+    background-color: #1A1618;
     background-image:
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
     background-repeat: repeat;
   }
 
   ::selection {
-    background-color: #C8B40033;
-    color: #F2F0ED;
+    background-color: #C47A8A33;
+    color: #F2ECF0;
   }
 }
 

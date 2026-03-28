@@ -108,10 +108,9 @@ const item: Variants = {
 
 export default function ProjectsPage() {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#1C1C1E" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#1A1618" }}>
       <main className="px-6 pt-28 pb-24 max-w-6xl mx-auto">
 
-        {/* Page header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -129,7 +128,6 @@ export default function ProjectsPage() {
           </p>
         </motion.div>
 
-        {/* Project list — same row pattern as FeaturedProjects */}
         <motion.div
           variants={container}
           initial="hidden"
@@ -172,7 +170,6 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
       onMouseMove={handleMouseMove}
       className="group relative grid sm:grid-cols-[auto_1fr_auto] gap-6 sm:gap-10 items-center py-7 sm:py-9"
     >
-      {/* Floating image reveal */}
       <motion.div
         className="pointer-events-none absolute z-20 w-52 h-36 rounded-sm overflow-hidden border border-[--border] shadow-xl"
         style={{ x, y, left: 0, top: 0 }}
@@ -189,14 +186,11 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
         <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[--primary]/10 to-transparent" />
       </motion.div>
 
-      {/* Index */}
       <span className="hidden sm:block font-mono text-xs text-[--primary] w-6 shrink-0 select-none">
         {String(index + 1).padStart(2, "0")}
       </span>
 
-      {/* Text */}
       <div className="min-w-0 space-y-2">
-        {/* Mobile-only static thumbnail */}
         <div className="relative w-full h-40 rounded-sm overflow-hidden border border-[--border] mb-3 sm:hidden">
           <Image
             src={project.image}
@@ -224,7 +218,6 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
         </div>
       </div>
 
-      {/* CTA */}
       {project.repo && (
         <Link
           href={project.repo}

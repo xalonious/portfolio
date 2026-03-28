@@ -19,14 +19,14 @@ const TECHS: Tech[] = [
   { name: "JavaScript",  icon: "/tech/javascript.svg",  category: "Frontend",       level: "Proficient" },
   { name: "CSS",         icon: "/tech/css.svg",         category: "Frontend",       level: "Proficient" },
   { name: "HTML",        icon: "/tech/html.svg",        category: "Frontend",       level: "Proficient" },
-  { name: "Framer",      icon: "/tech/framer.svg",      category: "Frontend",       level: "Familiar" },
+  { name: "Framer",      icon: "/tech/framer.svg",      category: "Frontend",       level: "Proficient" },
   { name: "Bootstrap",   icon: "/tech/bootstrap.svg",   category: "Frontend",       level: "Familiar"   },
   { name: "Electron",    icon: "/tech/electron.svg",    category: "Frontend",       level: "Familiar"   },
   { name: "Node.js",     icon: "/tech/nodejs.svg",      category: "Backend",        level: "Proficient" },
   { name: "Express",     icon: "/tech/express.svg",     category: "Backend",        level: "Proficient" },
   { name: "Java",        icon: "/tech/java.svg",        category: "Backend",        level: "Proficient" },
-  { name: "C#",          icon: "/tech/csharp.svg",      category: "Backend",        level: "Familiar" },
-  { name: ".NET",        icon: "/tech/dotnet.svg",      category: "Backend",        level: "Familiar" },
+  { name: "C#",          icon: "/tech/csharp.svg",      category: "Backend",        level: "Proficient" },
+  { name: ".NET",        icon: "/tech/dotnet.svg",      category: "Backend",        level: "Proficient" },
   { name: "Python",      icon: "/tech/python.svg",      category: "Backend",        level: "Familiar"   },
   { name: "Prisma",      icon: "/tech/prisma.svg",      category: "Backend",        level: "Proficient" },
   { name: "MySQL",       icon: "/tech/mysql.svg",       category: "Backend",        level: "Proficient" },
@@ -38,7 +38,7 @@ const TECHS: Tech[] = [
   { name: "Bash",        icon: "/tech/bash.svg",        category: "Infrastructure", level: "Familiar"   },
   { name: "Git",         icon: "/tech/git.svg",         category: "Tools",          level: "Proficient" },
   { name: "GitHub",      icon: "/tech/github.svg",      category: "Tools",          level: "Proficient" },
-  { name: "Figma",       icon: "/tech/figma.svg",       category: "Tools",          level: "Familiar" },
+  { name: "Figma",       icon: "/tech/figma.svg",       category: "Tools",          level: "Proficient" },
 ]
 
 const LEVEL_SIZE: Record<Tech["level"], number> = {
@@ -47,14 +47,14 @@ const LEVEL_SIZE: Record<Tech["level"], number> = {
 }
 
 const CATEGORY_COLOR: Record<Tech["category"], string> = {
-  Frontend:       "rgba(200, 180, 0, 0.12)",
-  Backend:        "rgba(99, 179, 237, 0.10)",
-  Infrastructure: "rgba(154, 205, 100, 0.10)",
-  Tools:          "rgba(180, 180, 180, 0.08)",
+  Frontend:       "rgba(196, 122, 138, 0.12)",  
+  Backend:        "rgba(99, 179, 237, 0.10)",    
+  Infrastructure: "rgba(154, 205, 100, 0.10)",   
+  Tools:          "rgba(180, 180, 180, 0.08)",   
 }
 
 const CATEGORY_BORDER: Record<Tech["category"], string> = {
-  Frontend:       "rgba(200, 180, 0, 0.30)",
+  Frontend:       "rgba(196, 122, 138, 0.30)",
   Backend:        "rgba(99, 179, 237, 0.25)",
   Infrastructure: "rgba(154, 205, 100, 0.25)",
   Tools:          "rgba(180, 180, 180, 0.20)",
@@ -209,19 +209,18 @@ function BubbleNode({
         width={b.r * 0.7}
         height={b.r * 0.7}
       >
-        <div style={{ width: "100%", height: "100%", opacity: isFiltered ? 0.3 : 0.85 }}>
-          <Image
-            src={tech.icon}
-            alt={tech.name}
-            width={Math.round(b.r * 0.7)}
-            height={Math.round(b.r * 0.7)}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-            }}
-          />
-        </div>
+        <Image
+          src={tech.icon}
+          alt={tech.name}
+          width={Math.round(b.r * 0.7)}
+          height={Math.round(b.r * 0.7)}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            opacity: isFiltered ? 0.3 : 0.85,
+          }}
+        />
       </foreignObject>
       {b.r >= 20 && (
         <text
