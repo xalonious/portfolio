@@ -25,8 +25,8 @@ const TECHS: Tech[] = [
   { name: "Node.js",     icon: "/tech/nodejs.svg",      category: "Backend",        level: "Proficient" },
   { name: "Express",     icon: "/tech/express.svg",     category: "Backend",        level: "Proficient" },
   { name: "Java",        icon: "/tech/java.svg",        category: "Backend",        level: "Proficient" },
-  { name: "C#",          icon: "/tech/csharp.svg",      category: "Backend",        level: "Proficient" },
-  { name: ".NET",        icon: "/tech/dotnet.svg",      category: "Backend",        level: "Proficient" },
+  { name: "C#",          icon: "/tech/csharp.svg",      category: "Backend",        level: "Familiar" },
+  { name: ".NET",        icon: "/tech/dotnet.svg",      category: "Backend",        level: "Familiar" },
   { name: "Python",      icon: "/tech/python.svg",      category: "Backend",        level: "Familiar"   },
   { name: "Prisma",      icon: "/tech/prisma.svg",      category: "Backend",        level: "Proficient" },
   { name: "MySQL",       icon: "/tech/mysql.svg",       category: "Backend",        level: "Proficient" },
@@ -38,7 +38,7 @@ const TECHS: Tech[] = [
   { name: "Bash",        icon: "/tech/bash.svg",        category: "Infrastructure", level: "Familiar"   },
   { name: "Git",         icon: "/tech/git.svg",         category: "Tools",          level: "Proficient" },
   { name: "GitHub",      icon: "/tech/github.svg",      category: "Tools",          level: "Proficient" },
-  { name: "Figma",       icon: "/tech/figma.svg",       category: "Tools",          level: "Proficient" },
+  { name: "Figma",       icon: "/tech/figma.svg",       category: "Tools",          level: "Familiar" },
 ]
 
 const LEVEL_SIZE: Record<Tech["level"], number> = {
@@ -215,8 +215,8 @@ function BubbleNode({
           width={Math.round(b.r * 0.7)}
           height={Math.round(b.r * 0.7)}
           style={{
-            width: "100%",
-            height: "100%",
+            width: `${Math.round(b.r * 0.7)}px`,
+            height: `${Math.round(b.r * 0.7)}px`,
             objectFit: "contain",
             opacity: isFiltered ? 0.3 : 0.85,
           }}
@@ -286,7 +286,7 @@ export function TechRadar() {
                     color: "var(--foreground)",
                   }}
                 >
-                  <Image src={tech.icon} alt={tech.name} width={14} height={14} className="object-contain opacity-80" />
+                  <Image src={tech.icon} alt={tech.name} width={14} height={14} style={{ width: "14px", height: "14px" }} className="object-contain opacity-80" />
                   {tech.name}
                 </div>
               ))}
@@ -294,7 +294,6 @@ export function TechRadar() {
           </div>
         ))}
       </div>
-
       <div className="hidden sm:block">
       <div className="flex flex-wrap gap-2 mb-8 px-6 max-w-6xl mx-auto">
         {categories.map((cat) => (
@@ -320,7 +319,6 @@ export function TechRadar() {
           </button>
         )}
       </div>
-
       <div className="relative w-full">
         {mounted && (
         <svg
@@ -353,10 +351,8 @@ export function TechRadar() {
               />
             )
           })}
-
         </svg>
-        )} 
-
+        )}
         {tooltip && (
           <motion.div
             className="absolute z-30 pointer-events-none -translate-x-1/2 -translate-y-full"

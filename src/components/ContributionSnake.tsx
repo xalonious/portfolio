@@ -15,9 +15,10 @@ export function ContributionSnake() {
         <Image
           src={SNAKE_URL}
           alt="GitHub contribution snake"
-          width={1024}
-          height={256}
+          width={1200}
+          height={120}
           className="w-full h-auto"
+          priority
         />
       </div>
     </div>

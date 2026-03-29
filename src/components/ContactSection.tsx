@@ -135,7 +135,6 @@ export function ContactSection() {
     <section id="contact" className="py-20 sm:py-28 px-6 scroll-mt-24 border-t border-[--border]">
       <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-[1fr_1.2fr] gap-16 lg:gap-24 items-start">
-
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -155,19 +154,40 @@ export function ContactSection() {
               Have a project in mind, a question, or just want to say hello? Fill in the form and I&apos;ll get back to you.
             </p>
 
-            <div className="pt-2 space-y-2 text-sm">
+            <div className="pt-2 space-y-3 hidden lg:block">
               <p className="text-xs uppercase tracking-[0.2em] text-[--muted-foreground]">Or find me at</p>
+
               <a
                 href="https://github.com/xalonious"
                 target="_blank"
                 rel="noreferrer"
-                className="block text-[--foreground] font-medium underline underline-offset-4 decoration-[--border] hover:decoration-[--primary] hover:text-[--primary] transition-colors duration-200"
+                className="flex items-center gap-3 px-4 py-3 rounded-sm border border-[--border] bg-[--card] hover:border-[--primary] transition-colors duration-200 group"
               >
-                github.com/xalonious
+                <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0 text-[--foreground]" fill="currentColor" aria-hidden>
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                <div className="min-w-0">
+                  <p className="text-xs text-[--muted-foreground] uppercase tracking-wider">GitHub</p>
+                  <p className="text-sm font-medium text-[--foreground] group-hover:text-[--primary] transition-colors duration-200">github.com/xalonious</p>
+                </div>
+              </a>
+
+              <a
+                href="https://discordid.netlify.app/?id=531484240114876416"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-3 px-4 py-3 rounded-sm border border-[--border] bg-[--card] hover:border-[--primary] transition-colors duration-200 group"
+              >
+                <svg viewBox="0 0 71 55" className="w-4 h-4 shrink-0" style={{ fill: "#5865F2" }} aria-hidden>
+                  <path d="M60.105 4.898A58.55 58.55 0 0045.803.408a.22.22 0 00-.233.11 40.784 40.784 0 00-1.8 3.697c-5.456-.817-10.886-.817-16.23 0-.484-1.164-1.2-2.587-1.828-3.697a.228.228 0 00-.233-.11 58.386 58.386 0 00-14.302 4.49.207.207 0 00-.095.082C1.578 18.73-.944 32.144.293 45.39a.244.244 0 00.093.167c6.008 4.41 11.83 7.09 17.548 8.858a.229.229 0 00.249-.082 42.08 42.08 0 003.638-5.924.225.225 0 00-.123-.312 38.772 38.772 0 01-5.525-2.632.228.228 0 01-.022-.378 31.17 31.17 0 001.096-.859.22.22 0 01.23-.031c11.59 5.294 24.145 5.294 35.6 0a.219.219 0 01.233.028c.355.293.728.582 1.099.862a.228.228 0 01-.02.378 36.304 36.304 0 01-5.528 2.629.227.227 0 00-.121.315 47.249 47.249 0 003.635 5.921.225.225 0 00.249.084c5.745-1.768 11.567-4.448 17.575-8.858a.228.228 0 00.093-.164c1.466-15.212-2.456-28.514-10.398-40.412a.18.18 0 00-.092-.084zm-35.999 32.44c-3.5 0-6.383-3.212-6.383-7.156 0-3.943 2.827-7.156 6.383-7.156 3.583 0 6.438 3.24 6.384 7.156 0 3.944-2.827 7.156-6.384 7.156zm23.602 0c-3.5 0-6.382-3.212-6.382-7.156 0-3.943 2.827-7.156 6.382-7.156 3.584 0 6.438 3.24 6.384 7.156 0 3.944-2.8 7.156-6.384 7.156z"/>
+                </svg>
+                <div className="min-w-0">
+                  <p className="text-xs text-[--muted-foreground] uppercase tracking-wider">Discord</p>
+                  <p className="text-sm font-medium text-[--foreground] group-hover:text-[--primary] transition-colors duration-200">xander~!</p>
+                </div>
               </a>
             </div>
           </motion.div>
-
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -291,6 +311,38 @@ export function ContactSection() {
                 </motion.p>
               )}
             </form>
+
+            <div className="pt-6 space-y-3 lg:hidden">
+              <p className="text-xs uppercase tracking-[0.2em] text-[--muted-foreground]">Or find me at</p>
+              <a
+                href="https://github.com/xalonious"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-3 px-4 py-3 rounded-sm border border-[--border] bg-[--card] hover:border-[--primary] transition-colors duration-200 group"
+              >
+                <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0 text-[--foreground]" fill="currentColor" aria-hidden>
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                <div className="min-w-0">
+                  <p className="text-xs text-[--muted-foreground] uppercase tracking-wider">GitHub</p>
+                  <p className="text-sm font-medium text-[--foreground] group-hover:text-[--primary] transition-colors duration-200">github.com/xalonious</p>
+                </div>
+              </a>
+              <a
+                href="https://discordid.netlify.app/?id=531484240114876416"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-3 px-4 py-3 rounded-sm border border-[--border] bg-[--card] hover:border-[--primary] transition-colors duration-200 group"
+              >
+                <svg viewBox="0 0 71 55" className="w-4 h-4 shrink-0" style={{ fill: "#5865F2" }} aria-hidden>
+                  <path d="M60.105 4.898A58.55 58.55 0 0045.803.408a.22.22 0 00-.233.11 40.784 40.784 0 00-1.8 3.697c-5.456-.817-10.886-.817-16.23 0-.484-1.164-1.2-2.587-1.828-3.697a.228.228 0 00-.233-.11 58.386 58.386 0 00-14.302 4.49.207.207 0 00-.095.082C1.578 18.73-.944 32.144.293 45.39a.244.244 0 00.093.167c6.008 4.41 11.83 7.09 17.548 8.858a.229.229 0 00.249-.082 42.08 42.08 0 003.638-5.924.225.225 0 00-.123-.312 38.772 38.772 0 01-5.525-2.632.228.228 0 01-.022-.378 31.17 31.17 0 001.096-.859.22.22 0 01.23-.031c11.59 5.294 24.145 5.294 35.6 0a.219.219 0 01.233.028c.355.293.728.582 1.099.862a.228.228 0 01-.02.378 36.304 36.304 0 01-5.528 2.629.227.227 0 00-.121.315 47.249 47.249 0 003.635 5.921.225.225 0 00.249.084c5.745-1.768 11.567-4.448 17.575-8.858a.228.228 0 00.093-.164c1.466-15.212-2.456-28.514-10.398-40.412a.18.18 0 00-.092-.084zm-35.999 32.44c-3.5 0-6.383-3.212-6.383-7.156 0-3.943 2.827-7.156 6.383-7.156 3.583 0 6.438 3.24 6.384 7.156 0 3.944-2.827 7.156-6.384 7.156zm23.602 0c-3.5 0-6.382-3.212-6.382-7.156 0-3.943 2.827-7.156 6.382-7.156 3.584 0 6.438 3.24 6.384 7.156 0 3.944-2.8 7.156-6.384 7.156z"/>
+                </svg>
+                <div className="min-w-0">
+                  <p className="text-xs text-[--muted-foreground] uppercase tracking-wider">Discord</p>
+                  <p className="text-sm font-medium text-[--foreground] group-hover:text-[--primary] transition-colors duration-200">xander~!</p>
+                </div>
+              </a>
+            </div>
           </motion.div>
         </div>
       </div>
