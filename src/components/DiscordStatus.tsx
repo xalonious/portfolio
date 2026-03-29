@@ -120,6 +120,30 @@ function SpotifyProgress({ start, end }: { start: number; end: number }) {
   )
 }
 
+function useElapsed(startMs: number | undefined): string {
+  const [elapsed, setElapsed] = useState("")
+
+  useEffect(() => {
+    if (!startMs) return
+    function tick() {
+      const totalSec = Math.floor((Date.now() - startMs!) / 1000)
+      const h = Math.floor(totalSec / 3600)
+      const m = Math.floor((totalSec % 3600) / 60)
+      const s = totalSec % 60
+      setElapsed(
+        h > 0
+          ? `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`
+          : `${m}:${String(s).padStart(2, "0")}`
+      )
+    }
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [startMs])
+
+  return elapsed
+}
+
 export function DiscordStatus() {
   const [data, setData] = useState<LanyardData | null>(null)
   const [time, setTime] = useState("")
@@ -175,16 +199,18 @@ export function DiscordStatus() {
     return () => clearInterval(id)
   }, [])
 
+  const elapsed = useElapsed(
+    data?.activities.find((a) => a.type === 0)?.timestamps?.start
+  )
+
   if (!data) return null
 
   const game = data.activities.find((a) => a.type === 0)
   const status = game ? BUSY_STATUS : STATUS_CONFIG[data.discord_status]
   const shouldPulse = !game && (data.discord_status === "online" || data.discord_status === "dnd")
   const gameImageUrl = game ? (resolveAssetUrl(game) ?? game.appIcon ?? null) : null
-
   return (
     <div className="flex flex-col gap-3 mt-8">
-
       <div className="flex items-center gap-5">
         <div className="flex items-center gap-2">
           <span className="relative flex h-2 w-2">
@@ -202,7 +228,6 @@ export function DiscordStatus() {
           {time} <span className="opacity-50">CET</span>
         </span>
       </div>
-
       {game && (
         <div className="flex items-center gap-3 rounded-sm border border-[--border] bg-[--card] p-3 max-w-xs">
           {gameImageUrl && (
@@ -225,10 +250,12 @@ export function DiscordStatus() {
             {game.state && (
               <p className="text-[10px] text-[--muted-foreground] truncate opacity-70">{game.state}</p>
             )}
+            {elapsed && (
+              <p className="text-[10px] font-mono text-[--primary] mt-0.5 tabular-nums">{elapsed}</p>
+            )}
           </div>
         </div>
       )}
-
       {data.listening_to_spotify && data.spotify && (
         <div className="flex items-start gap-3 rounded-sm border border-[--border] bg-[--card] p-3 max-w-xs">
           <div className="relative w-10 h-10 shrink-0 rounded-sm overflow-hidden border border-[--border]">
@@ -241,7 +268,6 @@ export function DiscordStatus() {
               unoptimized
             />
           </div>
-
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold text-[--foreground] truncate">
               {data.spotify.song}
