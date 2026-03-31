@@ -20,7 +20,7 @@ interface Activity {
   state?: string
   assets?: ActivityAssets
   timestamps?: { start?: number; end?: number }
-  appIcon?: string | null  
+  appIcon?: string | null
 }
 
 interface SpotifyData {
@@ -42,8 +42,8 @@ const LANYARD_URL = "https://api.lanyard.rest/v1/users/531484240114876416"
 const POLL_INTERVAL = 30_000
 
 const STATUS_CONFIG: Record<DiscordStatus, { label: string; color: string; dot: string }> = {
-  online:  { label: "Available", color: "text-emerald-400",         dot: "bg-emerald-400" },
-  dnd:     { label: "Available", color: "text-emerald-400",         dot: "bg-emerald-400" },
+  online:  { label: "Available", color: "text-emerald-400",          dot: "bg-emerald-400" },
+  dnd:     { label: "Available", color: "text-emerald-400",          dot: "bg-emerald-400" },
   idle:    { label: "Inactive",  color: "text-[--muted-foreground]", dot: "bg-[--muted-foreground]" },
   offline: { label: "Offline",   color: "text-[--muted-foreground]", dot: "bg-[--muted-foreground]" },
 }
@@ -54,7 +54,6 @@ const appIconCache: Record<string, string | null> = {}
 
 async function fetchAppIcon(applicationId: string): Promise<string | null> {
   if (applicationId in appIconCache) return appIconCache[applicationId]
-
   try {
     const res = await fetch(`https://discord.com/api/v10/applications/${applicationId}/rpc`)
     if (!res.ok) { appIconCache[applicationId] = null; return null }
@@ -78,7 +77,6 @@ function resolveAssetUrl(activity: Activity): string | null {
   if (activity.application_id) {
     return `https://cdn.discordapp.com/app-assets/${activity.application_id}/${img}.png`
   }
-
   return null
 }
 
@@ -147,11 +145,13 @@ function useElapsed(startMs: number | undefined): string {
 export function DiscordStatus() {
   const [data, setData] = useState<LanyardData | null>(null)
   const [time, setTime] = useState("")
+  const [tzAbbr, setTzAbbr] = useState("CET")
 
   useEffect(() => {
     function tick() {
+      const now = new Date()
       setTime(
-        new Date().toLocaleTimeString("en-BE", {
+        now.toLocaleTimeString("en-BE", {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
@@ -159,6 +159,11 @@ export function DiscordStatus() {
           hour12: false,
         })
       )
+      const abbr = now.toLocaleTimeString("en-GB", {
+        timeZone: "Europe/Brussels",
+        timeZoneName: "short",
+      }).split(" ").pop() ?? "CET"
+      setTzAbbr(abbr)
     }
     tick()
     const id = setInterval(tick, 1000)
@@ -174,7 +179,6 @@ export function DiscordStatus() {
           const rawActivities: Activity[] = ((json.data.activities ?? []) as Activity[]).filter(
             (a) => a.type !== 4
           )
-
           const resolved = await Promise.all(
             rawActivities.map(async (a) => {
               if (!a.assets?.large_image && a.application_id) {
@@ -183,7 +187,6 @@ export function DiscordStatus() {
               return a
             })
           )
-
           setData({
             discord_status: json.data.discord_status,
             listening_to_spotify: json.data.listening_to_spotify,
@@ -191,8 +194,7 @@ export function DiscordStatus() {
             activities: resolved,
           })
         }
-      } catch {
-      }
+      } catch {}
     }
     fetchStatus()
     const id = setInterval(fetchStatus, POLL_INTERVAL)
@@ -209,6 +211,7 @@ export function DiscordStatus() {
   const status = game ? BUSY_STATUS : STATUS_CONFIG[data.discord_status]
   const shouldPulse = !game && (data.discord_status === "online" || data.discord_status === "dnd")
   const gameImageUrl = game ? (resolveAssetUrl(game) ?? game.appIcon ?? null) : null
+
   return (
     <div className="flex flex-col gap-3 mt-8">
       <div className="flex items-center gap-5">
@@ -225,9 +228,10 @@ export function DiscordStatus() {
         </div>
         <span className="text-[--border] select-none">·</span>
         <span className="text-xs font-mono text-[--muted-foreground] tabular-nums">
-          {time} <span className="opacity-50">CET</span>
+          {time} <span className="opacity-50">{tzAbbr}</span>
         </span>
       </div>
+
       {game && (
         <div className="flex items-center gap-3 rounded-sm border border-[--border] bg-[--card] p-3 max-w-xs">
           {gameImageUrl && (
@@ -243,6 +247,7 @@ export function DiscordStatus() {
             </div>
           )}
           <div className="min-w-0">
+            <p className="text-[10px] uppercase tracking-[0.12em] text-[--muted-foreground] mb-0.5">Playing</p>
             <p className="text-xs font-semibold text-[--foreground] truncate">{game.name}</p>
             {game.details && (
               <p className="text-[10px] text-[--muted-foreground] truncate">{game.details}</p>
@@ -256,6 +261,7 @@ export function DiscordStatus() {
           </div>
         </div>
       )}
+
       {data.listening_to_spotify && data.spotify && (
         <div className="flex items-start gap-3 rounded-sm border border-[--border] bg-[--card] p-3 max-w-xs">
           <div className="relative w-10 h-10 shrink-0 rounded-sm overflow-hidden border border-[--border]">
@@ -282,7 +288,6 @@ export function DiscordStatus() {
           </div>
         </div>
       )}
-
     </div>
   )
 }
