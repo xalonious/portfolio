@@ -9,6 +9,7 @@ import { Story } from "@/components/Story"
 import { ScrambleText } from "@/components/ScrambleText"
 import { PrimaryButton, GhostButton } from "@/components/MagneticButton"
 import { DiscordStatus } from "@/components/DiscordStatus"
+import { TransitionLink } from "@/components/TransitionLink"
 
 export default function Portfolio() {
   return (
@@ -157,6 +158,16 @@ export default function Portfolio() {
               },
             ]}
           />
+
+          <div className="mt-12 flex justify-center">
+            <TransitionLink
+              href="/projects"
+              className="group flex items-center gap-2 text-sm font-medium text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-200 border border-[--border] hover:border-[--primary] px-6 py-3 rounded-sm"
+            >
+              View all projects
+              <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+            </TransitionLink>
+          </div>
         </div>
       </section>
       <ContactSection />
