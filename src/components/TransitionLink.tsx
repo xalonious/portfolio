@@ -1,5 +1,6 @@
 "use client"
 
+import { usePathname } from "next/navigation"
 import { useViewTransition } from "@/hooks/useViewTransition"
 import type { ReactNode, MouseEvent } from "react"
 
@@ -19,6 +20,7 @@ export function TransitionLink({
   rel,
 }: TransitionLinkProps) {
   const navigate = useViewTransition()
+  const pathname = usePathname()
 
   function handleClick(e: MouseEvent<HTMLAnchorElement>) {
     if (
@@ -35,6 +37,12 @@ export function TransitionLink({
     }
 
     e.preventDefault()
+
+    if (href === pathname) {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+      return
+    }
+
     navigate(href)
   }
 
