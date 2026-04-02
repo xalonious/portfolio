@@ -5,6 +5,7 @@ import { CustomCursor } from "@/components/CustomCursor"
 import { Preloader } from "@/components/Preloader"
 import { PageWrapper } from "@/components/PageWrapper"
 import { LenisProvider } from "@/components/LenisProvider"
+import { KonamiChat } from "@/components/KonamiChat"
 import { Playfair_Display, DM_Sans } from "next/font/google"
 
 export const metadata = {
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="min-h-screen bg-background text-foreground antialiased font-sans selection:bg-[#C47A8A33] selection:text-foreground cursor-none">
         <LenisProvider>
+          <KonamiChat />
           <Preloader />
           <CustomCursor />
           <Header />
