@@ -3,7 +3,7 @@
 import Image from "next/image"
 
 const SNAKE_URL =
-  "https://raw.githubusercontent.com/xalonious/portfolio/output/snake-dark.svg"
+  "https://raw.githubusercontent.com/xalonious/portfolio/snake/snake-dark.svg"
 
 export function ContributionSnake() {
   return (
