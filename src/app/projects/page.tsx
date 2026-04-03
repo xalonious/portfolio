@@ -63,6 +63,14 @@ const PROJECTS: Project[] = [
     tech: ["JavaScript", "Node.js", "Electron", "HTML", "CSS"],
   },
   {
+    title: "BongoClicker",
+    description:
+      "A Windows autoclicker for bongocat. Fires every key on the keyboard in rapid succession while the cat jams along.",
+    repo: "https://github.com/xalonious/bongoclicker",
+    image: "/projects/bongoclicker.png",
+    tech: ["Python", "Tkinter"],
+  },
+  {
     title: "Image Tool",
     description:
       "A simple CLI tool to convert and compress images with sensible defaults.",
