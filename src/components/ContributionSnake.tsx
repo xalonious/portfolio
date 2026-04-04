@@ -7,7 +7,7 @@ const SNAKE_URL =
 
 export function ContributionSnake() {
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 hidden sm:block">
       <p className="text-xs uppercase tracking-[0.2em] text-[--muted-foreground]">
         Contribution activity
       </p>
