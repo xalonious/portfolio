@@ -31,6 +31,14 @@ const PROJECTS: Project[] = [
     tech: ["JavaScript", "Node.js", "MongoDB"],
   },
   {
+    title: "Streaming App",
+    description:
+      "A self-hosted media streaming web app for discovering and playing movies and TV shows from user-configured sources.",
+    repo: "https://github.com/xalonious/streaming-app",
+    image: "/projects/streamingapp.png",
+    tech: ["TypeScript", "React", "Node.js", "Express", "Tailwind"],
+  },
+  {
     title: "xanderGPT",
     description:
       "A ChatGPT-style web app powered by a local LLM via Ollama, featuring real-time streaming responses, persistent conversations & web search.",
