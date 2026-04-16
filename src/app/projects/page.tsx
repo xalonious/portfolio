@@ -179,13 +179,13 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
     <motion.article
       ref={rowRef}
       variants={item}
-      onMouseEnter={() => setHovered(true)}
+      onMouseEnter={() => { if (window.matchMedia("(pointer: fine)").matches) setHovered(true) }}
       onMouseLeave={() => setHovered(false)}
       onMouseMove={handleMouseMove}
       className="group relative grid sm:grid-cols-[auto_1fr_auto] gap-6 sm:gap-10 items-center py-7 sm:py-9"
     >
       <motion.div
-        className="pointer-events-none absolute z-20 w-52 h-36 rounded-sm overflow-hidden border border-[--border] shadow-xl"
+        className="pointer-events-none absolute z-20 w-52 h-36 rounded-sm overflow-hidden border border-[--border] shadow-xl hidden sm:block"
         style={{ x, y, left: 0, top: 0 }}
         animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.88 }}
         transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
