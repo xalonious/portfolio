@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
+import { FaSpotify } from "react-icons/fa"
 
 type DiscordStatus = "online" | "idle" | "dnd" | "offline"
 
@@ -263,29 +264,51 @@ export function DiscordStatus() {
       )}
 
       {data.listening_to_spotify && data.spotify && (
-        <div className="flex items-start gap-3 rounded-sm border border-[--border] bg-[--card] p-3 max-w-xs">
-          <div className="relative w-10 h-10 shrink-0 rounded-sm overflow-hidden border border-[--border]">
-            <Image
-              src={data.spotify.album_art_url}
-              alt={data.spotify.album}
-              fill
-              sizes="40px"
-              className="object-cover"
-              unoptimized
-            />
+        <div className="rounded-sm border border-[--border] bg-[--card] p-3 max-w-xs">
+          <div className="flex items-center gap-1.5 mb-2.5">
+            <FaSpotify style={{ color: "#1DB954", width: 11, height: 11, flexShrink: 0 }} aria-hidden />
+            <span className="text-[10px] uppercase tracking-[0.14em] font-medium" style={{ color: "#1DB954" }}>
+              Listening to Spotify
+            </span>
+            <span className="flex items-end gap-[2px] ml-0.5" style={{ height: 10 }}>
+              {[1, 2, 3].map(i => (
+                <span key={i} className="w-[2px] rounded-full block" style={{
+                  backgroundColor: "#1DB954",
+                  height: "100%",
+                  animation: `eq${i} ${0.5 + i * 0.15}s ease-in-out infinite alternate`,
+                }} />
+              ))}
+            </span>
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold text-[--foreground] truncate">
-              {data.spotify.song}
-            </p>
-            <p className="text-[10px] text-[--muted-foreground] truncate">
-              {data.spotify.artist}
-            </p>
-            <SpotifyProgress
-              start={data.spotify.timestamps.start}
-              end={data.spotify.timestamps.end}
-            />
+          <div className="flex items-center gap-3">
+            <div className="relative w-12 h-12 shrink-0 rounded-sm overflow-hidden border border-[--border]">
+              <Image
+                src={data.spotify.album_art_url}
+                alt={data.spotify.album}
+                fill
+                sizes="48px"
+                className="object-cover"
+                unoptimized
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold text-[--foreground] truncate leading-tight">
+                {data.spotify.song}
+              </p>
+              <p className="text-[10px] text-[--muted-foreground] truncate mt-0.5">
+                {data.spotify.artist}
+              </p>
+              <SpotifyProgress
+                start={data.spotify.timestamps.start}
+                end={data.spotify.timestamps.end}
+              />
+            </div>
           </div>
+          <style>{`
+            @keyframes eq1 { from { height: 30% } to { height: 100% } }
+            @keyframes eq2 { from { height: 70% } to { height: 30% } }
+            @keyframes eq3 { from { height: 20% } to { height: 90% } }
+          `}</style>
         </div>
       )}
     </div>
