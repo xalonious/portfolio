@@ -80,7 +80,7 @@ export function CustomCursor() {
     <>
       <div
         ref={dotRef}
-        className="fixed top-0 left-0 z-[9999] pointer-events-none"
+        className="fixed top-0 left-0 z-[10002] pointer-events-none"
         style={{
           width:           6,
           height:          6,
@@ -94,7 +94,7 @@ export function CustomCursor() {
 
       <div
         ref={ringRef}
-        className="fixed top-0 left-0 z-[9998] pointer-events-none"
+        className="fixed top-0 left-0 z-[10001] pointer-events-none"
         style={{
           width:        hovering ? 44 : 32,
           height:       hovering ? 44 : 32,
@@ -109,7 +109,7 @@ export function CustomCursor() {
       {ripples.map(r => (
         <div
           key={r.id}
-          className="fixed pointer-events-none z-[9997]"
+          className="fixed pointer-events-none z-[10000]"
           style={{
             left:         r.x,
             top:          r.y,

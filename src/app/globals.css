@@ -66,6 +66,10 @@
   --border:            #3D3238;
   --input:             #3D3238;
   --ring:              #C47A8A;
+  --scrollbar-track:   rgba(242, 236, 240, 0.05);
+  --scrollbar-thumb:   rgba(196, 122, 138, 0.78);
+  --scrollbar-thumb-hover: rgba(214, 140, 155, 0.94);
+  --scrollbar-thumb-shadow: rgba(112, 63, 77, 0.35);
 
   
 }
@@ -88,6 +92,19 @@
   @media (pointer: coarse) {
     * {
       cursor: auto !important;
+    }
+  }
+
+  @media (pointer: fine) {
+    html {
+      scrollbar-width: none;
+    }
+
+    body::-webkit-scrollbar,
+    html::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+      display: none;
     }
   }
 

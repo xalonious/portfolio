@@ -7,6 +7,15 @@ export function LenisProvider({ children }: { children: ReactNode }) {
     let lenis: any
     let rafId: number
 
+    const onKonamiToggle = (event: Event) => {
+      const customEvent = event as CustomEvent<{ active?: boolean }>
+      if (customEvent.detail?.active) {
+        lenis?.stop()
+      } else {
+        lenis?.start()
+      }
+    }
+
     async function init() {
       const { default: Lenis } = await import("lenis")
 
@@ -25,9 +34,11 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       rafId = requestAnimationFrame(raf)
     }
 
+    window.addEventListener("konami-chat-toggle", onKonamiToggle as EventListener)
     init()
 
     return () => {
+      window.removeEventListener("konami-chat-toggle", onKonamiToggle as EventListener)
       cancelAnimationFrame(rafId)
       lenis?.destroy()
     }

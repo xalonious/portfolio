@@ -572,6 +572,30 @@ export function KonamiChat() {
   }, [pendingKey, active])
 
   useEffect(() => {
+    if (!active) return
+
+    const { body, documentElement } = document
+    const previousBodyOverflow = body.style.overflow
+    const previousHtmlOverflow = documentElement.style.overflow
+    const previousBodyOverscroll = body.style.overscrollBehavior
+    const previousHtmlOverscroll = documentElement.style.overscrollBehavior
+
+    body.style.overflow = "hidden"
+    documentElement.style.overflow = "hidden"
+    body.style.overscrollBehavior = "none"
+    documentElement.style.overscrollBehavior = "none"
+    window.dispatchEvent(new CustomEvent("konami-chat-toggle", { detail: { active: true } }))
+
+    return () => {
+      body.style.overflow = previousBodyOverflow
+      documentElement.style.overflow = previousHtmlOverflow
+      body.style.overscrollBehavior = previousBodyOverscroll
+      documentElement.style.overscrollBehavior = previousHtmlOverscroll
+      window.dispatchEvent(new CustomEvent("konami-chat-toggle", { detail: { active: false } }))
+    }
+  }, [active])
+
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages, typing])
 
@@ -630,7 +654,7 @@ export function KonamiChat() {
           <button onClick={handleClose} className="text-[--muted-foreground] hover:text-[--foreground] bg-transparent border-none cursor-pointer text-xl leading-none transition-colors">✕</button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-2.5">
+        <div data-lenis-prevent className="konami-scrollbar flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-2.5 overscroll-contain">
           <p className="text-center text-[10px] text-[--muted-foreground] uppercase tracking-widest mb-1">↑↑↓↓←→←→BA · easter egg unlocked</p>
 
           {messages.map((m, i) => (
@@ -695,6 +719,33 @@ export function KonamiChat() {
       <style>{`
         @keyframes chatFadeIn  { from { opacity: 0 } to { opacity: 1 } }
         @keyframes chatSlideUp { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: translateY(0) } }
+
+        .konami-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(196,122,138,0.72) rgba(242,236,240,0.06);
+        }
+
+        .konami-scrollbar::-webkit-scrollbar {
+          width: 10px;
+        }
+
+        .konami-scrollbar::-webkit-scrollbar-track {
+          background: rgba(242,236,240,0.06);
+          border-left: 1px solid rgba(196,122,138,0.08);
+        }
+
+        .konami-scrollbar::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, rgba(196,122,138,0.92), rgba(140,84,98,0.92));
+          border: 2px solid transparent;
+          border-radius: 999px;
+          background-clip: padding-box;
+        }
+
+        .konami-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, rgba(214,140,155,0.96), rgba(164,98,114,0.96));
+          border: 2px solid transparent;
+          background-clip: padding-box;
+        }
       `}</style>
     </div>
   )
