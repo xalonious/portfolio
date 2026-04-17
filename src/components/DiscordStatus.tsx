@@ -8,9 +8,6 @@ type DiscordStatus = "online" | "idle" | "dnd" | "offline"
 
 interface ActivityAssets {
   large_image?: string
-  large_text?: string
-  small_image?: string
-  small_text?: string
 }
 
 interface Activity {
@@ -39,7 +36,7 @@ interface LanyardData {
   activities: Activity[]
 }
 
-const LANYARD_URL = "https://api.lanyard.rest/v1/users/531484240114876416"
+const LANYARD_URL = "/api/presence"
 const POLL_INTERVAL = 30_000
 
 const STATUS_CONFIG: Record<DiscordStatus, { label: string; color: string; dot: string }> = {
@@ -176,25 +173,20 @@ export function DiscordStatus() {
       try {
         const res = await fetch(LANYARD_URL)
         const json = await res.json()
-        if (json.success) {
-          const rawActivities: Activity[] = ((json.data.activities ?? []) as Activity[]).filter(
-            (a) => a.type !== 4
-          )
-          const resolved = await Promise.all(
-            rawActivities.map(async (a) => {
-              if (!a.assets?.large_image && a.application_id) {
-                return { ...a, appIcon: await fetchAppIcon(a.application_id) }
-              }
-              return a
-            })
-          )
-          setData({
-            discord_status: json.data.discord_status,
-            listening_to_spotify: json.data.listening_to_spotify,
-            spotify: json.data.spotify,
-            activities: resolved,
+        const resolved = await Promise.all(
+          ((json.activities ?? []) as Activity[]).map(async (a) => {
+            if (!a.assets?.large_image && a.application_id) {
+              return { ...a, appIcon: await fetchAppIcon(a.application_id) }
+            }
+            return a
           })
-        }
+        )
+        setData({
+          discord_status: json.discord_status,
+          listening_to_spotify: json.listening_to_spotify,
+          spotify: json.spotify,
+          activities: resolved,
+        })
       } catch {}
     }
     fetchStatus()
