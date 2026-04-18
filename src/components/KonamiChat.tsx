@@ -218,7 +218,14 @@ const dialogue: Record<string, DialogueNode> = {
     xander: "0.5px borders. more refined. 1px is for people still figuring things out.",
     replies: [
       { label: "i'm judging and respecting you simultaneously", next: "hardest-part" },
-      { label: "tell me about the tech stack",    next: "bubbles-entry"    },
+      { label: "tell me about the tech stack",    next: "borders-to-stack"  },
+    ],
+  },
+  "borders-to-stack": {
+    xander: "sure. the tech stack section is probably the most iterated part of the whole site.",
+    replies: [
+      { label: "how so",                          next: "hardest-part"     },
+      { label: "what does it look like now",      next: "bubbles-entry"    },
     ],
   },
   "hardest-part": {
@@ -775,7 +782,11 @@ export function KonamiChat() {
           <p className="text-center text-[10px] text-[--muted-foreground] uppercase tracking-widest mb-1">↑↑↓↓←→←→BA · easter egg unlocked</p>
 
           {messages.map((m, i) => (
-            <div key={i} className={`flex flex-col gap-0.5 ${m.from === "you" ? "items-end" : "items-start"}`}>
+            <div
+              key={i}
+              className={`flex flex-col gap-0.5 ${m.from === "you" ? "items-end" : "items-start"}`}
+              style={{ animation: "msgSlideIn 0.25s cubic-bezier(0.22,1,0.36,1) both" }}
+            >
               {m.from === "claude" && (
                 <span className="text-[9px] uppercase tracking-wider ml-1" style={{ color: "#C47A8A" }}>claude 👀</span>
               )}
@@ -799,11 +810,11 @@ export function KonamiChat() {
           ))}
 
           {typing && !done && (
-            <div className="flex items-start gap-2">
+            <div className="flex items-start gap-2" style={{ animation: "msgSlideIn 0.25s cubic-bezier(0.22,1,0.36,1) both" }}>
               <div className="px-3.5 py-3 rounded-sm rounded-tl-none border border-[--border] bg-[--card] flex gap-1 items-center">
-                <span className="w-1.5 h-1.5 rounded-full bg-[--muted-foreground] animate-bounce [animation-delay:0ms]" />
-                <span className="w-1.5 h-1.5 rounded-full bg-[--muted-foreground] animate-bounce [animation-delay:150ms]" />
-                <span className="w-1.5 h-1.5 rounded-full bg-[--muted-foreground] animate-bounce [animation-delay:300ms]" />
+                <span className="typing-dot" style={{ animationDelay: "0ms" }} />
+                <span className="typing-dot" style={{ animationDelay: "180ms" }} />
+                <span className="typing-dot" style={{ animationDelay: "360ms" }} />
               </div>
             </div>
           )}
@@ -818,8 +829,8 @@ export function KonamiChat() {
         {!typing && !done && currentNode && (
           <div className="px-4 py-3 border-t border-[--border] flex flex-col gap-2 shrink-0">
             {currentNode.replies
-              .filter(r => !r.requires || visited.has(r.requires))
-              .map((r, i) => (
+              .filter((r: { label: string; next: string; requires?: string }) => !r.requires || visited.has(r.requires))
+              .map((r: { label: string; next: string; requires?: string }, i: number) => (
                 <button
                   key={i}
                   onClick={() => handleReply(r)}
@@ -836,6 +847,19 @@ export function KonamiChat() {
       <style>{`
         @keyframes chatFadeIn  { from { opacity: 0 } to { opacity: 1 } }
         @keyframes chatSlideUp { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: translateY(0) } }
+        @keyframes msgSlideIn  { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: translateY(0) } }
+        @keyframes typingBounce {
+          0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+          30%            { transform: translateY(-4px); opacity: 1; }
+        }
+        .typing-dot {
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background-color: var(--muted-foreground, #7A6B72);
+          animation: typingBounce 1.2s ease-in-out infinite;
+        }
 
         .konami-scrollbar {
           scrollbar-width: thin;
