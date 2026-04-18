@@ -66,7 +66,7 @@ function hasCompleteSpotifyData(
 export async function GET() {
   try {
     const response = await fetch(LANYARD_URL, {
-      next: { revalidate: 30 },
+      cache: "no-store",
     })
 
     if (!response.ok) {
@@ -137,7 +137,7 @@ export async function GET() {
       activities,
     }, {
       headers: {
-        "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60",
+        "Cache-Control": "no-store",
       },
     })
   } catch (error) {

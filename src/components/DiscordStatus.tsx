@@ -86,17 +86,25 @@ function formatTime(ms: number): string {
 }
 
 function SpotifyProgress({ start, end }: { start: number; end: number }) {
-  const [now, setNow] = useState(Date.now())
+  const [now, setNow] = useState(() => Math.min(Date.now(), end))
 
   useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), 1000)
-    return () => clearInterval(id)
-  }, [])
+    setNow(Math.min(Date.now(), end))
 
-  const elapsed = now - start
-  const total = end - start
-  const progress = Math.min(100, (elapsed / total) * 100)
-  const remaining = end - now
+    const id = setInterval(() => {
+      setNow((current) => {
+        if (current >= end) return current
+        return Math.min(Date.now(), end)
+      })
+    }, 1000)
+
+    return () => clearInterval(id)
+  }, [end, start])
+
+  const total = Math.max(end - start, 0)
+  const elapsed = Math.min(Math.max(now - start, 0), total)
+  const progress = total === 0 ? 100 : Math.min(100, (elapsed / total) * 100)
+  const remaining = Math.max(end - now, 0)
 
   return (
     <div className="flex items-center gap-2 mt-1.5">
