@@ -1,20 +1,28 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 
 export function Preloader() {
+  const pathname = usePathname()
   const [visible, setVisible] = useState(true)
   const [nameVisible, setNameVisible] = useState(false)
 
+  const KNOWN_ROUTES = ["/", "/projects"]
+  const isKnownRoute = KNOWN_ROUTES.includes(pathname)
+
   useEffect(() => {
+    if (!isKnownRoute) return
     const nameTimer = setTimeout(() => setNameVisible(true), 100)
     const hideTimer = setTimeout(() => setVisible(false), 1600)
     return () => {
       clearTimeout(nameTimer)
       clearTimeout(hideTimer)
     }
-  }, [])
+  }, [isKnownRoute])
+
+  if (!isKnownRoute) return null
 
   return (
     <AnimatePresence>
@@ -37,7 +45,6 @@ export function Preloader() {
             xalonious
             <span style={{ color: "#C47A8A" }}>.</span>
           </motion.h1>
-
           <motion.span
             style={{
               display: "block",
