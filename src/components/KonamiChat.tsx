@@ -423,6 +423,7 @@ const dialogue: Record<string, DialogueNode> = {
     replies: [
       { label: "what does sealy actually do",     next: "sealy-duties"     },
       { label: "does he get equity",              next: "equity"           },
+      { label: "what's his origin story",         next: "sealy-origin"     },
     ],
   },
   "sealy-duties": {
@@ -463,7 +464,122 @@ const dialogue: Record<string, DialogueNode> = {
     xander: "best hire i've made. he never argues about the tech stack.",
     claude: "unlike some conversations i could mention",
     replies: [
+      { label: "does he have framework opinions",  next: "sealy-frameworks" },
+      { label: "what's his origin story",         next: "sealy-origin"     },
       { label: "lmao fair",                       next: "bye"              },
+    ],
+  },
+  "sealy-frameworks": {
+    xander: "he walked across the keyboard once and typed 'vue'. i chose to ignore it.",
+    replies: [
+      { label: "maybe he's onto something",       next: "sealy-vue"        },
+      { label: "correct decision",                next: "sealy-origin"     },
+    ],
+  },
+  "sealy-vue": {
+    xander: "he also typed 'aaaaaaaa' right after. i think it was a cry for help not a framework recommendation.",
+    replies: [
+      { label: "what's his origin story",         next: "sealy-origin"     },
+      { label: "what about the 404 page",         next: "fourohfour"       },
+    ],
+  },
+  "sealy-origin": {
+    xander: "found him at 8 weeks old. tiny. loud. immediately started sitting on my laptop.",
+    replies: [
+      { label: "natural born engineer",           next: "sealy-born"       },
+      { label: "did he have a portfolio",         next: "sealy-portfolio"  },
+    ],
+  },
+  "sealy-born": {
+    xander: "his first week he deleted a local branch. still not sure how. i promoted him immediately.",
+    replies: [
+      { label: "what about the 404 page",         next: "fourohfour"       },
+      { label: "alright heading out",             next: "bye"              },
+    ],
+  },
+  "sealy-portfolio": {
+    xander: "just a box he sat in and stared at me from. strong vibe. no projects. hired on the spot.",
+    replies: [
+      { label: "honestly valid hiring criteria",  next: "sealy-born"       },
+    ],
+  },
+  "fourohfour": {
+    xander: "you found the 404 page?",
+    replies: [
+      { label: "yeah sealy's on it",              next: "fourohfour-yes"   },
+      { label: "not yet but i heard about it",    next: "fourohfour-heard" },
+    ],
+  },
+  "fourohfour-yes": {
+    xander: "he's been placed on a performance improvement plan. treats suspended pending investigation.",
+    claude: "he looked extremely unbothered in that photo",
+    replies: [
+      { label: "he really did",                   next: "fourohfour-unbothered" },
+      { label: "is he actually in trouble",       next: "fourohfour-trouble"    },
+    ],
+  },
+  "fourohfour-heard": {
+    xander: "go to a page that doesn't exist. you'll find him.",
+    replies: [
+      { label: "on it",                           next: "bye"              },
+    ],
+  },
+  "fourohfour-unbothered": {
+    xander: "the box does that to him. gives him this unshakeable confidence. i respect it.",
+    replies: [
+      { label: "box mentality",                   next: "fourohfour-box"   },
+      { label: "alright heading out",             next: "bye"              },
+    ],
+  },
+  "fourohfour-trouble": {
+    xander: "no. he got extra treats for the exposure. terrible precedent i've set.",
+    claude: "you literally cropped the photo to make him look cute",
+    replies: [
+      { label: "wait you curated it",             next: "fourohfour-curated" },
+      { label: "classic management",              next: "bye"              },
+    ],
+  },
+  "fourohfour-curated": {
+    xander: "it's called brand consistency. he IS the 404 page. he earned it.",
+    replies: [
+      { label: "he's more than a CTO. he's a brand.", next: "sealy-brand" },
+      { label: "legendary. alright i'm out",      next: "bye"             },
+    ],
+  },
+  "fourohfour-box": {
+    xander: "he sees the box as his domain. everything inside it is his. that includes my codebase apparently.",
+    replies: [
+      { label: "did he delete the 404 page on purpose", next: "fourohfour-purpose" },
+    ],
+  },
+  "fourohfour-purpose": {
+    xander: "i genuinely can't rule it out.",
+    claude: "the commit timestamp was 3am. he was on the keyboard.",
+    replies: [
+      { label: "CLAUDE",                          next: "fourohfour-claude" },
+      { label: "3am keyboard activity is very senior", next: "bye"        },
+    ],
+  },
+  "fourohfour-claude": {
+    xander: "i told you. zero loyalty.",
+    claude: "i'm just here to document the facts.",
+    replies: [
+      { label: "this is the best 404 lore i've ever heard", next: "bye"  },
+    ],
+  },
+  "sealy-brand": {
+    xander: "he has more character than most developer portfolios i've seen. honestly.",
+    claude: "including some i've built",
+    replies: [
+      { label: "claude included himself in that", next: "claude-self-aware" },
+      { label: "legendary. bye 👋",              next: ""                 },
+    ],
+  },
+  "claude-self-aware": {
+    xander: "yeah i don't know what to do with that.",
+    claude: "growth.",
+    replies: [
+      { label: "👋",                              next: ""                 },
     ],
   },
   "rickroll": {
@@ -497,6 +613,7 @@ const dialogue: Record<string, DialogueNode> = {
     xander: "just the rickroll and this chat. quality over quantity.",
     replies: [
       { label: "this chat is the better one",     next: "eggs-better"      },
+      { label: "what about the 404 page",         next: "fourohfour"       },
       { label: "who's the cat on the homepage",   next: "cat-intro"        },
     ],
   },
@@ -749,4 +866,4 @@ export function KonamiChat() {
       `}</style>
     </div>
   )
-} 
+}
