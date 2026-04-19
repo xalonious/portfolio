@@ -39,3 +39,22 @@ jobs:
 
             pm2 start portfolio
             pm2 save
+
+      - name: Notify Discord — success
+        if: success()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          status: success
+          title: "✅ Deployment #${{ github.run_number }} successful"
+          description: "Portfolio deployed to production."
+          url: "https://whoisxander.dev"
+
+      - name: Notify Discord — failure
+        if: failure()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          status: failure
+          title: "❌ Deployment #${{ github.run_number }} failed"
+          description: "Check the [workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details."
