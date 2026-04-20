@@ -91,7 +91,7 @@ export function Story() {
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-[--muted-foreground] mb-5">Primary stack</p>
               <div className="flex flex-wrap gap-2">
-                {["TypeScript", "React", "Next.js", "Node.js", "Java", "Tailwind", "Prisma", "MySQL"].map((tech) => (
+                {["TypeScript", "React", "Node.js", "Express", "Tailwind", "Prisma", "MySQL"].map((tech) => (
                   <span
                     key={tech}
                     className="px-3 py-1.5 rounded-sm border border-[--border] bg-[--card] text-xs text-[--foreground] font-medium"
