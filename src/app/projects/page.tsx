@@ -79,6 +79,14 @@ const PROJECTS: Project[] = [
     tech: ["Python", "Tkinter"],
   },
   {
+    title: "Statuswatch",
+    description:
+      "A self-hosted Go service that monitors third-party status pages and fires Discord webhook alerts for new incidents, updates, and resolutions.",
+    repo: "https://github.com/xalonious/statuswatch",
+    image: "/projects/statuswatch.png",
+    tech: ["Go"],
+  },
+  {
     title: "Image Tool",
     description:
       "A simple CLI tool to convert and compress images with sensible defaults.",
