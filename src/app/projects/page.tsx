@@ -57,10 +57,10 @@ const PROJECTS: Project[] = [
   {
     title: "My Portfolio Website",
     description:
-      "The site you're on — built with Next.js and Tailwind CSS. Showcases my projects, skills, and journey as a developer.",
+      "The site you're on. built with Next.js and Tailwind CSS. Showcases my projects, skills, and journey as a developer.",
     repo: "https://github.com/xalonious/portfolio",
     image: "/projects/portfolio.png",
-    tech: ["TypeScript", "React", "Next.js", "Tailwind CSS", "Shadcn UI", "Framer Motion"],
+    tech: ["TypeScript", "React", "Next.js", "Tailwind CSS", "Framer Motion"],
   },
   {
     title: "Robux Spent Calculator",
