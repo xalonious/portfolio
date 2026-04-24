@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { motion } from "framer-motion"
-import { MagneticButton } from "@/components/MagneticButton"
+import { MagneticButton } from "@/components/ui/MagneticButton"
 import { FaGithub, FaDiscord } from "react-icons/fa"
 import { MdEmail } from "react-icons/md"
 

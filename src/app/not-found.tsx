@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { TransitionLink } from "@/components/TransitionLink"
+import { TransitionLink } from "@/components/ui/TransitionLink"
 
 export default function NotFound() {
   return (

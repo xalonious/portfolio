@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { TransitionLink } from "@/components/TransitionLink"
+import { TransitionLink } from "@/components/ui/TransitionLink"
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)

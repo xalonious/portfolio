@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ContributionSnake } from "@/components/ContributionSnake"
+import { ContributionSnake } from "@/components/sections/ContributionSnake"
 
 export function Story() {
   return (

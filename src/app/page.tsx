@@ -2,14 +2,14 @@
 
 import { motion } from "framer-motion"
 import Image from "next/image"
-import { TechRadar } from "@/components/TechRadar"
-import { FeaturedProjects } from "@/components/FeaturedProjects"
-import { ContactSection } from "@/components/ContactSection"
-import { Story } from "@/components/Story"
-import { ScrambleText } from "@/components/ScrambleText"
-import { PrimaryButton, GhostButton } from "@/components/MagneticButton"
-import { DiscordStatus } from "@/components/DiscordStatus"
-import { TransitionLink } from "@/components/TransitionLink"
+import { TechRadar } from "@/components/sections/TechRadar"
+import { FeaturedProjects } from "@/components/sections/FeaturedProjects"
+import { ContactSection } from "@/components/sections/ContactSection"
+import { Story } from "@/components/sections/Story"
+import { ScrambleText } from "@/components/ui/ScrambleText"
+import { PrimaryButton, GhostButton } from "@/components/ui/MagneticButton"
+import { DiscordStatus } from "@/components/ui/DiscordStatus"
+import { TransitionLink } from "@/components/ui/TransitionLink"
 
 export default function Portfolio() {
   return (
