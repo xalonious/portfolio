@@ -617,11 +617,34 @@ const dialogue: Record<string, DialogueNode> = {
     ],
   },
   "eggs": {
-    xander: "just the rickroll and this chat. quality over quantity.",
+    xander: "the rickroll, this chat, and a curl easter egg. quality over quantity.",
     replies: [
+      { label: "wait a curl easter egg??",        next: "curl-egg"         },
       { label: "this chat is the better one",     next: "eggs-better"      },
       { label: "what about the 404 page",         next: "fourohfour"       },
       { label: "who's the cat on the homepage",   next: "cat-intro"        },
+    ],
+  },
+  "curl-egg": {
+    xander: "curl https://whoisxander.dev in a terminal. you'll see.",
+    claude: "sealy makes an appearance",
+    replies: [
+      { label: "of course he does",               next: "curl-sealy"       },
+      { label: "this chat is still the best one", next: "curl-best"        },
+    ],
+  },
+  "curl-sealy": {
+    xander: "he insisted. i didn't even ask.",
+    replies: [
+      { label: "this chat is still better",       next: "eggs-better"      },
+      { label: "who's the cat on the homepage",   next: "cat-intro"        },
+    ],
+  },
+  "curl-best": {
+    xander: "objectively yes. the curl one has sealy. this one has character development.",
+    replies: [
+      { label: "fair",                            next: "eggs-better"      },
+      { label: "who's the cat",                   next: "cat-intro"        },
     ],
   },
   "eggs-better": {
