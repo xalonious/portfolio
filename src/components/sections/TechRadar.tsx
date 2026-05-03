@@ -19,7 +19,6 @@ const TECHS: Tech[] = [
   { name: "JavaScript",  icon: "/tech/javascript.svg",  category: "Frontend",       level: "Proficient" },
   { name: "CSS",         icon: "/tech/css.svg",         category: "Frontend",       level: "Proficient" },
   { name: "HTML",        icon: "/tech/html.svg",        category: "Frontend",       level: "Proficient" },
-  { name: "Framer",      icon: "/tech/framer.svg",      category: "Frontend",       level: "Proficient" },
   { name: "Bootstrap",   icon: "/tech/bootstrap.svg",   category: "Frontend",       level: "Familiar"   },
   { name: "Electron",    icon: "/tech/electron.svg",    category: "Frontend",       level: "Familiar"   },
   { name: "Node.js",     icon: "/tech/nodejs.svg",      category: "Backend",        level: "Proficient" },
