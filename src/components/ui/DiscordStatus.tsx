@@ -236,13 +236,13 @@ export function DiscordStatus() {
       {game && (
         <div className="flex items-center gap-3 rounded-sm border border-[--border] bg-[--card] p-3 max-w-xs">
           {gameImageUrl && (
-            <div className="relative w-10 h-10 shrink-0 rounded-sm overflow-hidden border border-[--border]" style={{ backgroundColor: "#18181b" }}>
+            <div className="relative w-10 h-10 shrink-0 overflow-hidden">
               <Image
                 src={gameImageUrl}
                 alt={game.name}
                 fill
                 sizes="40px"
-                className="object-contain p-1"
+                className="object-contain"
                 unoptimized
               />
             </div>
