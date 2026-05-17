@@ -85,17 +85,41 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  * {
-    cursor: none !important;
-  }
-
-  @media (pointer: coarse) {
-    * {
-      cursor: auto !important;
-    }
-  }
-
   @media (pointer: fine) {
+    *,
+    *::before,
+    *::after {
+      cursor: url("/cursors/default.svg") 6 5, auto;
+    }
+
+    a,
+    button,
+    [role="button"],
+    label,
+    select,
+    summary,
+    [tabindex]:not([tabindex="-1"]) {
+      cursor: url("/cursors/pointer.svg") 6 5, pointer;
+    }
+
+    input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    textarea,
+    [contenteditable="true"] {
+      cursor: url("/cursors/text.svg") 16 16, text !important;
+      caret-color: var(--primary);
+    }
+
+    input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):focus,
+    textarea:focus,
+    [contenteditable="true"]:focus {
+      cursor: url("/cursors/text.svg") 16 16, text !important;
+    }
+
+    button:disabled,
+    [aria-disabled="true"] {
+      cursor: not-allowed;
+    }
+
     html {
       scrollbar-width: none;
     }

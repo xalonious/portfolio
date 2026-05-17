@@ -1,7 +1,6 @@
 import "./globals.css"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
-import { CustomCursor } from "@/components/ui/CustomCursor"
 import { Preloader } from "@/components/ui/Preloader"
 import { PageWrapper } from "@/components/layout/PageWrapper"
 import { LenisProvider } from "@/components/layout/LenisProvider"
@@ -61,12 +60,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${playfair.variable} ${dmSans.variable}`}
       data-scroll-behavior="smooth"
     >
-      <body className="min-h-screen bg-background text-foreground antialiased font-sans selection:bg-[#C47A8A33] selection:text-foreground cursor-none">
+      <body className="min-h-screen bg-background text-foreground antialiased font-sans selection:bg-[#C47A8A33] selection:text-foreground">
         <LenisProvider>
           <ScrollProgress />
           <KonamiChat />
           <Preloader />
-          <CustomCursor />
           <Header />
           <PageWrapper>{children}</PageWrapper>
           <Footer />
