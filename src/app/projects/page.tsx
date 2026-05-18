@@ -63,6 +63,14 @@ const PROJECTS: Project[] = [
     tech: ["TypeScript", "React", "Next.js", "Tailwind CSS", "Framer Motion"],
   },
   {
+    title: "My SSH Portfolio",
+    description:
+      "An SSH accessible terminal version of my portfolio, built as a keyboard driven TUI with Go, Bubble Tea, Lip Gloss, and Wish",
+    repo: "https://github.com/xalonious/ssh-portfolio",
+    image: "/projects/ssh-portfolio.png",
+    tech: ["Go"],
+  },
+  {
     title: "Robux Spent Calculator",
     description:
       "An Electron desktop app that tracks Robux inflow, outflow, and current balance, with charts and spending insights.",
