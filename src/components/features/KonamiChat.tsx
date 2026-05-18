@@ -617,9 +617,10 @@ const dialogue: Record<string, DialogueNode> = {
     ],
   },
   "eggs": {
-    xander: "the rickroll, this chat, and a curl easter egg. quality over quantity.",
+    xander: "the rickroll, this chat, a curl easter egg, and a full terminal portfolio over ssh. quality over quantity.",
     replies: [
       { label: "wait a curl easter egg??",        next: "curl-egg"         },
+      { label: "a terminal portfolio??",          next: "ssh-egg"          },
       { label: "this chat is the better one",     next: "eggs-better"      },
       { label: "what about the 404 page",         next: "fourohfour"       },
       { label: "who's the cat on the homepage",   next: "cat-intro"        },
@@ -630,21 +631,37 @@ const dialogue: Record<string, DialogueNode> = {
     claude: "sealy makes an appearance",
     replies: [
       { label: "of course he does",               next: "curl-sealy"       },
+      { label: "what about the ssh thing",        next: "ssh-egg"          },
       { label: "this chat is still the best one", next: "curl-best"        },
     ],
   },
   "curl-sealy": {
     xander: "he insisted. i didn't even ask.",
     replies: [
+      { label: "what about the ssh portfolio",    next: "ssh-egg"          },
       { label: "this chat is still better",       next: "eggs-better"      },
-      { label: "who's the cat on the homepage",   next: "cat-intro"        },
     ],
   },
   "curl-best": {
     xander: "objectively yes. the curl one has sealy. this one has character development.",
     replies: [
+      { label: "what about the ssh portfolio",    next: "ssh-egg"          },
       { label: "fair",                            next: "eggs-better"      },
-      { label: "who's the cat",                   next: "cat-intro"        },
+    ],
+  },
+  "ssh-egg": {
+    xander: "ssh term.whoisxander.dev -p 2323. full terminal version of the portfolio.",
+    replies: [
+      { label: "you made a terminal portfolio??", next: "ssh-why"          },
+      { label: "that's genuinely insane",         next: "ssh-why"          },
+    ],
+  },
+  "ssh-why": {
+    xander: "because i could. and because people who find it via ssh are exactly the kind of people i want to work with.",
+    claude: "he spent longer on the terminal version than the scroll progress bar",
+    replies: [
+      { label: "that tracks",                     next: "eggs-better"      },
+      { label: "this chat is still better though", next: "eggs-better"     },
     ],
   },
   "eggs-better": {
@@ -798,7 +815,7 @@ export function KonamiChat() {
               {done ? "left the chat" : typing ? "typing..." : "online"}
             </p>
           </div>
-          <button onClick={handleClose} className="text-[--muted-foreground] hover:text-[--foreground] bg-transparent border-none cursor-pointer text-xl leading-none transition-colors">✕</button>
+          <button onClick={handleClose} className="text-[--muted-foreground] hover:text-[--foreground] bg-transparent border-none text-xl leading-none transition-colors">✕</button>
         </div>
 
         <div data-lenis-prevent className="konami-scrollbar flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-2.5 overscroll-contain">
@@ -857,7 +874,7 @@ export function KonamiChat() {
                 <button
                   key={i}
                   onClick={() => handleReply(r)}
-                  className="w-full text-left px-3.5 py-2.5 rounded-sm border border-[--border] text-sm text-[--muted-foreground] hover:border-[--primary] hover:text-[--foreground] transition-colors duration-150 cursor-pointer"
+                  className="w-full text-left px-3.5 py-2.5 rounded-sm border border-[--border] text-sm text-[--muted-foreground] hover:border-[--primary] hover:text-[--foreground] transition-colors duration-150"
                   style={{ backgroundColor: "var(--card)" }}
                 >
                   {r.label}
