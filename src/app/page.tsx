@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { TechRadar } from "@/components/sections/TechRadar"
@@ -10,6 +11,42 @@ import { ScrambleText } from "@/components/ui/ScrambleText"
 import { PrimaryButton, GhostButton } from "@/components/ui/MagneticButton"
 import { DiscordStatus } from "@/components/ui/DiscordStatus"
 import { TransitionLink } from "@/components/ui/TransitionLink"
+import { FaCheck, FaRegCopy } from "react-icons/fa"
+
+function TerminalHint({ className = "" }: { className?: string }) {
+  const [copied, setCopied] = useState(false)
+  const command = "ssh term.whoisxander.dev -p 2323"
+
+  async function copyCommand() {
+    await navigator.clipboard.writeText(command)
+    setCopied(true)
+    window.setTimeout(() => setCopied(false), 1600)
+  }
+
+  return (
+    <div className={`text-[11px] leading-relaxed text-[--muted-foreground]/65 ${className}`}>
+      <p>psst... are you a terminal wizard? this portfolio has an SSH version:</p>
+      <div className="mt-1 inline-flex items-center overflow-hidden rounded-sm border border-[--border]/70 bg-[--card]/60">
+        <code className="whitespace-nowrap px-2 py-1 font-mono text-[--foreground]/65">
+          {command}
+        </code>
+        <button
+          type="button"
+          onClick={copyCommand}
+          className="flex h-6 w-7 items-center justify-center border-l border-[--border]/70 text-[--muted-foreground]/70 transition-colors duration-200 hover:text-[--foreground]"
+          aria-label="Copy SSH command"
+          title={copied ? "Copied" : "Copy"}
+        >
+          {copied ? (
+            <FaCheck className="h-3 w-3" aria-hidden />
+          ) : (
+            <FaRegCopy className="h-3 w-3" aria-hidden />
+          )}
+        </button>
+      </div>
+    </div>
+  )
+}
 
 export default function Portfolio() {
   return (
@@ -109,6 +146,14 @@ export default function Portfolio() {
         >
           Scroll ↓
         </motion.p>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="absolute bottom-8 right-6 hidden max-w-sm text-right sm:block"
+        >
+          <TerminalHint />
+        </motion.div>
       </section>
       <Story />
       <section id="stack" className="py-20 scroll-mt-24">
