@@ -49,7 +49,7 @@ const PROJECTS: Project[] = [
   {
     title: "Barber App",
     description:
-      "A school project — a simple booking app where users schedule appointments with barbers. Built with React and Express for a smooth UX.",
+      "A full-stack appointment booking app where users can schedule barber appointments through a clean, responsive interface.",
     repo: "https://github.com/xalonious/barber-app",
     image: "/projects/barber.png",
     tech: ["TypeScript", "React", "Node.js", "Bootstrap", "Express", "MySQL"],
@@ -79,52 +79,12 @@ const PROJECTS: Project[] = [
     tech: ["JavaScript", "Node.js", "Electron", "HTML", "CSS"],
   },
   {
-    title: "BongoClicker",
-    description:
-      "A Windows autoclicker for bongocat. Fires every key on the keyboard in rapid succession while the cat jams along.",
-    repo: "https://github.com/xalonious/bongoclicker",
-    image: "/projects/bongoclicker.png",
-    tech: ["Python", "Tkinter"],
-  },
-  {
     title: "Statuswatch",
     description:
       "A self-hosted Go service that monitors third-party status pages and fires Discord webhook alerts for new incidents, updates, and resolutions.",
     repo: "https://github.com/xalonious/statuswatch",
     image: "/projects/statuswatch.png",
     tech: ["Go"],
-  },
-  {
-    title: "Image Tool",
-    description:
-      "A simple CLI tool to convert and compress images with sensible defaults.",
-    repo: "https://github.com/xalonious/image_tool",
-    image: "/projects/imageconverter.png",
-    tech: ["Python"],
-  },
-  {
-    title: "AutoClicker",
-    description:
-      "A lightweight C# autoclicker to automate mouse clicks for repetitive tasks.",
-    repo: "https://github.com/xalonious/autoclicker",
-    image: "/projects/autoclicker.png",
-    tech: ["C#", ".NET"],
-  },
-  {
-    title: "PassGuard",
-    description:
-      "A simple password manager built with Electron and SQLite. Securely store and manage credentials locally.",
-    repo: "https://github.com/xalonious/password-manager",
-    image: "/projects/passwordmanager.png",
-    tech: ["JavaScript", "Electron", "HTML", "CSS", "SQLite"],
-  },
-  {
-    title: "Backup Code Encryptor",
-    description:
-      "CLI tool to encrypt your 2FA backup codes with a password — keep them safe from prying eyes.",
-    repo: "https://github.com/xalonious/backup-code-encryptor",
-    image: "/projects/encryption.png",
-    tech: ["Python"],
   },
 ]
 
