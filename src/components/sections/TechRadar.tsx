@@ -19,7 +19,6 @@ const TECHS: Tech[] = [
   { name: "JavaScript",  icon: "/tech/javascript.svg",  category: "Frontend",       level: "Proficient" },
   { name: "CSS",         icon: "/tech/css.svg",         category: "Frontend",       level: "Proficient" },
   { name: "HTML",        icon: "/tech/html.svg",        category: "Frontend",       level: "Proficient" },
-  { name: "Bootstrap",   icon: "/tech/bootstrap.svg",   category: "Frontend",       level: "Familiar"   },
   { name: "Electron",    icon: "/tech/electron.svg",    category: "Frontend",       level: "Familiar"   },
   { name: "Node.js",     icon: "/tech/nodejs.svg",      category: "Backend",        level: "Proficient" },
   { name: "Express",     icon: "/tech/express.svg",     category: "Backend",        level: "Proficient" },
@@ -27,17 +26,16 @@ const TECHS: Tech[] = [
   { name: "C#",          icon: "/tech/csharp.svg",      category: "Backend",        level: "Familiar"   },
   { name: ".NET",        icon: "/tech/dotnet.svg",      category: "Backend",        level: "Familiar"   },
   { name: "Python",      icon: "/tech/python.svg",      category: "Backend",        level: "Familiar"   },
+  { name: "Go",          icon: "/tech/go.svg",          category: "Backend",        level: "Familiar"   },
   { name: "Prisma",      icon: "/tech/prisma.svg",      category: "Backend",        level: "Proficient" },
   { name: "MySQL",       icon: "/tech/mysql.svg",       category: "Backend",        level: "Proficient" },
   { name: "MongoDB",     icon: "/tech/mongodb.svg",     category: "Backend",        level: "Proficient" },
-  { name: "SQLite",      icon: "/tech/sqlite.svg",      category: "Backend",        level: "Familiar"   },
   { name: "Docker",      icon: "/tech/docker.svg",      category: "Infrastructure", level: "Proficient" },
   { name: "Nginx",       icon: "/tech/nginx.svg",       category: "Infrastructure", level: "Proficient" },
   { name: "Linux",       icon: "/tech/linux.svg",       category: "Infrastructure", level: "Proficient" },
   { name: "Bash",        icon: "/tech/bash.svg",        category: "Infrastructure", level: "Familiar"   },
   { name: "Git",         icon: "/tech/git.svg",         category: "Tools",          level: "Proficient" },
   { name: "GitHub",      icon: "/tech/github.svg",      category: "Tools",          level: "Proficient" },
-  { name: "Figma",       icon: "/tech/figma.svg",       category: "Tools",          level: "Familiar"   },
 ]
 
 const LEVEL_SIZE: Record<Tech["level"], number> = {
