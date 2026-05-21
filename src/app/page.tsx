@@ -25,7 +25,7 @@ function TerminalHint({ className = "" }: { className?: string }) {
 
   return (
     <div className={`text-[11px] leading-relaxed text-[--muted-foreground]/65 ${className}`}>
-      <p>psst... are you a terminal wizard? this portfolio has an SSH version:</p>
+      <p>psst... terminal wizard? check out the ssh version:</p>
       <div className="mt-1 inline-flex items-center overflow-hidden rounded-sm border border-[--border]/70 bg-[--card]/60">
         <code className="whitespace-nowrap px-2 py-1 font-mono text-[--foreground]/65">
           {command}
