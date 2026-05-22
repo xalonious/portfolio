@@ -16,6 +16,7 @@ export function Footer() {
               Xander
             </Link>
           </p>
+          <p className="text-xs text-[--muted-foreground] opacity-60 italic">Barlog was here :)</p>
           <p className="text-xs text-[--muted-foreground]">© {new Date().getFullYear()}</p>
         </div>
 
