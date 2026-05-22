@@ -2,22 +2,17 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useRef, useState, useCallback } from "react"
+import { useCallback, useRef, useState } from "react"
 import { motion, type Variants, useMotionValue, useSpring } from "framer-motion"
+import type { Project } from "@/lib/projects"
 
-export type Project = {
-  title: string
-  description?: string
-  desc?: string
-  image: string
-  tech: string[]
-  repo?: string
-  href?: string
-}
-
-const container: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+type ProjectListProps = {
+  projects: Project[]
+  reveal?: "inView" | "mount"
+  rowClassName?: string
+  staggerChildren?: number
+  delayChildren?: number
+  titleAs?: "h2" | "h3"
 }
 
 const item: Variants = {
@@ -25,25 +20,55 @@ const item: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 }
 
-export function FeaturedProjects({ projects }: { projects: Project[] }) {
+export function ProjectList({
+  projects,
+  reveal = "inView",
+  rowClassName = "py-8 sm:py-10",
+  staggerChildren = 0.1,
+  delayChildren = 0.05,
+  titleAs = "h3",
+}: ProjectListProps) {
+  const container: Variants = {
+    hidden: {},
+    show: { transition: { staggerChildren, delayChildren } },
+  }
+
+  const revealProps =
+    reveal === "mount"
+      ? { animate: "show" }
+      : { whileInView: "show", viewport: { once: true, amount: 0.15 } }
+
   return (
     <motion.div
       variants={container}
       initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.15 }}
+      {...revealProps}
       className="divide-y divide-[--border] border-y border-[--border]"
     >
-      {projects.map((p, i) => (
-        <ProjectRow key={p.title} project={p} index={i} />
+      {projects.map((project, index) => (
+        <ProjectRow
+          key={project.title}
+          project={project}
+          index={index}
+          className={rowClassName}
+          titleAs={titleAs}
+        />
       ))}
     </motion.div>
   )
 }
 
-function ProjectRow({ project, index }: { project: Project; index: number }) {
-  const description = project.description ?? project.desc ?? ""
-  const link = project.repo ?? project.href
+function ProjectRow({
+  project,
+  index,
+  className,
+  titleAs,
+}: {
+  project: Project
+  index: number
+  className: string
+  titleAs: "h2" | "h3"
+}) {
   const rowRef = useRef<HTMLElement>(null)
   const [hovered, setHovered] = useState(false)
 
@@ -53,6 +78,7 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
   const springConfig = { stiffness: 120, damping: 18, mass: 0.8 }
   const x = useSpring(rawX, springConfig)
   const y = useSpring(rawY, springConfig)
+  const Heading = titleAs
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
     const row = rowRef.current
@@ -69,7 +95,7 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
       onMouseEnter={() => { if (window.matchMedia("(pointer: fine)").matches) setHovered(true) }}
       onMouseLeave={() => setHovered(false)}
       onMouseMove={handleMouseMove}
-      className="group relative grid sm:grid-cols-[auto_1fr_auto] gap-6 sm:gap-10 items-center py-8 sm:py-10"
+      className={`group relative grid sm:grid-cols-[auto_1fr_auto] gap-6 sm:gap-10 items-center ${className}`}
     >
       <motion.div
         className="pointer-events-none absolute z-20 w-52 h-36 rounded-sm overflow-hidden border border-[--border] shadow-xl hidden sm:block"
@@ -102,26 +128,26 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
             className="object-cover"
           />
         </div>
-        <h3 className="font-display text-xl sm:text-2xl font-bold leading-tight transition-colors duration-200 text-[--foreground] group-hover:text-[--primary]">
+        <Heading className="font-display text-xl sm:text-2xl font-bold leading-tight transition-colors duration-200 text-[--foreground] group-hover:text-[--primary]">
           {project.title}
-        </h3>
+        </Heading>
         <p className="text-sm text-[--muted-foreground] leading-relaxed max-w-prose line-clamp-2">
-          {description}
+          {project.description}
         </p>
         <div className="flex flex-wrap gap-1.5 pt-1">
-          {project.tech.map((t) => (
+          {project.tech.map((tech) => (
             <span
-              key={t}
+              key={tech}
               className="px-2 py-1 rounded-sm border border-[--border] bg-[--card] text-[10px] font-medium text-[--muted-foreground] uppercase tracking-wide"
             >
-              {t}
+              {tech}
             </span>
           ))}
         </div>
       </div>
-      {link && (
+      {project.repo && (
         <Link
-          href={link}
+          href={project.repo}
           target="_blank"
           rel="noreferrer"
           className="shrink-0 text-sm font-medium text-[--muted-foreground] underline underline-offset-4 decoration-[--border] hover:text-[--primary] hover:decoration-[--primary] transition-colors duration-200 whitespace-nowrap"

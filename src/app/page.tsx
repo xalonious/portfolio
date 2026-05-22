@@ -4,13 +4,14 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { TechRadar } from "@/components/sections/TechRadar"
-import { FeaturedProjects } from "@/components/sections/FeaturedProjects"
+import { ProjectList } from "@/components/sections/ProjectList"
 import { ContactSection } from "@/components/sections/ContactSection"
 import { Story } from "@/components/sections/Story"
 import { ScrambleText } from "@/components/ui/ScrambleText"
 import { PrimaryButton, GhostButton } from "@/components/ui/MagneticButton"
 import { DiscordStatus } from "@/components/ui/DiscordStatus"
 import { TransitionLink } from "@/components/ui/TransitionLink"
+import { featuredProjects } from "@/lib/projects"
 import { FaCheck, FaRegCopy } from "react-icons/fa"
 
 function TerminalHint({ className = "" }: { className?: string }) {
@@ -175,34 +176,7 @@ export default function Portfolio() {
             </p>
           </div>
 
-          <FeaturedProjects
-            projects={[
-              {
-                title: "Streaming App",
-                description:
-                  "A self-hosted media streaming web app for discovering and playing movies and TV shows from user-configured sources.",
-                repo: "https://github.com/xalonious/streaming-app",
-                image: "/projects/streamingapp.png",
-                tech: ["TypeScript", "React", "Node.js", "Express", "Tailwind"],
-              },
-              {
-                title: "xanderGPT",
-                description:
-                  "A ChatGPT-style web app powered by a local LLM via Ollama, with real-time streaming, persistent conversations & web search.",
-                repo: "https://github.com/xalonious/xanderGPT",
-                image: "/projects/xandergpt.png",
-                tech: ["TypeScript", "React", "Node.js", "Express", "Tailwind", "Prisma", "MySQL"],
-              },
-              {
-                title: "Serendipity Scheduling",
-                description:
-                  "A centralized scheduling web app and API for managing staff shifts and trainings for a Roblox roleplay group.",
-                repo: "https://github.com/xalonious/serendipity-scheduling-app",
-                image: "/projects/serendipity.png",
-                tech: ["TypeScript", "React", "Node.js", "Express", "Tailwind", "Prisma", "MySQL"],
-              },
-            ]}
-          />
+          <ProjectList projects={featuredProjects} />
 
           <div className="mt-12 flex justify-center">
             <TransitionLink
