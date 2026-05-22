@@ -63,7 +63,7 @@ export const projects: Project[] = [
     title: "My SSH Portfolio",
     description:
       "An SSH accessible terminal version of my portfolio, built as a keyboard driven TUI with Go, Bubble Tea, Lip Gloss, and Wish",
-    repo: "https://github.com/xalonious/ssh-portfolio",
+    repo: "https://github.com/xalonious/portfolio-a-la-ssh",
     image: "/projects/ssh-portfolio.png",
     tech: ["Go"],
   },
