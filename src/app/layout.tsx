@@ -35,6 +35,9 @@ export const metadata = {
     index: true,
     follow: true,
   },
+  icons: {
+    icon: '/favicon.svg',
+},
 }
 
 const playfair = Playfair_Display({
