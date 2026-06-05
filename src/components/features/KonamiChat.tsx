@@ -660,8 +660,15 @@ const dialogue: Record<string, DialogueNode> = {
     xander: "because i could. and because people who find it via ssh are exactly the kind of people i want to work with.",
     claude: "he spent longer on the terminal version than the scroll progress bar",
     replies: [
-      { label: "that tracks",                     next: "eggs-better"      },
+      { label: "that tracks",                     next: "ssh-tracks"       },
       { label: "this chat is still better though", next: "eggs-better"     },
+    ],
+  },
+  "ssh-tracks": {
+    xander: "deeply. the scroll bar was polish. the ssh version was a whole second portfolio wearing a trench coat.",
+    replies: [
+      { label: "did you build this site yourself", next: "vibe-code-soft"  },
+      { label: "who's the cat",                   next: "cat-intro"        },
     ],
   },
   "eggs-better": {
