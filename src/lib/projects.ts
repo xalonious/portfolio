@@ -18,12 +18,12 @@ export const projects: Project[] = [
     featured: true,
   },
   {
-    title: "Serendipity Assistant",
+    title: "Bridgely",
     description:
-      "A general purpose Discord bot featuring moderation tools, fun/community commands, and automation utilities.",
-    repo: "https://github.com/xalonious/serendipity-assistant",
-    image: "/projects/serendipity-assistant.png",
-    tech: ["JavaScript", "Node.js", "MongoDB"],
+      "A Discord-to-Roblox verification bot with profile and game-based verification, automatic group role and nickname synchronization, and configurable rank, badge, and game-pass role binds.",
+    repo: "https://github.com/xalonious/Bridgely",
+    image: "/projects/bridgely.png",
+    tech: ["JavaScript", "Node.js", "Discord.js", "Express", "MongoDB", "Luau"],
   },
   {
     title: "Streaming App",
