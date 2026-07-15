@@ -451,7 +451,13 @@ const dialogue: Record<string, DialogueNode> = {
     xander: "he shipped a commit once. 'asdfghjkl'. broke the build. very senior behaviour.",
     replies: [
       { label: "did you revert it",               next: "revert"           },
-      { label: "iconic",                          next: "revert"           },
+      { label: "iconic",                          next: "iconic"           },
+    ],
+  },
+  "iconic": {
+    xander: "exactly. finally, someone appreciates his creative process.",
+    replies: [
+      { label: "does he get compensated for this", next: "equity"          },
     ],
   },
   "revert": {
