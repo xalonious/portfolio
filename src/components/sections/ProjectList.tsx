@@ -1,9 +1,9 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
 import { useCallback, useRef, useState } from "react"
-import { motion, type Variants, useMotionValue, useSpring } from "framer-motion"
+import { motion, type Variants, useMotionValue, useReducedMotion, useSpring } from "framer-motion"
+import { TransitionLink } from "@/components/ui/TransitionLink"
 import type { Project } from "@/lib/projects"
 
 type ProjectListProps = {
@@ -28,9 +28,12 @@ export function ProjectList({
   delayChildren = 0.05,
   titleAs = "h3",
 }: ProjectListProps) {
+  const shouldReduceMotion = useReducedMotion()
   const container: Variants = {
     hidden: {},
-    show: { transition: { staggerChildren, delayChildren } },
+    show: {
+      transition: shouldReduceMotion ? { duration: 0 } : { staggerChildren, delayChildren },
+    },
   }
 
   const revealProps =
@@ -52,6 +55,7 @@ export function ProjectList({
           index={index}
           className={rowClassName}
           titleAs={titleAs}
+          shouldReduceMotion={shouldReduceMotion}
         />
       ))}
     </motion.div>
@@ -63,11 +67,13 @@ function ProjectRow({
   index,
   className,
   titleAs,
+  shouldReduceMotion,
 }: {
   project: Project
   index: number
   className: string
   titleAs: "h2" | "h3"
+  shouldReduceMotion: boolean | null
 }) {
   const rowRef = useRef<HTMLElement>(null)
   const [hovered, setHovered] = useState(false)
@@ -79,6 +85,8 @@ function ProjectRow({
   const x = useSpring(rawX, springConfig)
   const y = useSpring(rawY, springConfig)
   const Heading = titleAs
+  const externalHref = project.repo ?? project.live
+  const externalLabel = project.repo ? "View repository" : "View live project"
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
     const row = rowRef.current
@@ -91,7 +99,7 @@ function ProjectRow({
   return (
     <motion.article
       ref={rowRef}
-      variants={item}
+      variants={shouldReduceMotion ? { hidden: { opacity: 1 }, show: { opacity: 1 } } : item}
       onMouseEnter={() => { if (window.matchMedia("(pointer: fine)").matches) setHovered(true) }}
       onMouseLeave={() => setHovered(false)}
       onMouseMove={handleMouseMove}
@@ -102,13 +110,16 @@ function ProjectRow({
         style={{ x, y, left: 0, top: 0 }}
         animate={{
           opacity: hovered ? 1 : 0,
-          scale: hovered ? 1 : 0.88,
+          scale: hovered || shouldReduceMotion ? 1 : 0.88,
         }}
-        transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        transition={{
+          duration: shouldReduceMotion ? 0 : 0.2,
+          ease: [0.22, 1, 0.36, 1],
+        }}
       >
         <Image
           src={project.image}
-          alt={project.title}
+          alt={project.imageAlt ?? project.title}
           fill
           sizes="208px"
           className="object-cover"
@@ -122,13 +133,13 @@ function ProjectRow({
         <div className="relative w-full h-40 rounded-sm overflow-hidden border border-[--border] mb-3 sm:hidden">
           <Image
             src={project.image}
-            alt={project.title}
+            alt={project.imageAlt ?? project.title}
             fill
             sizes="(min-width: 640px) 0px, calc(100vw - 48px)"
             className="object-cover"
           />
         </div>
-        <Heading className="font-display text-xl sm:text-2xl font-bold leading-tight transition-colors duration-200 text-[--foreground] group-hover:text-[--primary]">
+        <Heading className="font-display text-xl sm:text-2xl font-bold leading-tight transition-colors duration-200 text-[--foreground] group-hover:text-[--primary] group-focus-within:text-[--primary]">
           {project.title}
         </Heading>
         <p className="text-sm text-[--muted-foreground] leading-relaxed max-w-prose line-clamp-2">
@@ -145,15 +156,24 @@ function ProjectRow({
           ))}
         </div>
       </div>
-      {project.repo && (
-        <Link
-          href={project.repo}
-          target="_blank"
-          rel="noreferrer"
-          className="shrink-0 text-sm font-medium text-[--muted-foreground] underline underline-offset-4 decoration-[--border] hover:text-[--primary] hover:decoration-[--primary] transition-colors duration-200 whitespace-nowrap"
+      {project.caseStudy ? (
+        <TransitionLink
+          href={`/projects/${project.slug}`}
+          className="shrink-0 whitespace-nowrap text-sm font-medium text-[--muted-foreground] underline decoration-[--border] underline-offset-4 transition-colors duration-200 hover:text-[--primary] hover:decoration-[--primary] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--primary]"
         >
-          View →
-        </Link>
+          View project <span aria-hidden="true">→</span>
+        </TransitionLink>
+      ) : (
+        externalHref && (
+          <a
+            href={externalHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 whitespace-nowrap text-sm font-medium text-[--muted-foreground] underline decoration-[--border] underline-offset-4 transition-colors duration-200 hover:text-[--primary] hover:decoration-[--primary] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--primary]"
+          >
+            {externalLabel} <span aria-hidden="true">→</span>
+          </a>
+        )
       )}
     </motion.article>
   )
