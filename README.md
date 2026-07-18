@@ -9,7 +9,7 @@ this is my personal site, built to bring together my story, projects, tech stack
 
 ## Features
 - Responsive landing page with animated hero, smooth scrolling, and page transitions
-- Project showcase with featured projects and a dedicated projects page
+- Project showcase with featured work, a complete project index, and dedicated data driven case study pages
 - Interactive tech stack radar with category filtering and hover details
 - Live Discord and Spotify presence powered by the Lanyard API
 - Contact form with validation, rate limiting, spam checks, and Discord webhook delivery
