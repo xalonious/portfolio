@@ -36,20 +36,23 @@ export function Story() {
             className="space-y-6 text-[--muted-foreground] text-lg leading-relaxed"
           >
             <p>
-              I&apos;m a <span className="text-[--foreground] font-medium">self-taught full-stack developer</span> who
-              went headfirst into coding and never really came back up for air.
+              I&apos;m a <span className="text-[--foreground] font-medium">self-taught full-stack developer</span>{" "}who
+              builds modern web applications end to end, from interfaces that feel good to use
+              to backends that don&apos;t fall over.
             </p>
             <p>
-              My background is in{" "}
-              <span className="text-[--foreground] font-medium">JavaScript, TypeScript, and Java</span>. I
-              build full-stack applications with a focus on clean architecture and interfaces
-              that actually feel good to use.
+              <span className="text-[--foreground] font-medium">TypeScript</span>{" "}is at the
+              center of most of my work, especially with React and Node.js. But I&apos;m not
+              married to one stack. I pick the language and tools that actually fit the problem,
+              whether that&apos;s a web app, a CLI tool, or something a client didn&apos;t even
+              know they needed.
             </p>
             <p>
-              I care about the{" "}
-              <span className="text-[--foreground] font-medium">open-source community</span>{" "}
-              and I&apos;m
-              always experimenting with something new. Currently available for the right opportunity.
+              I&apos;m also a little obsessed with{" "}
+              <span className="text-[--foreground] font-medium">automation</span>. If something
+              is repetitive, slow, or error-prone, odds are I&apos;ve already turned it into a
+              script, integration, or workflow that runs itself while I do something more
+              interesting.
             </p>
             <div className="pt-4 grid grid-cols-3 gap-6 border-t border-[--border]">
               {[
@@ -79,7 +82,7 @@ export function Story() {
                   { index: "02", label: "UI & UX Design" },
                   { index: "03", label: "API Design & Architecture" },
                   { index: "04", label: "Self-Hosted Infrastructure" },
-                  { index: "05", label: "Open Source" },
+                  { index: "05", label: "Automation & Integrations" },
                 ].map((item) => (
                   <li key={item.index} className="flex items-center gap-4 py-3.5">
                     <span className="text-[10px] text-[--primary] font-mono w-5 shrink-0">{item.index}</span>
