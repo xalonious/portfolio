@@ -318,6 +318,14 @@ export const projects: Project[] = [
     image: "/projects/statuswatch.png",
     tech: ["Go"],
   },
+  {
+    title: "Media Tool",
+    description:
+      "A cross-platform Python CLI for converting, compressing, and precisely cutting images, audio, and video, with batch processing and a project-local FFmpeg runtime.",
+    repo: "https://github.com/xalonious/media_tool",
+    image: "/projects/mediatool.png",
+    tech: ["Python", "FFmpeg", "Pillow"],
+  },
 ]
 
 export const featuredProjects = projects.filter((project) => project.featured)
