@@ -307,16 +307,16 @@ export const projects: Project[] = [
         {
           type: "features",
           eyebrow: "Tool orchestration",
-          title: "Connecting the model to useful tools",
+          title: "Giving the local model bounded tools",
           paragraphs: [
-            "Before generating an answer, the backend can ask the model whether it should use a calculator or search the web. Mathematical expressions are evaluated separately, Brave Search provides web results, and URLs included in a prompt can be fetched and reduced to readable page content before being added to the model's context.",
-            "Building this flow taught me how an assistant can coordinate several specialized tools instead of expecting the language model to handle every task by itself.",
+            "Before generating an answer, the Express backend can route a request to a calculator, a direct URL fetch, or web search. Search can be automatic, forced, or disabled, and explicit freshness cues such as \"latest\" or \"today\" require a web check instead of leaving the decision entirely to the model.",
+            "The search planner receives recent conversation history so it can turn follow-ups such as \"what about the current one?\" into self-contained queries. Mathematical expressions are still evaluated separately, while pasted URLs are fetched and reduced to readable page content. Building these handoffs taught me how much useful tool orchestration happens before generation begins.",
           ],
           images: [
             {
               src: "/casestudies/xandergpt/search.png",
-              alt: "xanderGPT answer comparing Prisma and Drizzle with five web search sources shown beneath it",
-              caption: "Web search results are added to the model's context and exposed beneath the generated answer.",
+              alt: "Earlier xanderGPT interface showing a Prisma and Drizzle comparison with five Brave search result cards below the answer",
+              caption: "This screenshot captures the earlier snippet-based search flow. The current version shows only the smaller evidence set supplied to the answering model and asks it to cite those sources inline.",
               width: 1015,
               height: 886,
               layout: "inset",
@@ -329,17 +329,18 @@ export const projects: Project[] = [
           eyebrow: "Main technical challenge",
           title: "Reliable web search is more than an API call",
           paragraphs: [
-            "The difficult part was not sending a query to a search API; it was finding results that were relevant and trustworthy enough to support an answer. The implementation lets the model decide when to search, evaluates whether it needs more results, and adds Brave Search snippets to the final prompt.",
-            "That still leaves a fragile handoff between retrieval and generation. Search results can be incomplete or poorly matched, and the model may rely on its existing knowledge when that conflicts with the retrieved information. The result can sound confident while still being wrong, which made web search the clearest limitation of the prototype.",
+            "The first implementation passed Brave result titles and snippets directly to the model. Testing exposed the gap between having search results and having evidence: answers could be weakly grounded or stale, the chosen query was sometimes poor, and the source panel did not make it clear which result supported each claim.",
+            "I replaced that handoff with a bounded retrieval pipeline. It starts with a small result set, asks the local model whether the results are sufficient, selects the strongest candidates, and can run another limited search with a rewritten query. The selection prompt favors directly relevant primary, official, and reputable sources while avoiding duplicates and low-information pages.",
+            "Selected pages are fetched locally and reduced to readable text with Readability, then a keyword-based ranker keeps short passages related to the question. The answering model receives only that evidence, with instructions to treat it as untrusted, expose weak or conflicting support, and use inline numbers that match the displayed source panel. Only those supplied sources are persisted. If page extraction fails, the pipeline falls back to a clearly labelled search snippet, while caps on results, search rounds, fetch attempts, timeouts, page text, and passages keep the process finite.",
           ],
         },
         {
           type: "improvements",
-          eyebrow: "What I would improve",
-          title: "Build the answer around evidence",
+          eyebrow: "Remaining limitations",
+          title: "Better grounded, still a local prototype",
           paragraphs: [
-            "A stronger version would treat search as a retrieval pipeline rather than passing result snippets directly to the model. I would fetch the most promising pages, prioritize primary and reputable sources, extract only the passages relevant to the question, compare evidence across multiple sources, and require the final answer to cite the material it actually used.",
-            "I would also make conflicts and weak evidence explicit instead of asking the model to resolve them silently. That would make the system easier to evaluate and reduce the chance that prior model knowledge overrides fresher information.",
+            "Readability still fails on some dynamic, protected, or poorly structured pages, leaving a weaker snippet as the fallback. Passage selection is based on keyword overlap, so it can miss evidence expressed through related concepts rather than the same terms.",
+            "Fetching and parsing pages locally adds latency, which creates a real tradeoff between responsiveness and grounding. I deliberately limit the final evidence set to two sources to keep that cost manageable, but the small set can miss useful breadth or corroboration. The local 7B model also occasionally returns malformed structured decisions, so routing, query rewriting, and candidate selection are not completely consistent.",
           ],
         },
         {
@@ -347,7 +348,7 @@ export const projects: Project[] = [
           eyebrow: "What I learned",
           title: "Tool use depends on the quality of the handoff",
           paragraphs: [
-            "The project gave me a practical understanding of tool orchestration and showed me that adding a tool is only the first step. The difficult work is deciding when to use it, selecting useful context, and making sure the model stays grounded in what the tool returned.",
+            "The project gave me a practical understanding of tool orchestration and showed me that adding an API is only the first step. The harder work is deciding when fresh evidence is needed, turning a conversation into a useful query, narrowing retrieved material, and making the limits of that evidence visible in the answer.",
           ],
         },
       ],
