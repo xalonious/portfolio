@@ -1,7 +1,12 @@
 import Image from "next/image"
 import { CaseStudyReveal } from "@/components/ui/CaseStudyReveal"
+import { CaseStudyImageLightbox } from "@/components/ui/CaseStudyImageLightbox"
 import { TransitionLink } from "@/components/ui/TransitionLink"
-import type { CaseStudySection, ProjectWithCaseStudy } from "@/lib/projects"
+import type {
+  CaseStudyImage,
+  CaseStudySection,
+  ProjectWithCaseStudy,
+} from "@/lib/projects"
 
 const focusStyles =
   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--primary]"
@@ -9,7 +14,49 @@ const focusStyles =
 function hasContent(section: CaseStudySection) {
   return (
     section.paragraphs.some((paragraph) => paragraph.trim()) ||
-    section.highlights?.some((highlight) => highlight.trim())
+    section.highlights?.some((highlight) => highlight.trim()) ||
+    Boolean(section.images?.length)
+  )
+}
+
+function CaseStudyImages({ images }: { images: CaseStudyImage[] }) {
+  const hasMultipleImages = images.length > 1
+
+  return (
+    <div
+      className={`mt-10 border-y border-[--border] py-4 sm:py-5 ${hasMultipleImages ? "lg:-mx-24" : ""}`}
+    >
+      <div
+        className={
+          hasMultipleImages
+            ? "grid gap-6 sm:gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(15rem,0.75fr)] lg:items-center lg:gap-5"
+            : ""
+        }
+      >
+        {images.map((image) => {
+          const isInset = image.layout === "inset"
+          const sizes = !hasMultipleImages
+            ? "(min-width: 768px) 768px, calc(100vw - 48px)"
+            : isInset
+              ? "(min-width: 1024px) 270px, (min-width: 640px) 416px, calc(100vw - 64px)"
+              : "(min-width: 1024px) 650px, calc(100vw - 48px)"
+
+          return (
+            <figure
+              key={image.src}
+              className={isInset ? "mx-auto w-full max-w-[26rem] lg:max-w-none" : ""}
+            >
+              <CaseStudyImageLightbox image={image} sizes={sizes} />
+              {image.caption && (
+                <figcaption className="mt-3 text-xs leading-relaxed text-[--muted-foreground] sm:text-sm">
+                  {image.caption}
+                </figcaption>
+              )}
+            </figure>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 
@@ -188,14 +235,18 @@ export function ProjectCaseStudy({ project }: { project: ProjectWithCaseStudy })
                             <p key={paragraph}>{paragraph}</p>
                           ))}
                       </div>
-                      {section.highlights && section.highlights.some((highlight) => highlight.trim()) && (
-                        <ul className="mt-8 space-y-3 border-l border-[--primary] pl-6 text-base leading-relaxed text-[--foreground]">
-                          {section.highlights
-                            .filter((highlight) => highlight.trim())
-                            .map((highlight) => (
-                              <li key={highlight}>{highlight}</li>
-                            ))}
-                        </ul>
+                      {section.highlights &&
+                        section.highlights.some((highlight) => highlight.trim()) && (
+                          <ul className="mt-8 space-y-3 border-l border-[--primary] pl-6 text-base leading-relaxed text-[--foreground]">
+                            {section.highlights
+                              .filter((highlight) => highlight.trim())
+                              .map((highlight) => (
+                                <li key={highlight}>{highlight}</li>
+                              ))}
+                          </ul>
+                        )}
+                      {section.images && section.images.length > 0 && (
+                        <CaseStudyImages images={section.images} />
                       )}
                     </section>
                   )

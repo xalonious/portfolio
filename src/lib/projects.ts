@@ -9,12 +9,23 @@ export type CaseStudySectionType =
   | "learnings"
   | "improvements"
 
+export type CaseStudyImage = {
+  src: string
+  alt: string
+  caption?: string
+  width: number
+  height: number
+  layout?: "wide" | "inset"
+  lightboxSize?: "compact" | "standard" | "wide"
+}
+
 export type CaseStudySection = {
   type: CaseStudySectionType
   eyebrow?: string
   title: string
   paragraphs: string[]
   highlights?: string[]
+  images?: CaseStudyImage[]
 }
 
 export type CaseStudy = {
@@ -94,6 +105,32 @@ export const projects: Project[] = [
           ],
         },
         {
+          type: "features",
+          eyebrow: "Interface",
+          title: "Scheduling in practice",
+          paragraphs: [
+            "Members could use the weekly schedule to see upcoming sessions at a glance. Staff could create a shift by choosing its date and time range, then review the calculated reward before confirming it.",
+          ],
+          images: [
+            {
+              src: "/casestudies/serendipity/shifts.png",
+              alt: "Serendipity weekly shift schedule with claimed sessions arranged across seven days",
+              caption: "The weekly shift schedule gives members one place to see upcoming sessions.",
+              width: 1553,
+              height: 659,
+            },
+            {
+              src: "/casestudies/serendipity/modal.png",
+              alt: "Create Shift form with date and time fields and an estimated reward of 8 Robux",
+              caption: "Staff choose a date and time range, then see the calculated reward before creating a shift.",
+              width: 418,
+              height: 333,
+              layout: "inset",
+              lightboxSize: "compact",
+            },
+          ],
+        },
+        {
           type: "challenge",
           eyebrow: "Main technical challenge",
           title: "Rewarding the hours that needed hosts",
@@ -160,6 +197,23 @@ export const projects: Project[] = [
           ],
         },
         {
+          type: "features",
+          eyebrow: "Interface",
+          title: "A desktop-first browsing experience",
+          paragraphs: [
+            "The home screen uses a full-width featured title and artwork-led content rows to make discovery feel closer to a dedicated streaming service than a collection of external links.",
+          ],
+          images: [
+            {
+              src: "/casestudies/streamingapp/home.png",
+              alt: "Streaming App home screen featuring The Odyssey above a row of popular titles",
+              caption: "The home screen leads with a featured title before moving into ranked discovery rows.",
+              width: 1898,
+              height: 921,
+            },
+          ],
+        },
+        {
           type: "challenge",
           eyebrow: "Main challenge",
           title: "Making a content-heavy interface feel cinematic",
@@ -167,6 +221,15 @@ export const projects: Project[] = [
             "The external integrations were intentionally straightforward; most of the work went into making the app feel cohesive and polished. I built an artwork-led home page, discovery rows, search, detailed title and actor pages, season and episode browsing, trailers, recommendations, and a full-screen player as one connected experience.",
             "The challenge was less about one difficult algorithm and more about maintaining a clear visual hierarchy across a large amount of content. Artwork came in different shapes, titles varied in length, metadata could become dense, and each screen still had to remain usable across desktop and smaller displays.",
             "That meant treating spacing, typography, image sizing, navigation depth, responsive rows, and player transitions as parts of the same system rather than polishing each screen in isolation.",
+          ],
+          images: [
+            {
+              src: "/casestudies/streamingapp/details.png",
+              alt: "Streaming App details page for Mr. Robot with metadata, trailer controls, season selection, and episodes",
+              caption: "Title pages bring metadata, trailers, season controls, and episode browsing into the same artwork-led layout.",
+              width: 1904,
+              height: 916,
+            },
           ],
         },
         {
@@ -231,6 +294,15 @@ export const projects: Project[] = [
             "The React frontend communicates with an Express API that sends prompts to a local qwen2.5:7b model through Ollama. I chose that model because it was capable enough for the experiment while still running comfortably on my RTX 3070.",
             "Prisma and MySQL store accounts, conversations, messages, and per-chat system prompts. The backend streams generated tokens to the browser, supports cancellable responses, creates automatic conversation titles, and also offers temporary chats that are not written to the database.",
           ],
+          images: [
+            {
+              src: "/casestudies/xandergpt/chat.png",
+              alt: "xanderGPT desktop chat interface with conversation history and a streamed response containing formatted text and TypeScript code",
+              caption: "The desktop interface brings persistent conversation history, streamed responses, and rich content rendering into one chat experience.",
+              width: 2557,
+              height: 1272,
+            },
+          ],
         },
         {
           type: "features",
@@ -239,6 +311,17 @@ export const projects: Project[] = [
           paragraphs: [
             "Before generating an answer, the backend can ask the model whether it should use a calculator or search the web. Mathematical expressions are evaluated separately, Brave Search provides web results, and URLs included in a prompt can be fetched and reduced to readable page content before being added to the model's context.",
             "Building this flow taught me how an assistant can coordinate several specialized tools instead of expecting the language model to handle every task by itself.",
+          ],
+          images: [
+            {
+              src: "/casestudies/xandergpt/search.png",
+              alt: "xanderGPT answer comparing Prisma and Drizzle with five web search sources shown beneath it",
+              caption: "Web search results are added to the model's context and exposed beneath the generated answer.",
+              width: 1015,
+              height: 886,
+              layout: "inset",
+              lightboxSize: "standard",
+            },
           ],
         },
         {
