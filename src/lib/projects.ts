@@ -315,10 +315,10 @@ export const projects: Project[] = [
           images: [
             {
               src: "/casestudies/xandergpt/search.png",
-              alt: "Earlier xanderGPT interface showing a Prisma and Drizzle comparison with five Brave search result cards below the answer",
-              caption: "This screenshot captures the earlier snippet-based search flow. The current version shows only the smaller evidence set supplied to the answering model and asks it to cite those sources inline.",
-              width: 1015,
-              height: 886,
+              alt: "xanderGPT answer comparing Prisma and Drizzle with two selected web evidence sources below it",
+              caption: "The current search flow narrows retrieval to a bounded evidence set, then exposes the same sources supplied to the answering model beneath its response.",
+              width: 1072,
+              height: 829,
               layout: "inset",
               lightboxSize: "standard",
             },
