@@ -253,107 +253,118 @@ export const projects: Project[] = [
       ],
     },
   },
-  {
-    title: "xanderGPT",
-    slug: "xandergpt",
-    description:
-      "A ChatGPT-style web app powered by a local LLM through Ollama, featuring real-time streamed responses, persistent conversations, and web search.",
-    repo: "https://github.com/xalonious/xanderGPT",
-    image: "/projects/xandergpt.png",
-    imageAlt: "xanderGPT welcome screen with its logo and new-chat prompt",
-    tech: [
-      "TypeScript",
-      "React",
-      "Node.js",
-      "Express",
-      "Tailwind",
-      "Prisma",
-      "MySQL",
-      "Ollama",
+{
+  title: "xanderGPT",
+  slug: "xandergpt",
+  description:
+    "A self-hosted ChatGPT-style app powered by Qwen3 through Ollama, with streamed reasoning, persistent conversations, and web-aware tool orchestration.",
+  repo: "https://github.com/xalonious/xanderGPT",
+  image: "/projects/xandergpt.png",
+  imageAlt: "xanderGPT welcome screen with its logo and new-chat prompt",
+  tech: [
+    "TypeScript",
+    "React",
+    "Node.js",
+    "Express",
+    "Tailwind",
+    "Prisma",
+    "MySQL",
+    "Ollama",
+  ],
+  featured: true,
+  caseStudy: {
+    role: "Sole developer",
+    year: "2026",
+    status: "Local prototype",
+    sections: [
+      {
+        type: "context",
+        eyebrow: "Context",
+        title: "Learning what sits behind an AI chat interface",
+        paragraphs: [
+          "xanderGPT did not begin with a problem I needed to solve. I wanted to understand how difficult it would be to build my own ChatGPT-style application and how the interface, model, conversation state, and external tools fit together.",
+          "I treated it as a local prototype rather than a production product, focusing on recreating the parts of an AI chat experience that users normally take for granted.",
+        ],
+      },
+      {
+        type: "architecture",
+        eyebrow: "The system",
+        title: "A local model with persistent conversations",
+        paragraphs: [
+          "The React frontend communicates with an Express API that sends prompts to a local Qwen3 8B model through Ollama. I moved from qwen2.5:7b to qwen3:8b for better instruction following and its native reasoning mode, while keeping the model practical to run locally on my RTX 3070.",
+          "Prisma and MySQL store accounts, conversations, messages, per-chat system prompts, and completed reasoning traces. The backend streams the reasoning and final-answer outputs separately, supports cancellable responses, creates automatic conversation titles, and offers temporary chats that are not written to the database.",
+        ],
+        images: [
+          {
+            src: "/casestudies/xandergpt/chat.png",
+            alt: "xanderGPT desktop chat interface with conversation history and a streamed response containing formatted text and TypeScript code",
+            caption:
+              "The desktop interface combines persistent conversation history, streamed responses, and rich content rendering in one chat experience.",
+            width: 2557,
+            height: 1272,
+          },
+        ],
+      },
+      {
+        type: "features",
+        eyebrow: "Tool orchestration",
+        title: "One planner, several bounded capabilities",
+        paragraphs: [
+          "Before generating an answer, the Express backend uses a single planner to decide whether the request needs web search, calculator use, extended reasoning, or a combination of them. The planner considers the current request, recent conversation history, deterministic freshness cues, and any options explicitly enabled by the user. This replaced the separate routing calls used in the earlier version.",
+          "Because the capabilities are independent, an answer can combine web evidence with deeper reasoning instead of choosing one mode or the other. Follow-up questions are rewritten into self-contained searches, mathematical expressions are evaluated by a bounded calculator, and pasted URLs are fetched directly and reduced to readable content. The interface also lets the user force web search or reasoning for the next message while leaving both automatic by default.",
+        ],
+        images: [
+          {
+            src: "/casestudies/xandergpt/search.png",
+            alt: "xanderGPT answer comparing Prisma and Drizzle with two selected web evidence sources below it",
+            caption:
+              "The search flow narrows retrieval to a bounded evidence set, then exposes the same sources supplied to the answering model beneath its response.",
+            width: 1072,
+            height: 829,
+            layout: "inset",
+            lightboxSize: "standard",
+          },
+        ],
+      },
+      {
+        type: "features",
+        eyebrow: "Reasoning experience",
+        title: "Separating intermediate reasoning from the answer",
+        paragraphs: [
+          "Qwen3 can emit a model-generated reasoning stream separately from its final response. xanderGPT displays that stream in a compact panel that follows the latest token while the model is working, then collapses into a summary such as \"Thought for 15 seconds\" when the answer begins. The trace can be reopened afterwards and is persisted with saved conversations.",
+          "The reasoning trace remains separate from the assistant's final message and is not fed back into later conversation context. This provides a useful view of the model's intermediate analysis without allowing verbose traces to consume future context or influence subsequent answers. The trace is not treated as a definitive explanation of how the model reached its answer. The planner leaves reasoning disabled for straightforward requests, while a one-message toggle lets the user explicitly enable it for harder prompts.",
+        ],
+      },
+      {
+        type: "challenge",
+        eyebrow: "The hardest reliability problem",
+        title: "Reliable web search is more than an API call",
+        paragraphs: [
+          "The first implementation passed Brave result titles and snippets directly to the model. Testing exposed the gap between having search results and having evidence: answers could be weakly grounded or stale, the chosen query was sometimes poor, and the source panel did not make it clear which result supported each claim.",
+          "I replaced that handoff with a bounded retrieval pipeline. It starts with a small result set, asks the local model whether the results are sufficient, selects the strongest candidates, and can run one additional search with a rewritten query. The selection prompt favors directly relevant primary, official, and reputable sources while avoiding duplicates and low-information pages.",
+          "Selected pages are fetched locally and reduced to readable text with Readability, then a keyword-based ranker keeps short passages related to the question. The answering model receives only that evidence, with instructions to expose weak or conflicting support and cite claims using matching source numbers. The frontend turns those numbers into clickable citations by mapping them to the stored source array rather than trusting model-generated URLs, while an expandable panel keeps the complete source list available. If page extraction fails, the pipeline falls back to a clearly labelled search snippet. Strict caps on search rounds, fetch attempts, timeouts, page text, and retained passages keep the process finite.",
+        ],
+      },
+      {
+        type: "improvements",
+        eyebrow: "Remaining limitations",
+        title: "More capable, still a local prototype",
+        paragraphs: [
+          "Readability still fails on some dynamic, protected, or poorly structured pages, leaving a weaker search snippet as the fallback. Passage selection is based on keyword overlap, so it can miss evidence expressed through related concepts rather than the same terms.",
+          "Fetching pages and generating a reasoning trace both add latency, creating a tradeoff between responsiveness and answer quality. I deliberately bound retrieval and keep reasoning automatic rather than always enabled, but those limits can still miss useful evidence or produce the wrong routing decision. The local 8B model can also return malformed structured outputs or uneven reasoning traces, so the backend applies deterministic constraints and safe fallbacks instead of assuming every model decision is valid.",
+        ],
+      },
+      {
+        type: "learnings",
+        eyebrow: "What I learned",
+        title: "Tool use depends on the quality of the handoff",
+        paragraphs: [
+          "The project showed me that the quality of an AI chat experience depends less on any single capability than on the handoffs between them. The difficult work is defining clear contracts between the planner, tools, answering model, and interface: deciding when fresh evidence or deeper reasoning is useful, keeping those operations bounded, and presenting the result clearly enough that the user can understand what the system did and where its answer may still be weak.",
+        ],
+      },
     ],
-    featured: true,
-    caseStudy: {
-      role: "Sole developer",
-      year: "2026",
-      status: "Local prototype",
-      sections: [
-        {
-          type: "context",
-          eyebrow: "Context",
-          title: "Learning what sits behind an AI chat interface",
-          paragraphs: [
-            "xanderGPT did not begin with a problem I needed to solve. I wanted to find out how difficult it would be to build my own ChatGPT-style application and understand how the interface, model, conversation state, and external tools fit together.",
-            "I treated it as a local prototype rather than a production product, focusing on recreating the parts of an AI chat experience that users normally take for granted.",
-          ],
-        },
-        {
-          type: "architecture",
-          eyebrow: "The system",
-          title: "A local model with persistent conversations",
-          paragraphs: [
-            "The React frontend communicates with an Express API that sends prompts to a local qwen2.5:7b model through Ollama. I chose that model because it was capable enough for the experiment while still running comfortably on my RTX 3070.",
-            "Prisma and MySQL store accounts, conversations, messages, and per-chat system prompts. The backend streams generated tokens to the browser, supports cancellable responses, creates automatic conversation titles, and also offers temporary chats that are not written to the database.",
-          ],
-          images: [
-            {
-              src: "/casestudies/xandergpt/chat.png",
-              alt: "xanderGPT desktop chat interface with conversation history and a streamed response containing formatted text and TypeScript code",
-              caption: "The desktop interface brings persistent conversation history, streamed responses, and rich content rendering into one chat experience.",
-              width: 2557,
-              height: 1272,
-            },
-          ],
-        },
-        {
-          type: "features",
-          eyebrow: "Tool orchestration",
-          title: "Giving the local model bounded tools",
-          paragraphs: [
-            "Before generating an answer, the Express backend can route a request to a calculator, a direct URL fetch, or web search. Search can be automatic, forced, or disabled, and explicit freshness cues such as \"latest\" or \"today\" require a web check instead of leaving the decision entirely to the model.",
-            "The search planner receives recent conversation history so it can turn follow-ups such as \"what about the current one?\" into self-contained queries. Mathematical expressions are still evaluated separately, while pasted URLs are fetched and reduced to readable page content. Building these handoffs taught me how much useful tool orchestration happens before generation begins.",
-          ],
-          images: [
-            {
-              src: "/casestudies/xandergpt/search.png",
-              alt: "xanderGPT answer comparing Prisma and Drizzle with two selected web evidence sources below it",
-              caption: "The current search flow narrows retrieval to a bounded evidence set, then exposes the same sources supplied to the answering model beneath its response.",
-              width: 1072,
-              height: 829,
-              layout: "inset",
-              lightboxSize: "standard",
-            },
-          ],
-        },
-        {
-          type: "challenge",
-          eyebrow: "Main technical challenge",
-          title: "Reliable web search is more than an API call",
-          paragraphs: [
-            "The first implementation passed Brave result titles and snippets directly to the model. Testing exposed the gap between having search results and having evidence: answers could be weakly grounded or stale, the chosen query was sometimes poor, and the source panel did not make it clear which result supported each claim.",
-            "I replaced that handoff with a bounded retrieval pipeline. It starts with a small result set, asks the local model whether the results are sufficient, selects the strongest candidates, and can run another limited search with a rewritten query. The selection prompt favors directly relevant primary, official, and reputable sources while avoiding duplicates and low-information pages.",
-            "Selected pages are fetched locally and reduced to readable text with Readability, then a keyword-based ranker keeps short passages related to the question. The answering model receives only that evidence, with instructions to treat it as untrusted, expose weak or conflicting support, and use inline numbers that match the displayed source panel. Only those supplied sources are persisted. If page extraction fails, the pipeline falls back to a clearly labelled search snippet, while caps on results, search rounds, fetch attempts, timeouts, page text, and passages keep the process finite.",
-          ],
-        },
-        {
-          type: "improvements",
-          eyebrow: "Remaining limitations",
-          title: "Better grounded, still a local prototype",
-          paragraphs: [
-            "Readability still fails on some dynamic, protected, or poorly structured pages, leaving a weaker snippet as the fallback. Passage selection is based on keyword overlap, so it can miss evidence expressed through related concepts rather than the same terms.",
-            "Fetching and parsing pages locally adds latency, which creates a real tradeoff between responsiveness and grounding. I deliberately limit the final evidence set to two sources to keep that cost manageable, but the small set can miss useful breadth or corroboration. The local 7B model also occasionally returns malformed structured decisions, so routing, query rewriting, and candidate selection are not completely consistent.",
-          ],
-        },
-        {
-          type: "learnings",
-          eyebrow: "What I learned",
-          title: "Tool use depends on the quality of the handoff",
-          paragraphs: [
-            "The project gave me a practical understanding of tool orchestration and showed me that adding an API is only the first step. The harder work is deciding when fresh evidence is needed, turning a conversation into a useful query, narrowing retrieved material, and making the limits of that evidence visible in the answer.",
-          ],
-        },
-      ],
-    },
   },
+},
   {
     title: "Bridgely",
     description:
