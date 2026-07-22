@@ -257,7 +257,7 @@ export const projects: Project[] = [
   title: "xanderGPT",
   slug: "xandergpt",
   description:
-    "A self-hosted ChatGPT-style app powered by Qwen3 through Ollama, with streamed reasoning, persistent conversations, and web-aware tool orchestration.",
+    "A self-hosted ChatGPT-style app powered by Qwen3 through Ollama, with streamed reasoning, persistent conversations, automatic context compaction, and web-aware tool orchestration.",
   repo: "https://github.com/xalonious/xanderGPT",
   image: "/projects/xandergpt.png",
   imageAlt: "xanderGPT welcome screen with its logo and new-chat prompt",
@@ -292,7 +292,7 @@ export const projects: Project[] = [
         title: "A local model with persistent conversations",
         paragraphs: [
           "The React frontend communicates with an Express API that sends prompts to a local Qwen3 8B model through Ollama. I moved from qwen2.5:7b to qwen3:8b for better instruction following and its native reasoning mode, while keeping the model practical to run locally on my RTX 3070.",
-          "Prisma and MySQL store accounts, conversations, messages, per-chat system prompts, and completed reasoning traces. The backend streams the reasoning and final-answer outputs separately, supports cancellable responses, creates automatic conversation titles, and offers temporary chats that are not written to the database.",
+          "Prisma and MySQL store accounts, conversations, messages, per-chat system prompts, completed reasoning traces, and hidden context summaries that allow long conversations to continue beyond the model's practical context limit. The backend streams the reasoning and final-answer outputs separately, supports cancellable responses, creates automatic conversation titles, and offers temporary chats that are not written to the database.",
         ],
         images: [
           {
@@ -351,7 +351,7 @@ export const projects: Project[] = [
         title: "More capable, still a local prototype",
         paragraphs: [
           "Readability still fails on some dynamic, protected, or poorly structured pages, leaving a weaker search snippet as the fallback. Passage selection is based on keyword overlap, so it can miss evidence expressed through related concepts rather than the same terms.",
-          "Fetching pages and generating a reasoning trace both add latency, creating a tradeoff between responsiveness and answer quality. I deliberately bound retrieval and keep reasoning automatic rather than always enabled, but those limits can still miss useful evidence or produce the wrong routing decision. The local 8B model can also return malformed structured outputs or uneven reasoning traces, so the backend applies deterministic constraints and safe fallbacks instead of assuming every model decision is valid.",
+          "Fetching pages, generating a reasoning trace, and compacting a long conversation all add latency, creating a tradeoff between responsiveness, continuity, and answer quality. Context usage is estimated locally on every request, while the additional summarization call only runs when the conversation reaches 75% of the model's context window. The resulting summary is bounded and distinguishes user requirements, confirmed decisions, and unconfirmed assistant proposals, although any model-generated summary can still omit or misclassify details. Retrieval and reasoning are similarly bounded, but those limits can miss useful evidence or produce the wrong routing decision. The local 8B model can also return malformed structured outputs or uneven reasoning traces, so the backend applies deterministic constraints and safe fallbacks instead of assuming every model decision is valid.",
         ],
       },
       {
