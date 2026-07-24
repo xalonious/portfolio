@@ -257,7 +257,7 @@ export const projects: Project[] = [
   title: "xanderGPT",
   slug: "xandergpt",
   description:
-    "A self-hosted ChatGPT-style app powered by Qwen3 through Ollama, with streamed reasoning, persistent conversations, automatic context compaction, and web-aware tool orchestration.",
+    "A self-hosted ChatGPT-style app powered by Qwen3 through Ollama, with streamed reasoning, persistent conversations, context compaction, and web-aware tool orchestration.",
   repo: "https://github.com/xalonious/xanderGPT",
   image: "/projects/xandergpt.png",
   imageAlt: "xanderGPT welcome screen with its logo and new-chat prompt",
@@ -292,7 +292,7 @@ export const projects: Project[] = [
         title: "A local model with persistent conversations",
         paragraphs: [
           "The React frontend communicates with an Express API that sends prompts to a local Qwen3 8B model through Ollama. I moved from qwen2.5:7b to qwen3:8b for better instruction following and its native reasoning mode, while keeping the model practical to run locally on my RTX 3070.",
-          "Prisma and MySQL store accounts, conversations, messages, per-chat system prompts, completed reasoning traces, and hidden context summaries that allow long conversations to continue beyond the model's practical context limit. The backend streams the reasoning and final-answer outputs separately, supports cancellable responses, creates automatic conversation titles, and offers temporary chats that are not written to the database.",
+          "Prisma and MySQL store accounts, conversations, messages, per-chat preferences, reasoning traces, and hidden context summaries for long-running chats. The backend streams reasoning and final answers separately, supports cancellation and temporary chats, and creates automatic titles. Users can also search conversation titles and message contents, then jump directly to a highlighted match.",
         ],
         images: [
           {
@@ -310,8 +310,8 @@ export const projects: Project[] = [
         eyebrow: "Tool orchestration",
         title: "One planner, several bounded capabilities",
         paragraphs: [
-          "Before generating an answer, the Express backend uses a single planner to decide whether the request needs web search, calculator use, extended reasoning, or a combination of them. The planner considers the current request, recent conversation history, deterministic freshness cues, and any options explicitly enabled by the user. This replaced the separate routing calls used in the earlier version.",
-          "Because the capabilities are independent, an answer can combine web evidence with deeper reasoning instead of choosing one mode or the other. Follow-up questions are rewritten into self-contained searches, mathematical expressions are evaluated by a bounded calculator, and pasted URLs are fetched directly and reduced to readable content. The interface also lets the user force web search or reasoning for the next message while leaving both automatic by default.",
+          "Before generating an answer, the backend uses one planner to decide whether the request needs web search, calculator use, extended reasoning, or a combination of them. It considers the request, recent history, deterministic freshness cues, the current runtime date, and any options explicitly enabled by the user.",
+          "Assistant, routing, tool, retrieval, compaction, and runtime instructions are assembled through dedicated prompt builders instead of being embedded throughout the orchestration services. Follow-up questions become self-contained searches, calculations use a bounded evaluator, and pasted URLs are fetched and reduced to readable content. Users can still force web search or reasoning for the next message while leaving both automatic by default.",
         ],
         images: [
           {
@@ -331,8 +331,8 @@ export const projects: Project[] = [
         eyebrow: "Reasoning experience",
         title: "Separating intermediate reasoning from the answer",
         paragraphs: [
-          "Qwen3 can emit a model-generated reasoning stream separately from its final response. xanderGPT displays that stream in a compact panel that follows the latest token while the model is working, then collapses into a summary such as \"Thought for 15 seconds\" when the answer begins. The trace can be reopened afterwards and is persisted with saved conversations.",
-          "The reasoning trace remains separate from the assistant's final message and is not fed back into later conversation context. This provides a useful view of the model's intermediate analysis without allowing verbose traces to consume future context or influence subsequent answers. The trace is not treated as a definitive explanation of how the model reached its answer. The planner leaves reasoning disabled for straightforward requests, while a one-message toggle lets the user explicitly enable it for harder prompts.",
+          "Qwen3 can emit a reasoning stream separately from its final response. xanderGPT displays it in a compact panel that follows the latest token while the model is working, then collapses into a summary such as \"Thought for 15 seconds\" when the answer begins. The trace can be reopened and is persisted with saved conversations.",
+          "Reasoning remains separate from the final message and is not fed into later conversation context. This exposes useful intermediate analysis without letting verbose traces consume future context or influence later answers. The planner disables reasoning for straightforward requests, while a one-message toggle lets the user enable it for harder prompts.",
         ],
       },
       {
@@ -340,9 +340,9 @@ export const projects: Project[] = [
         eyebrow: "The hardest reliability problem",
         title: "Reliable web search is more than an API call",
         paragraphs: [
-          "The first implementation passed Brave result titles and snippets directly to the model. Testing exposed the gap between having search results and having evidence: answers could be weakly grounded or stale, the chosen query was sometimes poor, and the source panel did not make it clear which result supported each claim.",
-          "I replaced that handoff with a bounded retrieval pipeline. It starts with a small result set, asks the local model whether the results are sufficient, selects the strongest candidates, and can run one additional search with a rewritten query. The selection prompt favors directly relevant primary, official, and reputable sources while avoiding duplicates and low-information pages.",
-          "Selected pages are fetched locally and reduced to readable text with Readability, then a keyword-based ranker keeps short passages related to the question. The answering model receives only that evidence, with instructions to expose weak or conflicting support and cite claims using matching source numbers. The frontend turns those numbers into clickable citations by mapping them to the stored source array rather than trusting model-generated URLs, while an expandable panel keeps the complete source list available. If page extraction fails, the pipeline falls back to a clearly labelled search snippet. Strict caps on search rounds, fetch attempts, timeouts, page text, and retained passages keep the process finite.",
+          "The first implementation passed Brave result titles and snippets directly to the model. Testing exposed the gap between having search results and having evidence: answers could be weakly grounded or stale, queries were sometimes poor, and the interface did not clearly connect claims to sources.",
+          "I replaced that handoff with a bounded retrieval pipeline. It begins with a small result set, asks the local model whether the results are sufficient, selects the strongest candidates, and can run another search with a rewritten query. Selection favors directly relevant primary, official, and reputable sources while avoiding duplicates and low-information pages.",
+          "Selected pages are fetched locally and reduced to readable text with Readability, then a keyword ranker keeps short passages related to the question. The answering model receives only that evidence and cites claims using matching source numbers. The frontend maps those numbers to stored sources instead of trusting model-generated URLs. Failed extraction falls back to a labelled snippet, while strict caps on searches, fetches, timeouts, page size, and retained passages keep the process finite.",
         ],
       },
       {
@@ -350,8 +350,8 @@ export const projects: Project[] = [
         eyebrow: "Remaining limitations",
         title: "More capable, still a local prototype",
         paragraphs: [
-          "Readability still fails on some dynamic, protected, or poorly structured pages, leaving a weaker search snippet as the fallback. Passage selection is based on keyword overlap, so it can miss evidence expressed through related concepts rather than the same terms.",
-          "Fetching pages, generating a reasoning trace, and compacting a long conversation all add latency, creating a tradeoff between responsiveness, continuity, and answer quality. Context usage is estimated locally on every request, while the additional summarization call only runs when the conversation reaches 75% of the model's context window. The resulting summary is bounded and distinguishes user requirements, confirmed decisions, and unconfirmed assistant proposals, although any model-generated summary can still omit or misclassify details. Retrieval and reasoning are similarly bounded, but those limits can miss useful evidence or produce the wrong routing decision. The local 8B model can also return malformed structured outputs or uneven reasoning traces, so the backend applies deterministic constraints and safe fallbacks instead of assuming every model decision is valid.",
+          "Readability still fails on some dynamic, protected, or poorly structured pages. Passage selection relies on keyword overlap, so it can miss related wording. Conversation search has the same lexical limitation: it finds exact text rather than semantically similar messages.",
+          "Fetching pages, reasoning, and context compaction add latency. Summarization only runs near the model's context limit and preserves distinctions between user requirements, confirmed decisions, and assistant proposals, but it can still omit or misclassify details. The local 8B model may also produce malformed structured output or uneven reasoning, so the backend applies deterministic constraints and safe fallbacks instead of trusting every model decision.",
         ],
       },
       {
@@ -359,7 +359,7 @@ export const projects: Project[] = [
         eyebrow: "What I learned",
         title: "Tool use depends on the quality of the handoff",
         paragraphs: [
-          "The project showed me that the quality of an AI chat experience depends less on any single capability than on the handoffs between them. The difficult work is defining clear contracts between the planner, tools, answering model, and interface: deciding when fresh evidence or deeper reasoning is useful, keeping those operations bounded, and presenting the result clearly enough that the user can understand what the system did and where its answer may still be weak.",
+          "The project showed me that an AI chat experience depends less on any single capability than on the handoffs between them. The difficult work is defining clear contracts between prompts, planners, tools, models, and the interface: deciding when fresh evidence or deeper reasoning is useful, keeping those operations bounded, and presenting the result clearly enough that users understand what happened and where it may still be weak.",
         ],
       },
     ],
