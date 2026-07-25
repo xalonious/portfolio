@@ -19,13 +19,38 @@ export type CaseStudyImage = {
   lightboxSize?: "compact" | "standard" | "wide"
 }
 
+export type CaseStudyStructuredItem = {
+  title: string
+  description: string
+}
+
+export type CaseStudyContentBlock =
+  | {
+      type: "paragraphs"
+      paragraphs: string[]
+    }
+  | {
+      type: "highlights"
+      highlights: string[]
+    }
+  | {
+      type: "steps"
+      items: CaseStudyStructuredItem[]
+    }
+  | {
+      type: "details"
+      items: CaseStudyStructuredItem[]
+    }
+  | {
+      type: "images"
+      images: CaseStudyImage[]
+    }
+
 export type CaseStudySection = {
   type: CaseStudySectionType
   eyebrow?: string
   title: string
-  paragraphs: string[]
-  highlights?: string[]
-  images?: CaseStudyImage[]
+  content: CaseStudyContentBlock[]
 }
 
 export type CaseStudy = {
@@ -60,7 +85,7 @@ export type ProjectWithoutCaseStudy = ProjectBase & {
 
 export type Project = ProjectWithCaseStudy | ProjectWithoutCaseStudy
 
-export const projects: Project[] = [
+const projectCatalog: Project[] = [
   {
     title: "Serendipity Scheduling App",
     slug: "serendipity-scheduling-app",
@@ -90,43 +115,63 @@ export const projects: Project[] = [
           type: "context",
           eyebrow: "Context",
           title: "Replacing announcements and spreadsheets with one schedule",
-          paragraphs: [
-            "Serendipity Support Center is a Roblox therapy roleplay group where staff host shifts and scheduled training sessions. Before the app, there was no central schedule for shifts, so members often only knew one was happening after it had been announced. Training sessions were claimed by entering a username into a shared spreadsheet.",
-            "That workflow was easy to overwrite and depended on a high-ranking staff member manually resetting the spreadsheet each week. I built a single place where staff could create shifts or claim fixed training slots, while other members could see what was scheduled and when.",
+          content: [
+            {
+              type: "paragraphs",
+              paragraphs: [
+                "Serendipity Support Center is a Roblox therapy roleplay group where staff host shifts and scheduled training sessions. Before the app, there was no central schedule for shifts, so members often only knew one was happening after it had been announced. Training sessions were claimed by entering a username into a shared spreadsheet.",
+                "That workflow was easy to overwrite and depended on a high-ranking staff member manually resetting the spreadsheet each week. I built a single place where staff could create shifts or claim fixed training slots, while other members could see what was scheduled and when.",
+              ],
+            },
           ],
         },
         {
           type: "architecture",
           eyebrow: "The system",
           title: "One backend for the website and Roblox",
-          paragraphs: [
-            "The system paired a React frontend with an Express API backed by Prisma and MySQL, all hosted on a VPS. Staff signed in through Roblox OAuth 2.0, and their Roblox profile and group rank determined which scheduling actions they were allowed to perform.",
-            "Roblox game servers also communicated with the API over HTTP using an API key. This allowed scheduled and ongoing sessions to appear in-game, while the same backend supported smaller group features such as special nametags, rotating staff tips, and permission checks.",
+          content: [
+            {
+              type: "paragraphs",
+              paragraphs: [
+                "The system paired a React frontend with an Express API backed by Prisma and MySQL, all hosted on a VPS. Staff signed in through Roblox OAuth 2.0, and their Roblox profile and group rank determined which scheduling actions they were allowed to perform.",
+                "Roblox game servers also communicated with the API over HTTP using an API key. This allowed scheduled and ongoing sessions to appear in-game, while the same backend supported smaller group features such as special nametags, rotating staff tips, and permission checks.",
+              ],
+            },
           ],
         },
         {
           type: "features",
           eyebrow: "Interface",
           title: "Scheduling in practice",
-          paragraphs: [
-            "Members could use the weekly schedule to see upcoming sessions at a glance. Staff could create a shift by choosing its date and time range, then review the calculated reward before confirming it.",
-          ],
-          images: [
+          content: [
             {
-              src: "/casestudies/serendipity/shifts.png",
-              alt: "Serendipity weekly shift schedule with claimed sessions arranged across seven days",
-              caption: "The weekly shift schedule gives members one place to see upcoming sessions.",
-              width: 1553,
-              height: 659,
+              type: "paragraphs",
+              paragraphs: [
+                "Members could use the weekly schedule to see upcoming sessions at a glance. Staff could create a shift by choosing its date and time range, then review the calculated reward before confirming it.",
+              ],
             },
             {
-              src: "/casestudies/serendipity/modal.png",
-              alt: "Create Shift form with date and time fields and an estimated reward of 8 Robux",
-              caption: "Staff choose a date and time range, then see the calculated reward before creating a shift.",
-              width: 418,
-              height: 333,
-              layout: "inset",
-              lightboxSize: "compact",
+              type: "images",
+              images: [
+                {
+                  src: "/casestudies/serendipity/shifts.png",
+                  alt: "Serendipity weekly shift schedule with claimed sessions arranged across seven days",
+                  caption:
+                    "The weekly shift schedule gives members one place to see upcoming sessions.",
+                  width: 1553,
+                  height: 659,
+                },
+                {
+                  src: "/casestudies/serendipity/modal.png",
+                  alt: "Create Shift form with date and time fields and an estimated reward of 8 Robux",
+                  caption:
+                    "Staff choose a date and time range, then see the calculated reward before creating a shift.",
+                  width: 418,
+                  height: 333,
+                  layout: "inset",
+                  lightboxSize: "compact",
+                },
+              ],
             },
           ],
         },
@@ -134,29 +179,61 @@ export const projects: Project[] = [
           type: "challenge",
           eyebrow: "Main technical challenge",
           title: "Rewarding the hours that needed hosts",
-          paragraphs: [
-            "When a staff member created a shift, the app calculated and displayed its Robux reward. Instead of assigning a fixed amount, I built a historical scoring model so that less frequently hosted time periods produced a higher reward.",
-            "The backend grouped previous shifts by time of week, weighted recent history more heavily, and combined the relevant periods when a shift crossed multiple time slots. The resulting score was mapped to a bounded Robux reward, with less frequently covered periods receiving stronger incentives.",
-            "The system also used a predictable fallback before enough history existed and applied the final result within the app's validation rules and weekly reward limits.",
-            "Designing that calculation was the hardest part of the project. It had to turn incomplete historical activity into an incentive that was useful to staff without making rewards unpredictable or disproportionately expensive.",
+          content: [
+            {
+              type: "paragraphs",
+              paragraphs: [
+                "When a staff member created a shift, the app calculated and displayed its Robux reward. Instead of assigning a fixed amount, I built a historical scoring model so that less frequently hosted time periods produced a higher reward.",
+              ],
+            },
+            {
+              type: "images",
+              images: [
+                {
+                  src: "/casestudies/serendipity/diagram.png",
+                  alt: "Four-stage Serendipity reward calculation showing grouped shift history, recency weighting, requested-period scoring, and a bounded Robux reward",
+                  caption:
+                    "The reward pipeline turns historical hosting coverage into a bounded incentive for the requested shift.",
+                  width: 1870,
+                  height: 841,
+                  lightboxSize: "wide",
+                },
+              ],
+            },
+            {
+              type: "paragraphs",
+              paragraphs: [
+                "Designing that calculation was the hardest part of the project. It had to turn incomplete historical activity into an incentive that was useful to staff without making rewards unpredictable or disproportionately expensive.",
+              ],
+            },
           ],
         },
         {
           type: "decisions",
           eyebrow: "Automation",
           title: "Removing the weekly maintenance work",
-          paragraphs: [
-            "Scheduled jobs archived completed shifts into the history used by future reward calculations, removed expired shift records, and regenerated the fixed training slots for the new week.",
-            "This removed the need for a high-ranking staff member to reset the spreadsheet manually each week and preserved completed scheduling data instead of discarding it.",
+          content: [
+            {
+              type: "paragraphs",
+              paragraphs: [
+                "Scheduled jobs archived completed shifts into the history used by future reward calculations, removed expired shift records, and regenerated the fixed training slots for the new week.",
+                "This removed the need for a high-ranking staff member to reset the spreadsheet manually each week and preserved completed scheduling data instead of discarding it.",
+              ],
+            },
           ],
         },
         {
           type: "learnings",
           eyebrow: "What I learned",
           title: "Turning historical behavior into a useful signal",
-          paragraphs: [
-            "Building the reward system taught me how to turn incomplete historical activity into a practical scoring model. I had to structure past behavior, account for recency and limited data, define predictable fallback behavior, and keep the result useful within a real workflow.",
-            "It also reinforced that a technically correct calculation is not enough on its own. The output had to be understandable, bounded, and consistent enough for staff to trust and act on.",
+          content: [
+            {
+              type: "paragraphs",
+              paragraphs: [
+                "Building the reward system taught me how to turn incomplete historical activity into a practical scoring model. I had to structure past behavior, account for recency and limited data, define predictable fallback behavior, and keep the result useful within a real workflow.",
+                "It also reinforced that a technically correct calculation is not enough on its own. The output had to be understandable, bounded, and consistent enough for staff to trust and act on.",
+              ],
+            },
           ],
         },
       ],
@@ -181,35 +258,54 @@ export const projects: Project[] = [
           type: "context",
           eyebrow: "Context",
           title: "A streaming experience I could control",
-          paragraphs: [
-            "I was tired of repeatedly searching for third-party streaming sites that would disappear, become overloaded with ads, or offer an inconsistent experience. Instead of replacing one temporary site with another, I decided to build a personal interface that I could control.",
-            "The result is a self-hosted app for discovering and watching movies and TV shows through one consistent browsing experience, while keeping the playback provider separate from the interface itself.",
+          content: [
+            {
+              type: "paragraphs",
+              paragraphs: [
+                "I was tired of repeatedly searching for third-party streaming sites that would disappear, become overloaded with ads, or offer an inconsistent experience. Instead of replacing one temporary site with another, I decided to build a personal interface that I could control.",
+                "The result is a self-hosted app for discovering and watching movies and TV shows through one consistent browsing experience, while keeping the playback provider separate from the interface itself.",
+              ],
+            },
           ],
         },
         {
           type: "architecture",
           eyebrow: "The system",
           title: "Separating metadata, playback, and the interface",
-          paragraphs: [
-            "The React and Vite frontend handles the complete browsing experience, while a focused Express API acts as a bridge to TMDB. Keeping those requests on the server protects the TMDB key and gives the frontend normalized data for search, artwork, cast information, trailers, seasons, episodes, collections, and recommendations.",
-            "Playback is provider-neutral. The backend generates movie and episode embed URLs from a single STREAM_SOURCE environment variable, which means I can replace a provider that stops working without rewriting the frontend.",
-            "The app does not download, store, or proxy video files. Its responsibility is to provide the discovery interface, normalize metadata, and connect the selected title to the configured playback source.",
+          content: [
+            {
+              type: "paragraphs",
+              paragraphs: [
+                "The React and Vite frontend handles the complete browsing experience, while a focused Express API acts as a bridge to TMDB. Keeping those requests on the server protects the TMDB key and gives the frontend normalized data for search, artwork, cast information, trailers, seasons, episodes, collections, and recommendations.",
+                "Playback is provider-neutral. The backend generates movie and episode embed URLs from a single STREAM_SOURCE environment variable, which means I can replace a provider that stops working without rewriting the frontend.",
+                "The app does not download, store, or proxy video files. Its responsibility is to provide the discovery interface, normalize metadata, and connect the selected title to the configured playback source.",
+              ],
+            },
           ],
         },
         {
           type: "features",
           eyebrow: "Interface",
           title: "A desktop-first browsing experience",
-          paragraphs: [
-            "The home screen uses a full-width featured title and artwork-led content rows to make discovery feel closer to a dedicated streaming service than a collection of external links.",
-          ],
-          images: [
+          content: [
             {
-              src: "/casestudies/streamingapp/home.png",
-              alt: "Streaming App home screen featuring The Odyssey above a row of popular titles",
-              caption: "The home screen leads with a featured title before moving into ranked discovery rows.",
-              width: 1898,
-              height: 921,
+              type: "paragraphs",
+              paragraphs: [
+                "The home screen uses a full-width featured title and artwork-led content rows to make discovery feel closer to a dedicated streaming service than a collection of external links.",
+              ],
+            },
+            {
+              type: "images",
+              images: [
+                {
+                  src: "/casestudies/streamingapp/home.png",
+                  alt: "Streaming App home screen featuring The Odyssey above a row of popular titles",
+                  caption:
+                    "The home screen leads with a featured title before moving into ranked discovery rows.",
+                  width: 1898,
+                  height: 921,
+                },
+              ],
             },
           ],
         },
@@ -217,18 +313,27 @@ export const projects: Project[] = [
           type: "challenge",
           eyebrow: "Main challenge",
           title: "Making a content-heavy interface feel cinematic",
-          paragraphs: [
-            "The external integrations were intentionally straightforward; most of the work went into making the app feel cohesive and polished. I built an artwork-led home page, discovery rows, search, detailed title and actor pages, season and episode browsing, trailers, recommendations, and a full-screen player as one connected experience.",
-            "The challenge was less about one difficult algorithm and more about maintaining a clear visual hierarchy across a large amount of content. Artwork came in different shapes, titles varied in length, metadata could become dense, and each screen still had to remain usable across desktop and smaller displays.",
-            "That meant treating spacing, typography, image sizing, navigation depth, responsive rows, and player transitions as parts of the same system rather than polishing each screen in isolation.",
-          ],
-          images: [
+          content: [
             {
-              src: "/casestudies/streamingapp/details.png",
-              alt: "Streaming App details page for Mr. Robot with metadata, trailer controls, season selection, and episodes",
-              caption: "Title pages bring metadata, trailers, season controls, and episode browsing into the same artwork-led layout.",
-              width: 1904,
-              height: 916,
+              type: "paragraphs",
+              paragraphs: [
+                "The external integrations were intentionally straightforward; most of the work went into making the app feel cohesive and polished. I built an artwork-led home page, discovery rows, search, detailed title and actor pages, season and episode browsing, trailers, recommendations, and a full-screen player as one connected experience.",
+                "The challenge was less about one difficult algorithm and more about maintaining a clear visual hierarchy across a large amount of content. Artwork came in different shapes, titles varied in length, metadata could become dense, and each screen still had to remain usable across desktop and smaller displays.",
+                "That meant treating spacing, typography, image sizing, navigation depth, responsive rows, and player transitions as parts of the same system rather than polishing each screen in isolation.",
+              ],
+            },
+            {
+              type: "images",
+              images: [
+                {
+                  src: "/casestudies/streamingapp/details.png",
+                  alt: "Streaming App details page for Mr. Robot with metadata, trailer controls, season selection, and episodes",
+                  caption:
+                    "Title pages bring metadata, trailers, season controls, and episode browsing into the same artwork-led layout.",
+                  width: 1904,
+                  height: 916,
+                },
+              ],
             },
           ],
         },
@@ -236,18 +341,28 @@ export const projects: Project[] = [
           type: "decisions",
           eyebrow: "Deployment",
           title: "Private and self-hosted",
-          paragraphs: [
-            "The app runs on a Raspberry Pi behind a firewall and is limited through network access rules to my own use. That keeps the deployment private while giving me direct control over the application, its configuration, and the selected playback provider.",
-            "Self-hosting also made the project a practical part of my own setup rather than only a local development exercise.",
+          content: [
+            {
+              type: "paragraphs",
+              paragraphs: [
+                "The app runs on a Raspberry Pi behind a firewall and is limited through network access rules to my own use. That keeps the deployment private while giving me direct control over the application, its configuration, and the selected playback provider.",
+                "Self-hosting also made the project a practical part of my own setup rather than only a local development exercise.",
+              ],
+            },
           ],
         },
         {
           type: "learnings",
           eyebrow: "What I learned",
           title: "Polish comes from consistent decisions",
-          paragraphs: [
-            "Building the app taught me that polish in a media interface comes from consistency across many small decisions: artwork sizing, text contrast, loading behavior, responsive rows, navigation depth, and keeping controls understandable as the amount of content grows.",
-            "It also helped me get better at using visual hierarchy to guide attention without allowing artwork or metadata to overwhelm the interface. The experience had to feel cinematic, but it still needed to remain clear, predictable, and easy to browse.",
+          content: [
+            {
+              type: "paragraphs",
+              paragraphs: [
+                "Building the app taught me that polish in a media interface comes from consistency across many small decisions: artwork sizing, text contrast, loading behavior, responsive rows, navigation depth, and keeping controls understandable as the amount of content grows.",
+                "It also helped me get better at using visual hierarchy to guide attention without allowing artwork or metadata to overwhelm the interface. The experience had to feel cinematic, but it still needed to remain clear, predictable, and easy to browse.",
+              ],
+            },
           ],
         },
       ],
@@ -281,27 +396,67 @@ export const projects: Project[] = [
         type: "context",
         eyebrow: "Context",
         title: "Learning what sits behind an AI chat interface",
-        paragraphs: [
-          "xanderGPT did not begin with a problem I needed to solve. I wanted to understand how difficult it would be to build my own ChatGPT-style application and how the interface, model, conversation state, and external tools fit together.",
-          "I treated it as a local prototype rather than a production product, focusing on recreating the parts of an AI chat experience that users normally take for granted.",
+        content: [
+          {
+            type: "paragraphs",
+            paragraphs: [
+              "xanderGPT did not begin with a problem I needed to solve. I wanted to understand how difficult it would be to build my own ChatGPT-style application and how the interface, model, conversation state, and external tools fit together.",
+              "I treated it as a local prototype rather than a production product, focusing on recreating the parts of an AI chat experience that users normally take for granted.",
+            ],
+          },
         ],
       },
       {
         type: "architecture",
         eyebrow: "The system",
         title: "A local model with persistent conversations",
-        paragraphs: [
-          "The React frontend communicates with an Express API that sends prompts to a local Qwen3 8B model through Ollama. I moved from qwen2.5:7b to qwen3:8b for better instruction following and its native reasoning mode, while keeping the model practical to run locally on my RTX 3070.",
-          "Prisma and MySQL store accounts, conversations, messages, per-chat preferences, reasoning traces, and hidden context summaries for long-running chats. The backend streams reasoning and final answers separately, supports cancellation and temporary chats, and creates automatic titles. Users can also search conversation titles and message contents, then jump directly to a highlighted match.",
-        ],
-        images: [
+        content: [
           {
-            src: "/casestudies/xandergpt/chat.png",
-            alt: "xanderGPT desktop chat interface with conversation history and a streamed response containing formatted text and TypeScript code",
-            caption:
-              "The desktop interface combines persistent conversation history, streamed responses, and rich content rendering in one chat experience.",
-            width: 2557,
-            height: 1272,
+            type: "paragraphs",
+            paragraphs: [
+              "The React frontend communicates with an Express API that sends prompts to a local Qwen3 8B model through Ollama. I moved from qwen2.5:7b to qwen3:8b for better instruction following and its native reasoning mode, while keeping the model practical to run locally on my RTX 3070.",
+              "Prisma and MySQL store accounts, conversations, messages, per-chat preferences, reasoning traces, and hidden context summaries for long-running chats. The backend streams reasoning and final answers separately, supports cancellation and temporary chats, and creates automatic titles. Users can also search conversation titles and message contents, then jump directly to a highlighted match.",
+            ],
+          },
+          {
+            type: "images",
+            images: [
+              {
+                src: "/casestudies/xandergpt/chat.png",
+                alt: "xanderGPT desktop chat interface with conversation history and a streamed response containing formatted text and TypeScript code",
+                caption:
+                  "The desktop interface combines persistent conversation history, streamed responses, and rich content rendering in one chat experience.",
+                width: 2557,
+                height: 1272,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "architecture",
+        eyebrow: "Architecture at a glance",
+        title: "How a message moves through xanderGPT",
+        content: [
+          {
+            type: "paragraphs",
+            paragraphs: [
+              "Each request moves through planning and context assembly before reaching the local model. The resulting reasoning, tool activity, sources, and answer are streamed to the interface, then persisted with the conversation.",
+            ],
+          },
+          {
+            type: "images",
+            images: [
+              {
+                src: "/casestudies/xandergpt/diagram.png",
+                alt: "xanderGPT request lifecycle from a user message through request planning, context assembly, Qwen3 via Ollama, a streamed response, and saved conversation state",
+                caption:
+                  "The request lifecycle connects planning, context, local inference, streaming, and persistence.",
+                width: 1952,
+                height: 806,
+                lightboxSize: "wide",
+              },
+            ],
           },
         ],
       },
@@ -309,20 +464,28 @@ export const projects: Project[] = [
         type: "features",
         eyebrow: "Tool orchestration",
         title: "One planner, several bounded capabilities",
-        paragraphs: [
-          "Before generating an answer, the backend uses one planner to decide whether the request needs web search, calculator use, extended reasoning, or a combination of them. It considers the request, recent history, deterministic freshness cues, the current runtime date, and any options explicitly enabled by the user.",
-          "Assistant, routing, tool, retrieval, compaction, and runtime instructions are assembled through dedicated prompt builders instead of being embedded throughout the orchestration services. Follow-up questions become self-contained searches, calculations use a bounded evaluator, and pasted URLs are fetched and reduced to readable content. Users can still force web search or reasoning for the next message while leaving both automatic by default.",
-        ],
-        images: [
+        content: [
           {
-            src: "/casestudies/xandergpt/search.png",
-            alt: "xanderGPT answer comparing Prisma and Drizzle with two selected web evidence sources below it",
-            caption:
-              "The search flow narrows retrieval to a bounded evidence set, then exposes the same sources supplied to the answering model beneath its response.",
-            width: 1072,
-            height: 829,
-            layout: "inset",
-            lightboxSize: "standard",
+            type: "paragraphs",
+            paragraphs: [
+              "Before generating an answer, the backend uses one planner to decide whether the request needs web search, calculator use, extended reasoning, or a combination of them. It considers the request, recent history, deterministic freshness cues, the current runtime date, and any options explicitly enabled by the user.",
+              "Assistant, routing, tool, retrieval, compaction, and runtime instructions are assembled through dedicated prompt builders instead of being embedded throughout the orchestration services. Follow-up questions become self-contained searches, calculations use a bounded evaluator, and pasted URLs are fetched and reduced to readable content. Users can still force web search or reasoning for the next message while leaving both automatic by default.",
+            ],
+          },
+          {
+            type: "images",
+            images: [
+              {
+                src: "/casestudies/xandergpt/search.png",
+                alt: "xanderGPT answer comparing Prisma and Drizzle with two selected web evidence sources below it",
+                caption:
+                  "The search flow narrows retrieval to a bounded evidence set, then exposes the same sources supplied to the answering model beneath its response.",
+                width: 1072,
+                height: 829,
+                layout: "inset",
+                lightboxSize: "standard",
+              },
+            ],
           },
         ],
       },
@@ -330,36 +493,109 @@ export const projects: Project[] = [
         type: "features",
         eyebrow: "Reasoning experience",
         title: "Separating intermediate reasoning from the answer",
-        paragraphs: [
-          "Qwen3 can emit a reasoning stream separately from its final response. xanderGPT displays it in a compact panel that follows the latest token while the model is working, then collapses into a summary such as \"Thought for 15 seconds\" when the answer begins. The trace can be reopened and is persisted with saved conversations.",
-          "Reasoning remains separate from the final message and is not fed into later conversation context. This exposes useful intermediate analysis without letting verbose traces consume future context or influence later answers. The planner disables reasoning for straightforward requests, while a one-message toggle lets the user enable it for harder prompts.",
+        content: [
+          {
+            type: "paragraphs",
+            paragraphs: [
+              "Qwen3 can emit a reasoning stream separately from its final response. xanderGPT displays it in a compact panel that follows the latest token while the model is working, then collapses into a summary such as \"Thought for 15 seconds\" when the answer begins. The trace can be reopened and is persisted with saved conversations.",
+            ],
+          },
+          {
+            type: "highlights",
+            highlights: [
+              "Reasoning traces remain separate from the final message and are never fed into later conversation context.",
+              "The planner skips reasoning for straightforward requests, while a one-message toggle lets users enable it for harder prompts.",
+            ],
+          },
         ],
       },
       {
         type: "challenge",
         eyebrow: "The hardest reliability problem",
         title: "Reliable web search is more than an API call",
-        paragraphs: [
-          "The first implementation passed Brave result titles and snippets directly to the model. Testing exposed the gap between having search results and having evidence: answers could be weakly grounded or stale, queries were sometimes poor, and the interface did not clearly connect claims to sources.",
-          "I replaced that handoff with a bounded retrieval pipeline. It begins with a small result set, asks the local model whether the results are sufficient, selects the strongest candidates, and can run another search with a rewritten query. Selection favors directly relevant primary, official, and reputable sources while avoiding duplicates and low-information pages.",
-          "Selected pages are fetched locally and reduced to readable text with Readability, then a keyword ranker keeps short passages related to the question. The answering model receives only that evidence and cites claims using matching source numbers. The frontend maps those numbers to stored sources instead of trusting model-generated URLs. Failed extraction falls back to a labelled snippet, while strict caps on searches, fetches, timeouts, page size, and retained passages keep the process finite.",
+        content: [
+          {
+            type: "paragraphs",
+            paragraphs: [
+              "The first implementation passed Brave result titles and snippets directly to the model. Testing exposed the gap between having search results and having evidence: answers could be weakly grounded or stale, queries were sometimes poor, and the interface did not clearly connect claims to sources.",
+            ],
+          },
+          {
+            type: "steps",
+            items: [
+              {
+                title: "Search",
+                description:
+                  "Begin with a small result set based on the user's request and recent context.",
+              },
+              {
+                title: "Assess",
+                description:
+                  "Check whether the results are sufficient and rewrite the query once if needed.",
+              },
+              {
+                title: "Select",
+                description:
+                  "Prefer relevant primary and reputable sources while removing weak or duplicate pages.",
+              },
+              {
+                title: "Extract",
+                description:
+                  "Fetch selected pages, reduce them with Readability, and retain the strongest passages.",
+              },
+              {
+                title: "Answer",
+                description:
+                  "Give the model only that evidence and map its numbered citations to stored sources.",
+              },
+            ],
+          },
+          {
+            type: "highlights",
+            highlights: [
+              "Failed extraction falls back to a labelled snippet, while strict caps on searches, fetches, timeouts, page size, and retained passages keep the process finite.",
+            ],
+          },
         ],
       },
       {
         type: "improvements",
         eyebrow: "Remaining limitations",
         title: "More capable, still a local prototype",
-        paragraphs: [
-          "Readability still fails on some dynamic, protected, or poorly structured pages. Passage selection relies on keyword overlap, so it can miss related wording. Conversation search has the same lexical limitation: it finds exact text rather than semantically similar messages.",
-          "Fetching pages, reasoning, and context compaction add latency. Summarization only runs near the model's context limit and preserves distinctions between user requirements, confirmed decisions, and assistant proposals, but it can still omit or misclassify details. The local 8B model may also produce malformed structured output or uneven reasoning, so the backend applies deterministic constraints and safe fallbacks instead of trusting every model decision.",
+        content: [
+          {
+            type: "details",
+            items: [
+              {
+                title: "Retrieval",
+                description:
+                  "Readability can fail on dynamic, protected, or poorly structured pages. Passage and conversation search rely on lexical overlap, so related wording can still be missed.",
+              },
+              {
+                title: "Latency and memory",
+                description:
+                  "Fetching, reasoning, and context compaction add latency. Summaries preserve distinctions between requirements, decisions, and proposals, but can still omit or misclassify details.",
+              },
+              {
+                title: "Model reliability",
+                description:
+                  "The local 8B model can produce malformed structured output or uneven reasoning, so deterministic constraints and safe fallbacks guard every model-controlled decision.",
+              },
+            ],
+          },
         ],
       },
       {
         type: "learnings",
         eyebrow: "What I learned",
         title: "Tool use depends on the quality of the handoff",
-        paragraphs: [
-          "The project showed me that an AI chat experience depends less on any single capability than on the handoffs between them. The difficult work is defining clear contracts between prompts, planners, tools, models, and the interface: deciding when fresh evidence or deeper reasoning is useful, keeping those operations bounded, and presenting the result clearly enough that users understand what happened and where it may still be weak.",
+        content: [
+          {
+            type: "paragraphs",
+            paragraphs: [
+              "The project showed me that an AI chat experience depends less on any single capability than on the handoffs between them. The difficult work is defining clear contracts between prompts, planners, tools, models, and the interface: deciding when fresh evidence or deeper reasoning is useful, keeping those operations bounded, and presenting the result clearly enough that users understand what happened and where it may still be weak.",
+            ],
+          },
         ],
       },
     ],
@@ -422,6 +658,24 @@ export const projects: Project[] = [
     tech: ["Python", "FFmpeg", "Pillow"],
   },
 ]
+
+const prioritizedProjectSlugs = [
+  "xandergpt",
+  "serendipity-scheduling-app",
+  "streaming-app",
+]
+
+function getProjectPriority(project: Project) {
+  if (!project.slug) return Number.MAX_SAFE_INTEGER
+
+  const priority = prioritizedProjectSlugs.indexOf(project.slug)
+  return priority === -1 ? Number.MAX_SAFE_INTEGER : priority
+}
+
+export const projects = [...projectCatalog].sort(
+  (firstProject, secondProject) =>
+    getProjectPriority(firstProject) - getProjectPriority(secondProject),
+)
 
 export const featuredProjects = projects.filter((project) => project.featured)
 

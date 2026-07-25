@@ -3,6 +3,7 @@ import { CaseStudyReveal } from "@/components/ui/CaseStudyReveal"
 import { CaseStudyImageLightbox } from "@/components/ui/CaseStudyImageLightbox"
 import { TransitionLink } from "@/components/ui/TransitionLink"
 import type {
+  CaseStudyContentBlock,
   CaseStudyImage,
   CaseStudySection,
   ProjectWithCaseStudy,
@@ -11,12 +12,22 @@ import type {
 const focusStyles =
   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--primary]"
 
+function hasBlockContent(block: CaseStudyContentBlock) {
+  switch (block.type) {
+    case "paragraphs":
+      return block.paragraphs.some((paragraph) => paragraph.trim())
+    case "highlights":
+      return block.highlights.some((highlight) => highlight.trim())
+    case "steps":
+    case "details":
+      return block.items.length > 0
+    case "images":
+      return block.images.length > 0
+  }
+}
+
 function hasContent(section: CaseStudySection) {
-  return (
-    section.paragraphs.some((paragraph) => paragraph.trim()) ||
-    section.highlights?.some((highlight) => highlight.trim()) ||
-    Boolean(section.images?.length)
-  )
+  return section.content.some(hasBlockContent)
 }
 
 function CaseStudyImages({ images }: { images: CaseStudyImage[] }) {
@@ -58,6 +69,92 @@ function CaseStudyImages({ images }: { images: CaseStudyImage[] }) {
       </div>
     </div>
   )
+}
+
+function CaseStudyParagraphs({ paragraphs }: { paragraphs: string[] }) {
+  return (
+    <div className="mt-6 space-y-5 text-base leading-8 text-[--muted-foreground] sm:text-lg">
+      {paragraphs
+        .filter((paragraph) => paragraph.trim())
+        .map((paragraph) => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
+    </div>
+  )
+}
+
+function CaseStudyHighlights({ highlights }: { highlights: string[] }) {
+  return (
+    <ul className="mt-8 space-y-3 border-l border-[--primary] pl-6 text-base leading-relaxed text-[--foreground]">
+      {highlights
+        .filter((highlight) => highlight.trim())
+        .map((highlight) => (
+          <li key={highlight}>{highlight}</li>
+        ))}
+    </ul>
+  )
+}
+
+function CaseStudySteps({ items }: { items: Extract<CaseStudyContentBlock, { type: "steps" }>["items"] }) {
+  const columnStyles =
+    items.length === 2
+      ? "lg:grid-cols-2"
+      : items.length === 3
+        ? "lg:grid-cols-3"
+        : items.length === 4
+          ? "lg:grid-cols-4"
+          : "lg:grid-cols-5"
+
+  return (
+    <ol
+      className={`mt-8 grid gap-px overflow-hidden rounded-sm border border-[--border] bg-[--border] sm:grid-cols-2 lg:-mx-24 ${columnStyles}`}
+    >
+      {items.map((step, stepIndex) => (
+        <li key={step.title} className="bg-[--card] p-5">
+          <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-[--primary]">
+            {String(stepIndex + 1).padStart(2, "0")}
+          </span>
+          <h3 className="mt-4 text-base font-medium text-[--foreground]">{step.title}</h3>
+          <p className="mt-2 text-sm leading-6 text-[--muted-foreground]">
+            {step.description}
+          </p>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+function CaseStudyDetails({ items }: { items: Extract<CaseStudyContentBlock, { type: "details" }>["items"] }) {
+  return (
+    <dl className="mt-8 divide-y divide-[--border] border-y border-[--border]">
+      {items.map((detail) => (
+        <div
+          key={detail.title}
+          className="grid gap-2 py-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-8"
+        >
+          <dt className="text-sm font-medium text-[--foreground]">{detail.title}</dt>
+          <dd className="text-sm leading-7 text-[--muted-foreground] sm:text-base">
+            {detail.description}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
+function CaseStudyContent({ block }: { block: CaseStudyContentBlock }) {
+  switch (block.type) {
+    case "paragraphs":
+      return <CaseStudyParagraphs paragraphs={block.paragraphs} />
+    case "highlights":
+      return <CaseStudyHighlights highlights={block.highlights} />
+    case "steps":
+      return <CaseStudySteps items={block.items} />
+    case "details":
+      return <CaseStudyDetails items={block.items} />
+    case "images":
+      return <CaseStudyImages images={block.images} />
+  }
 }
 
 function ExternalProjectLink({ href, children }: { href: string; children: React.ReactNode }) {
@@ -228,26 +325,14 @@ export function ProjectCaseStudy({ project }: { project: ProjectWithCaseStudy })
                       >
                         {section.title}
                       </h2>
-                      <div className="mt-6 space-y-5 text-base leading-8 text-[--muted-foreground] sm:text-lg">
-                        {section.paragraphs
-                          .filter((paragraph) => paragraph.trim())
-                          .map((paragraph) => (
-                            <p key={paragraph}>{paragraph}</p>
-                          ))}
-                      </div>
-                      {section.highlights &&
-                        section.highlights.some((highlight) => highlight.trim()) && (
-                          <ul className="mt-8 space-y-3 border-l border-[--primary] pl-6 text-base leading-relaxed text-[--foreground]">
-                            {section.highlights
-                              .filter((highlight) => highlight.trim())
-                              .map((highlight) => (
-                                <li key={highlight}>{highlight}</li>
-                              ))}
-                          </ul>
-                        )}
-                      {section.images && section.images.length > 0 && (
-                        <CaseStudyImages images={section.images} />
-                      )}
+                      {section.content
+                        .filter(hasBlockContent)
+                        .map((block, blockIndex) => (
+                          <CaseStudyContent
+                            key={`${block.type}-${blockIndex}`}
+                            block={block}
+                          />
+                        ))}
                     </section>
                   )
                 })}
