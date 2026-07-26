@@ -7,7 +7,7 @@ import type {
   CaseStudyImage,
   CaseStudySection,
   ProjectWithCaseStudy,
-} from "@/lib/projects"
+} from "@/lib/project-types"
 
 const focusStyles =
   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--primary]"
@@ -290,14 +290,9 @@ export function ProjectCaseStudy({ project }: { project: ProjectWithCaseStudy })
               )}
             </div>
 
-            {(project.repo || project.live) && (
+            {project.repo && (
               <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
-                {project.repo && (
-                  <ExternalProjectLink href={project.repo}>View repository</ExternalProjectLink>
-                )}
-                {project.live && (
-                  <ExternalProjectLink href={project.live}>View live project</ExternalProjectLink>
-                )}
+                <ExternalProjectLink href={project.repo}>View repository</ExternalProjectLink>
               </div>
             )}
           </header>

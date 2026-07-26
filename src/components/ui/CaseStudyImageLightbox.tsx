@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
-import type { CaseStudyImage } from "@/lib/projects"
+import type { CaseStudyImage } from "@/lib/project-types"
 
 type CaseStudyImageLightboxProps = {
   image: CaseStudyImage

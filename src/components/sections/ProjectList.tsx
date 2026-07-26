@@ -4,7 +4,7 @@ import Image from "next/image"
 import { useCallback, useRef, useState } from "react"
 import { motion, type Variants, useMotionValue, useReducedMotion, useSpring } from "framer-motion"
 import { TransitionLink } from "@/components/ui/TransitionLink"
-import type { Project } from "@/lib/projects"
+import type { Project } from "@/lib/project-types"
 
 type ProjectListProps = {
   projects: Project[]
@@ -85,8 +85,8 @@ function ProjectRow({
   const x = useSpring(rawX, springConfig)
   const y = useSpring(rawY, springConfig)
   const Heading = titleAs
-  const externalHref = project.repo ?? project.live
-  const externalLabel = project.repo ? "View repository" : "View live project"
+  const externalHref = project.repo
+  const externalLabel = "View repository"
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
     const row = rowRef.current
