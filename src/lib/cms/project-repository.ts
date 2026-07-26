@@ -182,6 +182,39 @@ export function listAdminProjects() {
   return rows.map(parseAdminRow)
 }
 
+export function reorderProjects(projectIds: string[]) {
+  const database = getDatabase()
+  const existingRows = database
+    .prepare("SELECT id FROM projects")
+    .all() as unknown as Array<{ id: string }>
+  const existingIds = new Set(existingRows.map((row) => row.id))
+  const requestedIds = new Set(projectIds)
+
+  if (
+    requestedIds.size !== projectIds.length ||
+    projectIds.length !== existingIds.size ||
+    projectIds.some((id) => !existingIds.has(id))
+  ) {
+    throw new Error("The project list changed. Refresh the page and try again.")
+  }
+
+  runTransaction(() => {
+    const updateProject = database.prepare(
+      "UPDATE projects SET sort_order = ? WHERE id = ?",
+    )
+    const updateDraft = database.prepare(
+      `UPDATE project_drafts
+       SET document_json = json_set(document_json, '$.sortOrder', ?)
+       WHERE project_id = ?`,
+    )
+
+    projectIds.forEach((id, index) => {
+      updateProject.run(index, id)
+      updateDraft.run(index, id)
+    })
+  })
+}
+
 export function getAdminProject(id: string) {
   const row = getDatabase()
     .prepare(

@@ -3,7 +3,6 @@
 import { CaseStudyEditor } from "@/components/admin/project-editor/CaseStudyEditor"
 import {
   EditorPanel,
-  NumberField,
   SelectField,
   TextAreaField,
   TextField,
@@ -81,27 +80,19 @@ export function ProjectForm({
           onChange={(repo) => onChange({ repo })}
         />
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          <TextField
-            label="Technology (comma separated)"
-            value={document.tech.join(", ")}
-            error={getFieldError(validationIssues, ["tech"])}
-            onChange={(value) =>
-              onChange({
-                tech: value
-                  .split(",")
-                  .map((technology) => technology.trim())
-                  .filter(Boolean),
-              })
-            }
-          />
-          <NumberField
-            label="Sort order"
-            value={document.sortOrder}
-            error={getFieldError(validationIssues, ["sortOrder"])}
-            onChange={(sortOrder) => onChange({ sortOrder })}
-          />
-        </div>
+        <TextField
+          label="Technology (comma separated)"
+          value={document.tech.join(", ")}
+          error={getFieldError(validationIssues, ["tech"])}
+          onChange={(value) =>
+            onChange({
+              tech: value
+                .split(",")
+                .map((technology) => technology.trim())
+                .filter(Boolean),
+            })
+          }
+        />
 
         <label className="flex items-center gap-3 text-sm text-[--foreground]">
           <input

@@ -6,6 +6,7 @@ import { requireAdmin } from "@/lib/cms/auth"
 import {
   deleteProject,
   publishProject,
+  reorderProjects,
   restoreProjectRevision,
   saveProjectDraft,
 } from "@/lib/cms/project-repository"
@@ -64,6 +65,29 @@ export async function publishProjectAction(input: unknown) {
     return { ok: true as const, document }
   } catch (error) {
     return actionFailure(error, "Unable to publish the project.")
+  }
+}
+
+const projectOrderSchema = z.array(z.string().uuid()).min(1)
+
+export async function reorderProjectsAction(input: unknown) {
+  await requireAdmin()
+
+  try {
+    const projectIds = projectOrderSchema.parse(input)
+    reorderProjects(projectIds)
+    revalidatePath("/")
+    revalidatePath("/projects")
+    revalidatePath("/admin")
+    return { ok: true as const }
+  } catch (error) {
+    return {
+      ok: false as const,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Unable to save the project order.",
+    }
   }
 }
 

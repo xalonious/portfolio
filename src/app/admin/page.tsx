@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { ProjectOrderList } from "@/components/admin/ProjectOrderList"
 import { requireAdmin } from "@/lib/cms/auth"
 import { listAdminProjects } from "@/lib/cms/project-repository"
 
@@ -32,42 +33,17 @@ export default async function AdminDashboardPage() {
 
       <section className="mt-10 overflow-hidden rounded-sm border border-[--border]">
         {projects.length ? (
-          <div className="divide-y divide-[--border]">
-            {projects.map(({ document, status, updatedAt }) => (
-              <Link
-                key={document.id}
-                href={`/admin/projects/${document.id}`}
-                className="grid gap-4 bg-[--card] px-5 py-5 transition hover:bg-[--muted]/60 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-center"
-              >
-                <div>
-                  <h2 className="font-display text-xl font-bold text-[--foreground]">
-                    {document.title}
-                  </h2>
-                  <p className="mt-1 line-clamp-1 text-sm text-[--muted-foreground]">
-                    {document.description}
-                  </p>
-                </div>
-                <span
-                  className={`w-fit rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
-                    status === "published"
-                      ? "border-emerald-700/60 text-emerald-400"
-                      : "border-amber-700/60 text-amber-300"
-                  }`}
-                >
-                  {status}
-                </span>
-                <time
-                  dateTime={updatedAt}
-                  className="text-xs text-[--muted-foreground]"
-                >
-                  {new Intl.DateTimeFormat("en", {
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                  }).format(new Date(updatedAt))}
-                </time>
-              </Link>
-            ))}
-          </div>
+          <ProjectOrderList
+            initialProjects={projects.map(
+              ({ document, status, updatedAt }) => ({
+                id: document.id!,
+                title: document.title,
+                description: document.description,
+                status,
+                updatedAt,
+              }),
+            )}
+          />
         ) : (
           <p className="bg-[--card] px-6 py-12 text-center text-[--muted-foreground]">
             No projects yet.
