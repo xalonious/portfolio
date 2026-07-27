@@ -29,11 +29,20 @@ export function Footer() {
             GitHub
           </Link>
           <Link
-            href="#contact"
+            href="https://github.com/xalonious/portfolio"
+            target="_blank"
+            rel="noreferrer"
             className="hover:text-[--primary] transition-colors duration-200"
           >
-            Contact
+            Source
           </Link>
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="hover:text-[--primary] transition-colors duration-200"
+          >
+            Back to top
+          </button>
         </nav>
 
       </div>

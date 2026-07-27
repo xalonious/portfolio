@@ -7,7 +7,7 @@ import { TransitionLink } from "@/components/ui/TransitionLink"
 export default function NotFound() {
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-6 text-center"
+      className="min-h-[100svh] flex flex-col items-center justify-center px-6 pb-8 pt-20 text-center sm:min-h-screen sm:py-24"
       style={{ backgroundColor: "#1A1618" }}
     >
       <motion.div
@@ -17,14 +17,13 @@ export default function NotFound() {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         <div
-          className="relative rounded-sm overflow-hidden border border-[--border] -rotate-[2deg] mb-8 w-full"
-          style={{ aspectRatio: "3/4", maxWidth: 320 }}
+          className="relative mb-5 aspect-[3/4] w-full max-w-[230px] -rotate-[2deg] overflow-hidden rounded-sm border border-[--border] sm:mb-8 sm:max-w-[320px]"
         >
           <Image
             src="/sealy-404.jpg"
             alt="Sealy looking guilty"
             fill
-            sizes="320px"
+            sizes="(max-width: 639px) 230px, 320px"
             className="object-cover object-top"
             priority
           />
@@ -38,8 +37,8 @@ export default function NotFound() {
         <h1 className="font-display text-3xl sm:text-4xl font-bold text-[--foreground] leading-tight mb-3">
           Sealy deleted this page.
         </h1>
-        <p className="text-sm text-[--muted-foreground] leading-relaxed mb-8">
-          He's been placed on a performance improvement plan.<br />Treats suspended pending investigation.
+        <p className="mb-6 text-sm leading-relaxed text-[--muted-foreground] sm:mb-8">
+          He&apos;s been placed on a performance improvement plan.<br />Treats suspended pending investigation.
         </p>
         <div className="flex gap-3">
           <TransitionLink
