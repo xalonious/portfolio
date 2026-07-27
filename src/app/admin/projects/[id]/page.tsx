@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation"
 import { ProjectEditor } from "@/components/admin/ProjectEditor"
 import { requireAdmin } from "@/lib/cms/auth"
-import { listMediaAssets } from "@/lib/cms/media"
 import {
   getAdminProject,
   getProjectRevisions,
@@ -28,7 +27,6 @@ export default async function EditProjectPage({
     <ProjectEditor
       initialDocument={project.document}
       initialStatus={project.status}
-      initialMedia={listMediaAssets()}
       revisions={getProjectRevisions(id)}
     />
   )

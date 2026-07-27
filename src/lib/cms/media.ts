@@ -56,19 +56,6 @@ function rowToMediaAsset(row: MediaRow): MediaAsset {
   }
 }
 
-export function listMediaAssets() {
-  const rows = getDatabase()
-    .prepare(
-      `SELECT id, storage_key, public_path, original_name, mime_type,
-              width, height, size_bytes, created_at
-       FROM media
-       ORDER BY created_at DESC`,
-    )
-    .all() as unknown as MediaRow[]
-
-  return rows.map(rowToMediaAsset)
-}
-
 export function getMediaAssetsByPublicPaths(publicPaths: Iterable<string>) {
   const statement = getDatabase().prepare(
     `SELECT id, storage_key, public_path, original_name, mime_type,

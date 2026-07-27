@@ -1,16 +1,5 @@
 import { isAdminAuthenticated } from "@/lib/cms/auth"
-import {
-  listMediaAssets,
-  saveUploadedImage,
-} from "@/lib/cms/media"
-
-export async function GET() {
-  if (!(await isAdminAuthenticated())) {
-    return Response.json({ error: "Unauthorized." }, { status: 401 })
-  }
-
-  return Response.json({ media: listMediaAssets() })
-}
+import { saveUploadedImage } from "@/lib/cms/media"
 
 export async function POST(request: Request) {
   if (!(await isAdminAuthenticated())) {

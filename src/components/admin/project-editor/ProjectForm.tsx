@@ -7,7 +7,7 @@ import {
   TextAreaField,
   TextField,
 } from "@/components/admin/project-editor/EditorControls"
-import { MediaPicker } from "@/components/admin/project-editor/MediaPicker"
+import { MediaUpload } from "@/components/admin/project-editor/MediaUpload"
 import { getFieldError } from "@/components/admin/project-editor/validation"
 import type { MediaAsset } from "@/lib/cms/media"
 import {
@@ -19,7 +19,6 @@ import {
 export function ProjectForm({
   document,
   validationIssues,
-  media,
   isPending,
   uploadImage,
   onChange,
@@ -27,7 +26,6 @@ export function ProjectForm({
 }: {
   document: ProjectDocument
   validationIssues: ProjectValidationIssue[]
-  media: MediaAsset[]
   isPending: boolean
   uploadImage: (file: File) => Promise<MediaAsset>
   onChange: (patch: Partial<ProjectDocument>) => void
@@ -132,10 +130,9 @@ export function ProjectForm({
               })
             }
           />
-          <MediaPicker
-            media={media}
+          <MediaUpload
             uploadImage={uploadImage}
-            onSelect={(asset) =>
+            onUpload={(asset) =>
               onChange({
                 image: asset.publicPath,
                 imageAlt:
@@ -172,7 +169,6 @@ export function ProjectForm({
           <CaseStudyEditor
             caseStudy={document.caseStudy}
             validationIssues={validationIssues}
-            media={media}
             uploadImage={uploadImage}
             onChange={(caseStudy) => onChange({ caseStudy })}
           />

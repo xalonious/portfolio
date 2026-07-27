@@ -30,7 +30,6 @@ import type { ProjectWithCaseStudy } from "@/lib/project-types"
 type ProjectEditorProps = {
   initialDocument: ProjectDocument
   initialStatus: "draft" | "published"
-  initialMedia: MediaAsset[]
   revisions: ProjectRevision[]
 }
 
@@ -45,13 +44,11 @@ function validationMessage(issues: ProjectValidationIssue[]) {
 export function ProjectEditor({
   initialDocument,
   initialStatus,
-  initialMedia,
   revisions,
 }: ProjectEditorProps) {
   const router = useRouter()
   const [document, setDocument] = useState(initialDocument)
   const [status, setStatus] = useState(initialStatus)
-  const [media, setMedia] = useState(initialMedia)
   const [view, setView] = useState<"edit" | "preview">("edit")
   const [message, setMessage] = useState<string | null>(null)
   const [validationIssues, setValidationIssues] = useState<
@@ -187,7 +184,6 @@ export function ProjectEditor({
       throw new Error(payload.error ?? "Unable to upload the image.")
     }
 
-    setMedia((current) => [payload.media!, ...current])
     return payload.media
   }
 
@@ -302,7 +298,6 @@ export function ProjectEditor({
           <ProjectForm
             document={document}
             validationIssues={validationIssues}
-            media={media}
             isPending={isPending}
             uploadImage={uploadImage}
             onChange={updateDocument}

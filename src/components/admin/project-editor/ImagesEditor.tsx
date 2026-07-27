@@ -5,7 +5,7 @@ import {
   SelectField,
   TextField,
 } from "@/components/admin/project-editor/EditorControls"
-import { MediaPicker } from "@/components/admin/project-editor/MediaPicker"
+import { MediaUpload } from "@/components/admin/project-editor/MediaUpload"
 import { moveItem } from "@/components/admin/project-editor/caseStudyUtils"
 import { secondaryButton } from "@/components/admin/project-editor/styles"
 import { getFieldError } from "@/components/admin/project-editor/validation"
@@ -17,14 +17,12 @@ export function ImagesEditor({
   block,
   path,
   validationIssues,
-  media,
   uploadImage,
   onChange,
 }: {
   block: Extract<CaseStudyContentBlock, { type: "images" }>
   path: Array<string | number>
   validationIssues: ProjectValidationIssue[]
-  media: MediaAsset[]
   uploadImage: (file: File) => Promise<MediaAsset>
   onChange: (block: CaseStudyContentBlock) => void
 }) {
@@ -215,10 +213,9 @@ export function ImagesEditor({
         </div>
       ))}
 
-      <MediaPicker
-        media={media}
+      <MediaUpload
         uploadImage={uploadImage}
-        onSelect={appendAsset}
+        onUpload={appendAsset}
       />
     </div>
   )

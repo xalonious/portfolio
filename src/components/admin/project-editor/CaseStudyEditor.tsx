@@ -31,13 +31,11 @@ import type {
 export function CaseStudyEditor({
   caseStudy,
   validationIssues,
-  media,
   uploadImage,
   onChange,
 }: {
   caseStudy: NonNullable<ProjectDocument["caseStudy"]>
   validationIssues: ProjectValidationIssue[]
-  media: MediaAsset[]
   uploadImage: (file: File) => Promise<MediaAsset>
   onChange: (caseStudy: NonNullable<ProjectDocument["caseStudy"]>) => void
 }) {
@@ -78,7 +76,6 @@ export function CaseStudyEditor({
             index={sectionIndex}
             total={caseStudy.sections.length}
             validationIssues={validationIssues}
-            media={media}
             uploadImage={uploadImage}
             onChange={(next) => updateSection(sectionIndex, next)}
             onMove={(direction) =>
@@ -124,7 +121,6 @@ function SectionEditor({
   index,
   total,
   validationIssues,
-  media,
   uploadImage,
   onChange,
   onMove,
@@ -134,7 +130,6 @@ function SectionEditor({
   index: number
   total: number
   validationIssues: ProjectValidationIssue[]
-  media: MediaAsset[]
   uploadImage: (file: File) => Promise<MediaAsset>
   onChange: (section: CaseStudySection) => void
   onMove: (direction: -1 | 1) => void
@@ -238,7 +233,6 @@ function SectionEditor({
               blockIndex,
             ]}
             validationIssues={validationIssues}
-            media={media}
             uploadImage={uploadImage}
             onChange={(next) => updateBlock(blockIndex, next)}
             onMove={(direction) =>
@@ -290,7 +284,6 @@ function BlockEditor({
   total,
   path,
   validationIssues,
-  media,
   uploadImage,
   onChange,
   onMove,
@@ -301,7 +294,6 @@ function BlockEditor({
   total: number
   path: Array<string | number>
   validationIssues: ProjectValidationIssue[]
-  media: MediaAsset[]
   uploadImage: (file: File) => Promise<MediaAsset>
   onChange: (block: CaseStudyContentBlock) => void
   onMove: (direction: -1 | 1) => void
@@ -375,7 +367,6 @@ function BlockEditor({
             block={block}
             path={path}
             validationIssues={validationIssues}
-            media={media}
             uploadImage={uploadImage}
             onChange={onChange}
           />
