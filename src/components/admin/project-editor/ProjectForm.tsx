@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useRef, useState } from "react"
 import { CaseStudyEditor } from "@/components/admin/project-editor/CaseStudyEditor"
 import {
   EditorPanel,
@@ -16,6 +17,13 @@ import {
   type ProjectValidationIssue,
 } from "@/lib/project-schema"
 
+function parseTechnologyInput(value: string) {
+  return value
+    .split(",")
+    .map((technology) => technology.trim())
+    .filter(Boolean)
+}
+
 export function ProjectForm({
   document,
   validationIssues,
@@ -31,6 +39,19 @@ export function ProjectForm({
   onChange: (patch: Partial<ProjectDocument>) => void
   onDelete: () => void
 }) {
+  const normalizedTechnologies = document.tech.join(", ")
+  const [technologyInput, setTechnologyInput] = useState(
+    normalizedTechnologies,
+  )
+  const lastEmittedTechnologies = useRef(normalizedTechnologies)
+
+  useEffect(() => {
+    if (normalizedTechnologies === lastEmittedTechnologies.current) return
+
+    lastEmittedTechnologies.current = normalizedTechnologies
+    setTechnologyInput(normalizedTechnologies)
+  }, [normalizedTechnologies])
+
   return (
     <div className="space-y-8">
       <EditorPanel eyebrow="Project" title="Metadata">
@@ -80,16 +101,14 @@ export function ProjectForm({
 
         <TextField
           label="Technology (comma separated)"
-          value={document.tech.join(", ")}
+          value={technologyInput}
           error={getFieldError(validationIssues, ["tech"])}
-          onChange={(value) =>
-            onChange({
-              tech: value
-                .split(",")
-                .map((technology) => technology.trim())
-                .filter(Boolean),
-            })
-          }
+          onChange={(value) => {
+            setTechnologyInput(value)
+            const tech = parseTechnologyInput(value)
+            lastEmittedTechnologies.current = tech.join(", ")
+            onChange({ tech })
+          }}
         />
 
         <label className="flex items-center gap-3 text-sm text-[--foreground]">
