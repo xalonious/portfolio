@@ -161,7 +161,7 @@ function ProjectRow({
           href={`/projects/${project.slug}`}
           className="shrink-0 whitespace-nowrap text-sm font-medium text-[--muted-foreground] underline decoration-[--border] underline-offset-4 transition-colors duration-200 hover:text-[--primary] hover:decoration-[--primary] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--primary]"
         >
-          View project <span aria-hidden="true">→</span>
+          Read case study <span aria-hidden="true">→</span>
         </TransitionLink>
       ) : (
         externalHref && (
