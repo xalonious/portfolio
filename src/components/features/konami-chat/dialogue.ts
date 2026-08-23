@@ -268,8 +268,16 @@ export const dialogue = defineDialogue({
     xander: "i nearly removed revisions for being overkill, which is how you know the rest of the CMS was perfectly reasonable.",
     claude: "he kept them",
     replies: [
-      { label: "of course you did",               next: "cms.overkill"     },
+      { label: "of course you did",               next: "cms.revisions-wrap" },
       { label: "how does publishing work",        next: "cms.publishing"   },
+    ],
+  },
+  "cms.revisions-wrap": {
+    xander: "future me will appreciate the rollback the first time i break something. until then, yes, it's mostly evidence.",
+    replies: [
+      { label: "what else did you overengineer",  next: "borders-to-stack" },
+      { label: "who's the cat",                   next: "cat-intro"        },
+      { label: "alright heading out",             next: "bye"              },
     ],
   },
   "cms.security": {
