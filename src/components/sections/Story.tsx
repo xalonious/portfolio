@@ -1,9 +1,35 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
 import { ContributionSnake } from "@/components/sections/ContributionSnake"
+import type { GitHubStats } from "@/lib/github-stats"
 
-export function Story() {
+const numberFormat = new Intl.NumberFormat("en-US")
+
+export function Story({ codingYears }: { codingYears: number }) {
+  const [githubStats, setGithubStats] = useState<GitHubStats>({ projects: null, commits: null })
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    async function loadStats() {
+      try {
+        const response = await fetch("/api/github-stats", { signal: controller.signal })
+        if (!response.ok) return
+        const stats: GitHubStats = await response.json()
+        if (!controller.signal.aborted) setGithubStats(stats)
+      } catch {
+
+      }
+    }
+
+    void loadStats()
+    return () => controller.abort()
+  }, [])
+
+  const formatCount = (value: number | null) => value === null ? "—" : `${numberFormat.format(value)}+`
+
   return (
     <section id="about" className="py-20 sm:py-28 px-6 scroll-mt-24 border-t border-[--border]">
       <div className="max-w-6xl mx-auto">
@@ -56,12 +82,12 @@ export function Story() {
             </p>
             <div className="pt-4 grid grid-cols-3 gap-6 border-t border-[--border]">
               {[
-                { value: "1000+", label: "Coffees" },
-                { value: "100+",  label: "Rage quits" },
-                { value: "20+",   label: "All-nighters" },
+                { value: `${codingYears}+`, label: "Years coding", title: "Coding since October 23, 2018" },
+                { value: formatCount(githubStats.projects), label: "Projects", title: "GitHub repositories I own, including forks" },
+                { value: formatCount(githubStats.commits), label: "Commits", title: "GitHub-recorded commit contributions across all years and repositories" },
               ].map((stat) => (
-                <div key={stat.label}>
-                  <p className="font-display text-3xl font-bold text-[--foreground]">{stat.value}</p>
+                <div key={stat.label} title={stat.title}>
+                  <p className="font-display text-2xl sm:text-3xl font-bold text-[--foreground] tabular-nums" aria-label={`${stat.label}: ${stat.value === "—" ? "unavailable" : stat.value}`}>{stat.value}</p>
                   <p className="text-xs text-[--muted-foreground] uppercase tracking-wider mt-1">{stat.label}</p>
                 </div>
               ))}

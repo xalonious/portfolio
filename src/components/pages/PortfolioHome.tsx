@@ -12,6 +12,7 @@ import { PrimaryButton, GhostButton } from "@/components/ui/MagneticButton"
 import { DiscordStatus } from "@/components/ui/DiscordStatus"
 import { TransitionLink } from "@/components/ui/TransitionLink"
 import type { Project } from "@/lib/project-types"
+import { useCodingYears } from "@/hooks/useCodingYears"
 import { FaCheck, FaRegCopy } from "react-icons/fa"
 
 function TerminalHint({ className = "" }: { className?: string }) {
@@ -51,9 +52,13 @@ function TerminalHint({ className = "" }: { className?: string }) {
 
 export function PortfolioHome({
   featuredProjects,
+  initialCodingYears,
 }: {
   featuredProjects: Project[]
+  initialCodingYears: number
 }) {
+  const codingYears = useCodingYears(initialCodingYears)
+
   return (
     <div className="min-h-screen text-[--foreground]" style={{ backgroundColor: "#1A1618" }}>
       <section className="relative min-h-screen flex flex-col justify-center px-6 pt-28 pb-20 max-w-6xl mx-auto">
@@ -90,7 +95,7 @@ export function PortfolioHome({
             >
               I build things for the web. Self-taught, full-stack,{" "}
               <em className="font-display italic text-[--foreground] not-italic">
-                7 years in
+                {codingYears} years in
               </em>
               {" "}and still hooked.
             </motion.p>
@@ -160,7 +165,7 @@ export function PortfolioHome({
           <TerminalHint />
         </motion.div>
       </section>
-      <Story />
+      <Story codingYears={codingYears} />
       <section id="stack" className="py-20 scroll-mt-24">
         <div className="max-w-6xl mx-auto px-6 mb-10">
           <p className="text-xs uppercase tracking-[0.2em] text-[--primary] font-medium mb-2">Tools of the trade</p>

@@ -8,7 +8,9 @@ Built with Next.js, React, TypeScript, Tailwind CSS, and Framer Motion.
 this is my personal site, built to bring together my story, projects, tech stack, live Discord presence, and contact links in one responsive web experience.
 
 ## Features
+
 - Responsive landing page with animated hero, smooth scrolling, and page transitions
+- Dynamic story statistics with years coding that update on my birthday and GitHub repository and commit counts cached daily
 - Project showcase with featured work, a complete project index, and dedicated data driven case study pages
 - Private SQLite-backed project CMS with drafts, publishing, revisions, structured case-study blocks, and persistent media uploads
 - Interactive tech stack radar with category filtering and hover details
