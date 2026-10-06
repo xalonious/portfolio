@@ -10,16 +10,17 @@ permissions:
 
 jobs:
   generate:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, runnerd]
+
     steps:
-      - uses: Platane/snk@v3
+      - name: Generate snake SVGs
+        uses: Platane/snk/svg-only@v3
         with:
           github_user_name: xalonious
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           outputs: |
             dist/snake.svg
             dist/snake-dark.svg?palette=github-dark
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push to output branch
         uses: peaceiris/actions-gh-pages@v4
