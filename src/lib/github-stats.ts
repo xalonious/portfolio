@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 const count = z.number().int().nonnegative()
-const profileSchema = z.object({ public_repos: count })
+const repositoriesSchema = z.array(z.object({ fork: z.boolean() }))
 const summarySchema = z.object({
   repositories: z.object({ totalCount: count }),
   contributionsCollection: z.object({ contributionYears: z.array(count) }),
@@ -41,17 +41,25 @@ async function graphql(username: string, token: string, fields: string): Promise
 }
 
 export async function getPublicRepositoryCount(username: string): Promise<number> {
-  const response = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`, {
-    headers: {
-      Accept: "application/vnd.github+json",
-      "User-Agent": "xalonious-portfolio",
-      "X-GitHub-Api-Version": "2026-03-10",
-    },
-    cache: "no-store",
-    signal: AbortSignal.timeout(10_000),
-  })
-  if (!response.ok) throw new Error(`GitHub profile request failed (${response.status})`)
-  return profileSchema.parse(await response.json()).public_repos
+  let projects = 0
+  for (let page = 1; ; page += 1) {
+    const response = await fetch(
+      `https://api.github.com/users/${encodeURIComponent(username)}/repos?type=owner&per_page=100&page=${page}`,
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+          "User-Agent": "xalonious-portfolio",
+          "X-GitHub-Api-Version": "2026-03-10",
+        },
+        cache: "no-store",
+        signal: AbortSignal.timeout(10_000),
+      },
+    )
+    if (!response.ok) throw new Error(`GitHub repositories request failed (${response.status})`)
+    const repositories = repositoriesSchema.parse(await response.json())
+    projects += repositories.filter((repository) => !repository.fork).length
+    if (repositories.length < 100) return projects
+  }
 }
 
 export async function getAuthenticatedGitHubStats(
@@ -60,7 +68,7 @@ export async function getAuthenticatedGitHubStats(
   currentYear: number,
 ): Promise<{ projects: number; commits: number }> {
   const summary = summarySchema.parse(await graphql(username, token, `
-    repositories(first: 1, ownerAffiliations: [OWNER]) { totalCount }
+    repositories(first: 1, ownerAffiliations: [OWNER], isFork: false) { totalCount }
     contributionsCollection { contributionYears }
   `))
 

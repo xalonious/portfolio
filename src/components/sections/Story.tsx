@@ -83,7 +83,7 @@ export function Story({ codingYears }: { codingYears: number }) {
             <div className="pt-4 grid grid-cols-3 gap-6 border-t border-[--border]">
               {[
                 { value: `${codingYears}+`, label: "Years coding", title: "Coding since October 23, 2018" },
-                { value: formatCount(githubStats.projects), label: "Projects", title: "GitHub repositories I own, including forks" },
+                { value: formatCount(githubStats.projects), label: "Projects", title: "GitHub repositories I own, excluding forks" },
                 { value: formatCount(githubStats.commits), label: "Commits", title: "GitHub-recorded commit contributions across all years and repositories" },
               ].map((stat) => (
                 <div key={stat.label} title={stat.title}>

@@ -10,7 +10,7 @@ import {
 const DAY_SECONDS = 24 * 60 * 60
 const publicRepositories = unstable_cache(
   getPublicRepositoryCount,
-  ["github-public-repositories-v1"],
+  ["github-public-repositories-v2-no-forks"],
   { revalidate: DAY_SECONDS },
 )
 
@@ -22,7 +22,7 @@ export async function GET() {
   if (token) {
     const authenticatedStats = unstable_cache(
       (login: string, year: number) => getAuthenticatedGitHubStats(login, token, year),
-      ["github-portfolio-statistics-v1", createHash("sha256").update(token).digest("hex")],
+      ["github-portfolio-statistics-v2-no-forks", createHash("sha256").update(token).digest("hex")],
       { revalidate: DAY_SECONDS },
     )
     try {
