@@ -11,32 +11,26 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, runnerd]
 
     steps:
-      - name: Deploy to Raspberry Pi
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.PI_HOST }}
-          username: ${{ secrets.PI_USER }}
-          key: ${{ secrets.PI_SSH_KEY }}
-          port: ${{ secrets.PI_PORT }}
-          script: |
-            set -e
-            cd /home/xalonious/projects/portfolio
+      - name: Deploy
+        run: |
+          set -e
+          cd /home/xalonious/projects/portfolio
 
-            pm2 stop portfolio || true
-            pm2 flush portfolio || true
+          pm2 stop portfolio || true
+          pm2 flush portfolio || true
 
-            git fetch origin main
-            git reset --hard origin/main
-            git clean -fd
+          git fetch origin main
+          git reset --hard origin/main
+          git clean -fd
 
-            npm ci
-            npm run build
+          npm ci
+          npm run build
 
-            pm2 start portfolio
-            pm2 save
+          pm2 start portfolio
+          pm2 save
 
       - name: Notify Discord — success
         if: success()
