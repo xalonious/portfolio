@@ -29,7 +29,7 @@ export function Preloader() {
       {visible && (
         <motion.div
           className="fixed inset-0 z-[99999] flex flex-col items-center justify-center gap-4"
-          style={{ backgroundColor: "#1A1618" }}
+          style={{ backgroundColor: "var(--background)" }}
           exit={{
             y: "-100%",
             transition: { duration: 0.75, ease: [0.76, 0, 0.24, 1], delay: 0.1 },
@@ -37,20 +37,20 @@ export function Preloader() {
         >
           <motion.h1
             className="font-display font-black tracking-tight select-none text-5xl sm:text-7xl"
-            style={{ color: "#F2ECF0" }}
+            style={{ color: "var(--foreground)" }}
             initial={{ opacity: 0, y: 16 }}
             animate={nameVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
             xalonious
-            <span style={{ color: "#C47A8A" }}>.</span>
+            <span style={{ color: "var(--primary)" }}>.</span>
           </motion.h1>
           <motion.span
             style={{
               display: "block",
               height: "1.5px",
               width: "4rem",
-              backgroundColor: "#C47A8A",
+              backgroundColor: "var(--primary)",
               transformOrigin: "left center",
             }}
             initial={{ scaleX: 0 }}

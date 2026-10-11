@@ -26,16 +26,16 @@ function TerminalHint({ className = "" }: { className?: string }) {
   }
 
   return (
-    <div className={`text-[11px] leading-relaxed text-[--muted-foreground]/65 ${className}`}>
+    <div className={`text-[11px] leading-relaxed light:text-muted-foreground ${className}`}>
       <p>psst... terminal wizard? check out the ssh version:</p>
-      <div className="mt-1 inline-flex items-center overflow-hidden rounded-sm border border-[--border]/70 bg-[--card]/60">
-        <code className="whitespace-nowrap px-2 py-1 font-mono text-[--foreground]/65">
+      <div className="mt-1 inline-flex items-center overflow-hidden rounded-sm border light:border-border/70 light:bg-card/60">
+        <code className="whitespace-nowrap px-2 py-1 font-mono light:text-foreground">
           {command}
         </code>
         <button
           type="button"
           onClick={copyCommand}
-          className="flex h-6 w-7 items-center justify-center border-l border-[--border]/70 text-[--muted-foreground]/70 transition-colors duration-200 hover:text-[--foreground]"
+          className="flex h-6 w-7 items-center justify-center border-l light:border-border/70 light:text-muted-foreground transition-colors duration-200 light:hover:text-foreground"
           aria-label="Copy SSH command"
           title={copied ? "Copied" : "Copy"}
         >
@@ -60,7 +60,7 @@ export function PortfolioHome({
   const codingYears = useCodingYears(initialCodingYears)
 
   return (
-    <div className="min-h-screen text-[--foreground]" style={{ backgroundColor: "#1A1618" }}>
+    <div className="min-h-screen light:text-foreground" style={{ backgroundColor: "var(--background)" }}>
       <section className="relative min-h-screen flex flex-col justify-center px-6 pt-28 pb-20 max-w-6xl mx-auto">
 
         <div className="grid lg:grid-cols-[1fr_auto] gap-16 items-end">
@@ -69,11 +69,11 @@ export function PortfolioHome({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-xs uppercase tracking-[0.2em] text-[--primary] font-medium mb-6"
+              className="text-xs uppercase tracking-[0.2em] light:text-primary-ink font-medium mb-6"
             >
               Full-Stack Developer & Designer
             </motion.p>
-            <h1 className="font-display text-[clamp(3.5rem,10vw,8rem)] font-black leading-[0.9] tracking-tight text-[--foreground] mb-8">
+            <h1 className="font-display text-[clamp(3.5rem,10vw,8rem)] font-black leading-[0.9] tracking-tight light:text-foreground mb-8">
               <ScrambleText
                 text="Xander"
                 delay={2200}
@@ -85,16 +85,16 @@ export function PortfolioHome({
               animate={{ scaleX: 1 }}
               transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
               style={{ originX: 0 }}
-              className="block h-[2px] w-16 bg-[--primary] mb-8"
+              className="block h-[2px] w-16 light:bg-primary mb-8"
             />
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-lg sm:text-xl text-[--muted-foreground] max-w-lg leading-relaxed"
+              className="text-lg sm:text-xl light:text-muted-foreground max-w-lg leading-relaxed"
             >
               I build things for the web. Self-taught, full-stack,{" "}
-              <em className="font-display italic text-[--foreground] not-italic">
+              <em className="font-display italic light:text-foreground not-italic">
                 {codingYears} years in
               </em>
               {" "}and still hooked.
@@ -130,19 +130,19 @@ export function PortfolioHome({
             transition={{ duration: 0.7, delay: 0.3 }}
             className="hidden lg:flex flex-col items-end gap-4"
           >
-            <div className="w-52 rotate-[2deg] rounded-sm overflow-hidden border border-[--border] shadow-md">
+            <div className="w-52 rotate-[2deg] rounded-sm overflow-hidden border light:border-border shadow-md">
               <div className="relative w-full h-64">
                 <Image src="/headshot.png" alt="Xander" fill sizes="208px" className="object-cover" />
               </div>
-              <div className="bg-[--card] px-3 py-2 text-xs text-[--muted-foreground] font-medium">
+              <div className="light:bg-card px-3 py-2 text-xs light:text-muted-foreground font-medium">
                 It me 👋
               </div>
             </div>
-            <div className="w-40 -rotate-[3deg] rounded-sm overflow-hidden border border-[--border] shadow-md self-start ml-8">
+            <div className="w-40 -rotate-[3deg] rounded-sm overflow-hidden border light:border-border shadow-md self-start ml-8">
               <div className="relative w-full h-36">
                 <Image src="/cat.png" alt="My cat" fill sizes="160px" className="object-cover" />
               </div>
-              <div className="bg-[--card] px-3 py-2 text-xs text-[--muted-foreground] font-medium">
+              <div className="light:bg-card px-3 py-2 text-xs light:text-muted-foreground font-medium">
                 CTO 🐱
               </div>
             </div>
@@ -152,7 +152,7 @@ export function PortfolioHome({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="absolute bottom-8 left-6 text-xs text-[--muted-foreground] tracking-widest uppercase hidden sm:block"
+          className="absolute bottom-8 left-6 text-xs light:text-muted-foreground tracking-widest uppercase hidden sm:block"
         >
           Scroll ↓
         </motion.p>
@@ -168,8 +168,8 @@ export function PortfolioHome({
       <Story codingYears={codingYears} />
       <section id="stack" className="py-20 scroll-mt-24">
         <div className="max-w-6xl mx-auto px-6 mb-10">
-          <p className="text-xs uppercase tracking-[0.2em] text-[--primary] font-medium mb-2">Tools of the trade</p>
-          <h2 className="font-display text-4xl sm:text-5xl font-bold text-[--foreground]">Tech Stack</h2>
+          <p className="text-xs uppercase tracking-[0.2em] light:text-primary-ink font-medium mb-2">Tools of the trade</p>
+          <h2 className="font-display text-4xl sm:text-5xl font-bold light:text-foreground">Tech Stack</h2>
         </div>
         <TechRadar />
       </section>
@@ -177,10 +177,10 @@ export function PortfolioHome({
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-14">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-[--primary] font-medium mb-2">Selected work</p>
-              <h2 className="font-display text-4xl sm:text-5xl font-bold text-[--foreground]">Projects</h2>
+              <p className="text-xs uppercase tracking-[0.2em] light:text-primary-ink font-medium mb-2">Selected work</p>
+              <h2 className="font-display text-4xl sm:text-5xl font-bold light:text-foreground">Projects</h2>
             </div>
-            <p className="text-sm text-[--muted-foreground] max-w-xs sm:text-right">
+            <p className="text-sm light:text-muted-foreground max-w-xs sm:text-right">
               A few things I&apos;ve built that I&apos;m actually proud of.
             </p>
           </div>
@@ -190,7 +190,7 @@ export function PortfolioHome({
           <div className="mt-12 flex justify-center">
             <TransitionLink
               href="/projects"
-              className="group flex items-center gap-2 text-sm font-medium text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-200 border border-[--border] hover:border-[--primary] px-6 py-3 rounded-sm"
+              className="group flex items-center gap-2 text-sm font-medium light:text-muted-foreground light:hover:text-foreground transition-colors duration-200 border light:border-border light:hover:border-primary px-6 py-3 rounded-sm"
             >
               View all projects
               <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>

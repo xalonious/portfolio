@@ -40,13 +40,13 @@ const LANYARD_URL = "/api/presence"
 const POLL_INTERVAL = 30_000
 
 const STATUS_CONFIG: Record<DiscordStatus, { label: string; color: string; dot: string }> = {
-  online:  { label: "Available", color: "text-emerald-400",          dot: "bg-emerald-400" },
-  dnd:     { label: "Available", color: "text-emerald-400",          dot: "bg-emerald-400" },
-  idle:    { label: "Inactive",  color: "text-[--muted-foreground]", dot: "bg-[--muted-foreground]" },
-  offline: { label: "Offline",   color: "text-[--muted-foreground]", dot: "bg-[--muted-foreground]" },
+  online:  { label: "Available", color: "text-emerald-400 light:text-[var(--success)]",          dot: "bg-emerald-400" },
+  dnd:     { label: "Available", color: "text-emerald-400 light:text-[var(--success)]",          dot: "bg-emerald-400" },
+  idle:    { label: "Inactive",  color: "light:text-muted-foreground", dot: "light:bg-muted-foreground" },
+  offline: { label: "Offline",   color: "light:text-muted-foreground", dot: "light:bg-muted-foreground" },
 }
 
-const BUSY_STATUS = { label: "Busy", color: "text-red-400", dot: "bg-red-400" }
+const BUSY_STATUS = { label: "Busy", color: "text-red-400 light:text-destructive", dot: "bg-red-400" }
 
 const appIconCache: Record<string, string | null> = {}
 
@@ -108,16 +108,16 @@ function SpotifyProgress({ start, end }: { start: number; end: number }) {
 
   return (
     <div className="flex items-center gap-2 mt-1.5">
-      <span className="text-[10px] font-mono text-[--muted-foreground] tabular-nums w-8 text-right">
+      <span className="text-[10px] font-mono light:text-muted-foreground tabular-nums w-8 text-right">
         {formatTime(elapsed)}
       </span>
-      <div className="flex-1 h-[2px] bg-[--border] rounded-full overflow-hidden">
+      <div className="flex-1 h-[2px] light:bg-border rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-1000"
-          style={{ width: `${progress}%`, backgroundColor: "#1DB954" }}
+          style={{ width: `${progress}%`, backgroundColor: "var(--spotify)" }}
         />
       </div>
-      <span className="text-[10px] font-mono text-[--muted-foreground] tabular-nums w-8">
+      <span className="text-[10px] font-mono light:text-muted-foreground tabular-nums w-8">
         -{formatTime(remaining)}
       </span>
     </div>
@@ -227,14 +227,14 @@ export function DiscordStatus() {
             {status.label}
           </span>
         </div>
-        <span className="text-[--border] select-none">·</span>
-        <span className="text-xs font-mono text-[--muted-foreground] tabular-nums">
-          {time} <span className="opacity-50">{tzAbbr}</span>
+        <span className="light:text-border select-none">·</span>
+        <span className="text-xs font-mono light:text-muted-foreground tabular-nums">
+          {time} <span className="opacity-50 light:opacity-100">{tzAbbr}</span>
         </span>
       </div>
 
       {game && (
-        <div className="flex items-center gap-3 rounded-sm border border-[--border] bg-[--card] p-3 max-w-xs">
+        <div className="flex items-center gap-3 rounded-sm border light:border-border light:bg-card p-3 max-w-xs">
           {gameImageUrl && (
             <div className="relative w-10 h-10 shrink-0 overflow-hidden">
               <Image
@@ -248,32 +248,32 @@ export function DiscordStatus() {
             </div>
           )}
           <div className="min-w-0">
-            <p className="text-[10px] uppercase tracking-[0.12em] text-[--muted-foreground] mb-0.5">Playing</p>
-            <p className="text-xs font-semibold text-[--foreground] truncate">{game.name}</p>
+            <p className="text-[10px] uppercase tracking-[0.12em] light:text-muted-foreground mb-0.5">Playing</p>
+            <p className="text-xs font-semibold light:text-foreground truncate">{game.name}</p>
             {game.details && (
-              <p className="text-[10px] text-[--muted-foreground] truncate">{game.details}</p>
+              <p className="text-[10px] light:text-muted-foreground truncate">{game.details}</p>
             )}
             {game.state && (
-              <p className="text-[10px] text-[--muted-foreground] truncate opacity-70">{game.state}</p>
+              <p className="text-[10px] light:text-muted-foreground truncate opacity-70 light:opacity-100">{game.state}</p>
             )}
             {elapsed && (
-              <p className="text-[10px] font-mono text-[--primary] mt-0.5 tabular-nums">{elapsed}</p>
+              <p className="text-[10px] font-mono light:text-primary-ink mt-0.5 tabular-nums">{elapsed}</p>
             )}
           </div>
         </div>
       )}
 
       {data.listening_to_spotify && data.spotify && (
-        <div className="rounded-sm border border-[--border] bg-[--card] p-3 max-w-xs">
+        <div className="rounded-sm border light:border-border light:bg-card p-3 max-w-xs">
           <div className="flex items-center gap-1.5 mb-2.5">
-            <FaSpotify style={{ color: "#1DB954", width: 11, height: 11, flexShrink: 0 }} aria-hidden />
-            <span className="text-[10px] uppercase tracking-[0.14em] font-medium" style={{ color: "#1DB954" }}>
+            <FaSpotify style={{ color: "var(--spotify)", width: 11, height: 11, flexShrink: 0 }} aria-hidden />
+            <span className="text-[10px] uppercase tracking-[0.14em] font-medium" style={{ color: "var(--spotify)" }}>
               Listening to Spotify
             </span>
             <span className="flex items-end gap-[2px] ml-0.5" style={{ height: 10 }}>
               {[1, 2, 3].map(i => (
                 <span key={i} className="w-[2px] rounded-full block" style={{
-                  backgroundColor: "#1DB954",
+                  backgroundColor: "var(--spotify)",
                   height: "100%",
                   animation: `eq${i} ${0.5 + i * 0.15}s ease-in-out infinite alternate`,
                 }} />
@@ -281,7 +281,7 @@ export function DiscordStatus() {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <div className="relative w-12 h-12 shrink-0 rounded-sm overflow-hidden border border-[--border]">
+            <div className="relative w-12 h-12 shrink-0 rounded-sm overflow-hidden border light:border-border">
               <Image
                 src={data.spotify.album_art_url}
                 alt={data.spotify.album}
@@ -292,10 +292,10 @@ export function DiscordStatus() {
               />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-[--foreground] truncate leading-tight">
+              <p className="text-xs font-semibold light:text-foreground truncate leading-tight">
                 {data.spotify.song}
               </p>
-              <p className="text-[10px] text-[--muted-foreground] truncate mt-0.5">
+              <p className="text-[10px] light:text-muted-foreground truncate mt-0.5">
                 {data.spotify.artist}
               </p>
               <SpotifyProgress

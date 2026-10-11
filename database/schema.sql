@@ -1,6 +1,18 @@
 PRAGMA foreign_keys = ON;
-PRAGMA journal_mode = WAL;
 PRAGMA busy_timeout = 5000;
+PRAGMA journal_mode = WAL;
+
+CREATE TABLE IF NOT EXISTS ssh_achievement_connections (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ip_hash TEXT NOT NULL,
+    connected_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_ssh_achievement_connections_ip_time
+    ON ssh_achievement_connections (ip_hash, connected_at);
+
+CREATE INDEX IF NOT EXISTS idx_ssh_achievement_connections_time
+    ON ssh_achievement_connections (connected_at);
 
 DROP TABLE IF EXISTS cms_metadata;
 

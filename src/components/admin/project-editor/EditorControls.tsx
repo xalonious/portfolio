@@ -16,9 +16,9 @@ export function EditorPanel({
   children: ReactNode
 }) {
   return (
-    <section className="rounded-sm border border-[--border] bg-[--card] p-5 sm:p-6">
+    <section className="rounded-sm border light:border-border light:bg-card p-5 sm:p-6">
       <p className={labelStyles}>{eyebrow}</p>
-      <h2 className="mt-2 font-display text-2xl font-bold text-[--foreground]">
+      <h2 className="mt-2 font-display text-2xl font-bold light:text-foreground">
         {title}
       </h2>
       <div className="mt-6 space-y-5">{children}</div>
@@ -48,7 +48,7 @@ export function TextField({
           error ? "border-red-700/80 focus:border-red-500" : ""
         }`}
       />
-      {error && <span className="mt-2 block text-xs text-red-300">{error}</span>}
+      {error && <span className="mt-2 block text-xs text-red-300 light:text-destructive">{error}</span>}
     </label>
   )
 }
@@ -77,7 +77,7 @@ export function NumberField({
           error ? "border-red-700/80 focus:border-red-500" : ""
         }`}
       />
-      {error && <span className="mt-2 block text-xs text-red-300">{error}</span>}
+      {error && <span className="mt-2 block text-xs text-red-300 light:text-destructive">{error}</span>}
     </label>
   )
 }
@@ -107,7 +107,7 @@ export function TextAreaField({
           error ? "border-red-700/80 focus:border-red-500" : ""
         }`}
       />
-      {error && <span className="mt-2 block text-xs text-red-300">{error}</span>}
+      {error && <span className="mt-2 block text-xs text-red-300 light:text-destructive">{error}</span>}
     </label>
   )
 }
@@ -138,7 +138,7 @@ export function SelectField({
         className="mt-2"
         invalid={Boolean(error)}
       />
-      {error && <p className="mt-2 text-xs text-red-300">{error}</p>}
+      {error && <p className="mt-2 text-xs text-red-300 light:text-destructive">{error}</p>}
     </div>
   )
 }
@@ -196,18 +196,18 @@ export function Dropdown({
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
-        className={`flex w-full items-center justify-between gap-3 rounded-sm border bg-[--background] px-3 py-2.5 text-left text-sm text-[--foreground] outline-none transition ${
+        className={`flex w-full items-center justify-between gap-3 rounded-sm border light:bg-background px-3 py-2.5 text-left text-sm light:text-foreground outline-none transition ${
           invalid
             ? "border-red-700/80 hover:border-red-600 focus:border-red-500"
-            : "border-[--border] hover:border-[--muted-foreground] focus:border-[--primary]"
+            : "light:border-border light:hover:border-muted-foreground focus:border-primary"
         }`}
       >
-        <span className={selected ? "" : "text-[--muted-foreground]"}>
+        <span className={selected ? "" : "light:text-muted-foreground"}>
           {selected?.label ?? placeholder}
         </span>
         <span
           aria-hidden="true"
-          className={`text-[10px] text-[--muted-foreground] transition-transform ${
+          className={`text-[10px] light:text-muted-foreground transition-transform ${
             open ? "rotate-180" : ""
           }`}
         >
@@ -218,7 +218,7 @@ export function Dropdown({
       {open && (
         <div
           role="listbox"
-          className="absolute z-[80] mt-1 max-h-64 w-full overflow-y-auto rounded-sm border border-[--border] bg-[#231E21] p-1 shadow-2xl shadow-black/50"
+          className="absolute z-[80] mt-1 max-h-64 w-full overflow-y-auto rounded-sm border light:border-border bg-popover p-1 shadow-2xl dark:shadow-black/50 light:shadow-primary/10"
         >
           {options.length ? (
             options.map((option) => {
@@ -236,8 +236,8 @@ export function Dropdown({
                   }}
                   className={`flex w-full items-center justify-between rounded-sm px-3 py-2 text-left text-sm transition ${
                     active
-                      ? "bg-[--primary]/15 text-[--primary]"
-                      : "text-[--foreground] hover:bg-[--muted]"
+                      ? "light:bg-primary/15 light:text-primary-ink"
+                      : "light:text-foreground light:hover:bg-muted"
                   }`}
                 >
                   <span className="truncate">{option.label}</span>
@@ -250,7 +250,7 @@ export function Dropdown({
               )
             })
           ) : (
-            <p className="px-3 py-2 text-sm text-[--muted-foreground]">
+            <p className="px-3 py-2 text-sm light:text-muted-foreground">
               No options available.
             </p>
           )}

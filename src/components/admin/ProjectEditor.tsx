@@ -194,23 +194,23 @@ export function ProjectEditor({
   return (
     <main className="min-h-screen pb-24 pt-28 sm:pt-32">
       <header className="mx-auto max-w-7xl px-6">
-        <div className="flex flex-col gap-6 border-b border-[--border] pb-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-6 border-b light:border-border pb-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <Link
               href="/admin"
-              className="text-sm text-[--muted-foreground] transition hover:text-[--foreground]"
+              className="text-sm light:text-muted-foreground transition light:hover:text-foreground"
             >
               ← All projects
             </Link>
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <h1 className="font-display text-4xl font-bold text-[--foreground]">
+              <h1 className="font-display text-4xl font-bold light:text-foreground">
                 {document.title || "New project"}
               </h1>
               <span
                 className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
                   status === "published"
-                    ? "border-emerald-700/60 text-emerald-400"
-                    : "border-amber-700/60 text-amber-300"
+                    ? "border-emerald-700/60 text-emerald-400 light:text-[var(--success)]"
+                    : "border-amber-700/60 text-amber-300 light:text-[var(--rarity-legendary)]"
                 }`}
               >
                 {status}
@@ -219,7 +219,7 @@ export function ProjectEditor({
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex rounded-sm border border-[--border] p-1">
+            <div className="flex rounded-sm border light:border-border p-1">
               {(["edit", "preview"] as const).map((option) => (
                 <button
                   key={option}
@@ -227,8 +227,8 @@ export function ProjectEditor({
                   onClick={() => setView(option)}
                   className={`rounded-sm px-3 py-1.5 text-xs font-medium capitalize ${
                     view === option
-                      ? "bg-[--muted] text-[--foreground]"
-                      : "text-[--muted-foreground]"
+                      ? "light:bg-muted light:text-foreground"
+                      : "light:text-muted-foreground"
                   }`}
                 >
                   {option}
@@ -247,7 +247,7 @@ export function ProjectEditor({
               type="button"
               onClick={() => save(true)}
               disabled={isPending}
-              className="rounded-sm bg-[--primary] px-4 py-2 text-xs font-semibold text-[--primary-foreground] transition hover:brightness-110 disabled:opacity-50"
+              className="rounded-sm light:bg-primary px-4 py-2 text-xs font-semibold light:text-primary-foreground transition hover:brightness-110 disabled:opacity-50"
             >
               {isPending ? "Working…" : "Publish"}
             </button>
@@ -262,8 +262,8 @@ export function ProjectEditor({
               message.includes("success") ||
               message.includes("saved") ||
               message.includes("restored")
-                ? "border-emerald-800/60 bg-emerald-950/20 text-emerald-300"
-                : "border-red-800/60 bg-red-950/20 text-red-300"
+                ? "border-emerald-800/60 bg-emerald-950/20 text-emerald-300 light:text-[var(--success)]"
+                : "border-red-800/60 bg-red-950/20 text-red-300 light:text-destructive"
             }`}
           >
             <p>{message}</p>
@@ -285,11 +285,11 @@ export function ProjectEditor({
 
       {view === "preview" ? (
         previewProject ? (
-          <div className="mt-6 border-y border-[--border]">
+          <div className="mt-6 border-y light:border-border">
             <ProjectCaseStudy project={previewProject} />
           </div>
         ) : (
-          <div className="mx-auto mt-16 max-w-xl px-6 text-center text-[--muted-foreground]">
+          <div className="mx-auto mt-16 max-w-xl px-6 text-center light:text-muted-foreground">
             Enable the case study to preview the full page.
           </div>
         )

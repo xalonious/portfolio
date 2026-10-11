@@ -61,6 +61,7 @@ export type CaseStudy = {
 }
 
 type ProjectBase = {
+  id?: string
   title: string
   description: string
   image: string
@@ -88,4 +89,18 @@ export function isProjectWithCaseStudy(
   project: Project,
 ): project is ProjectWithCaseStudy {
   return project.caseStudy !== undefined
+}
+
+export function hasCaseStudyBlockContent(block: CaseStudyContentBlock): boolean {
+  switch (block.type) {
+    case "paragraphs": return block.paragraphs.some(paragraph => paragraph.trim())
+    case "highlights": return block.highlights.some(highlight => highlight.trim())
+    case "steps":
+    case "details": return block.items.length > 0
+    case "images": return block.images.length > 0
+  }
+}
+
+export function hasCaseStudySectionContent(section: CaseStudySection): boolean {
+  return section.content.some(hasCaseStudyBlockContent)
 }

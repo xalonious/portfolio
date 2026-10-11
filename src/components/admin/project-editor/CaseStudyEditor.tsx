@@ -46,7 +46,7 @@ export function CaseStudyEditor({
   }
 
   return (
-    <div className="space-y-6 border-t border-[--border] pt-6">
+    <div className="space-y-6 border-t light:border-border pt-6">
       <div className="grid gap-5 sm:grid-cols-3">
         <TextField
           label="Role"
@@ -142,9 +142,9 @@ function SectionEditor({
   }
 
   return (
-    <section className="rounded-sm border border-[--border] bg-[--background]/60 p-4">
+    <section className="rounded-sm border light:border-border light:bg-background/60 p-4">
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-xs font-semibold text-[--foreground]">
+        <p className="text-xs font-semibold light:text-foreground">
           Section {String(index + 1).padStart(2, "0")}
         </p>
         <div className="flex gap-2">
@@ -218,7 +218,7 @@ function SectionEditor({
         />
       </div>
 
-      <div className="mt-5 space-y-4 border-t border-[--border] pt-5">
+      <div className="mt-5 space-y-4 border-t light:border-border pt-5">
         {section.content.map((block, blockIndex) => (
           <BlockEditor
             key={`${block.type}-${blockIndex}`}
@@ -300,9 +300,9 @@ function BlockEditor({
   onRemove: () => void
 }) {
   return (
-    <div className="rounded-sm border border-[--border] bg-[--card] p-4">
+    <div className="rounded-sm border light:border-border light:bg-card p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-xs font-semibold capitalize text-[--primary]">
+        <p className="text-xs font-semibold capitalize light:text-primary-ink">
           {block.type}
         </p>
         <div className="flex gap-2">

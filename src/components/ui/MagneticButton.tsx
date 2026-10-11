@@ -110,9 +110,9 @@ export function PrimaryButton({
         ${className}
       `.trim()}
       style={{
-        backgroundColor: "#C47A8A",
-        color: "#F2ECF0",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 1px 3px rgba(0,0,0,0.3)",
+        backgroundColor: "var(--primary)",
+        color: "var(--button-foreground)",
+        boxShadow: "var(--button-shadow)",
       }}
     >
       <span
@@ -148,12 +148,12 @@ export function GhostButton({
         text-sm font-medium tracking-[0.06em]
         rounded-sm
         transition-all duration-200
-        hover:border-[--foreground]
+        light:hover:border-foreground
         ${className}
       `.trim()}
       style={{
-        border: "1px solid #3D3238",
-        color: "#F2ECF0",
+        border: "1px solid var(--border)",
+        color: "var(--foreground)",
         backgroundColor: "transparent",
       }}
     >
@@ -165,7 +165,7 @@ export function GhostButton({
           transition-transform duration-300 ease-out
           group-hover:translate-x-0
         "
-        style={{ backgroundColor: "rgba(196, 122, 138, 0.12)" }}
+        style={{ backgroundColor: "var(--hover-background)" }}
       />
       <span className="relative">{children}</span>
     </MagneticButton>

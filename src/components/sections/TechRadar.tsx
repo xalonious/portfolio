@@ -185,6 +185,7 @@ function BubbleNode({ tech, b, isFiltered, mousePos, onEnter, onLeave }: {
           alt={tech.name}
           width={iconSize}
           height={iconSize}
+          className={tech.name === "Next.js" ? "light:brightness-0" : undefined}
           style={{ width: `${iconSize}px`, height: `${iconSize}px`, objectFit: "contain", opacity: isFiltered ? 0.3 : 0.88 }}
         />
       </foreignObject>
@@ -236,7 +237,7 @@ export function TechRadar() {
       <div className="sm:hidden px-6 max-w-6xl mx-auto space-y-6">
         {categories.map((cat) => (
           <div key={cat}>
-            <p className="text-[10px] uppercase tracking-[0.2em] text-[--muted-foreground] mb-3">{cat}</p>
+            <p className="text-[10px] uppercase tracking-[0.2em] light:text-muted-foreground mb-3">{cat}</p>
             <div className="flex flex-wrap gap-2">
               {TECHS.filter((t) => t.category === cat).map((tech) => (
                 <div
@@ -244,7 +245,7 @@ export function TechRadar() {
                   className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-sm border text-xs font-medium"
                   style={{ borderColor: CATEGORY_BORDER[cat], backgroundColor: CATEGORY_COLOR[cat], color: "var(--foreground)" }}
                 >
-                  <Image src={tech.icon} alt={tech.name} width={14} height={14} style={{ width: "14px", height: "14px" }} className="object-contain opacity-80" />
+                  <Image src={tech.icon} alt={tech.name} width={14} height={14} style={{ width: "14px", height: "14px" }} className={`object-contain opacity-80 ${tech.name === "Next.js" ? "light:brightness-0" : ""}`} />
                   {tech.name}
                 </div>
               ))}
@@ -272,7 +273,7 @@ export function TechRadar() {
           {activeCategory && (
             <button
               onClick={() => setActiveCategory(null)}
-              className="px-3 py-1 rounded-sm text-xs font-medium border border-[--border] text-[--muted-foreground] hover:text-[--foreground] transition-all duration-200"
+              className="px-3 py-1 rounded-sm text-xs font-medium border light:border-border light:text-muted-foreground light:hover:text-foreground transition-all duration-200"
             >
               Clear
             </button>
@@ -319,8 +320,8 @@ export function TechRadar() {
             >
               <div className="rounded-sm px-2.5 py-1.5 text-xs shadow-lg whitespace-nowrap"
                 style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}>
-                <span className="font-semibold text-[--foreground]">{tooltip.tech.name}</span>
-                <span className="text-[--muted-foreground]"> · {tooltip.tech.category} · {tooltip.tech.level}</span>
+                <span className="font-semibold light:text-foreground">{tooltip.tech.name}</span>
+                <span className="light:text-muted-foreground"> · {tooltip.tech.category} · {tooltip.tech.level}</span>
               </div>
             </motion.div>
           )}

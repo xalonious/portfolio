@@ -48,7 +48,7 @@ export function MediaUpload({
           }}
         />
       </label>
-      {error && <p className="mt-2 text-xs text-red-300">{error}</p>}
+      {error && <p className="mt-2 text-xs text-red-300 light:text-destructive">{error}</p>}
     </div>
   )
 }

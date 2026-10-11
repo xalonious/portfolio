@@ -48,7 +48,7 @@ export function ImagesEditor({
       {block.images.map((image, imageIndex) => (
         <div
           key={`${image.src}-${imageIndex}`}
-          className="space-y-4 border-b border-[--border] pb-5"
+          className="space-y-4 border-b light:border-border pb-5"
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <TextField

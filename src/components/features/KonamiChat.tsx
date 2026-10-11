@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { emitAchievementEvent } from "@/lib/achievements"
 import {
   dialogue,
   type DialogueNodeId,
@@ -32,6 +33,7 @@ export function KonamiChat() {
       bufferRef.current = [...bufferRef.current, event.key].slice(-KONAMI.length)
       if (bufferRef.current.join(",") === KONAMI.join(",")) {
         setActive(true)
+        emitAchievementEvent("konami_activated")
         bufferRef.current = []
       }
     }
@@ -144,38 +146,38 @@ export function KonamiChat() {
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-4 backdrop-blur-md"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[var(--chat-overlay)] p-4 backdrop-blur-md"
       style={{ animation: "chatFadeIn 0.2s ease" }}
     >
       <div
-        className="flex w-full max-w-sm flex-col overflow-hidden rounded-sm border border-[--border]"
+        className="flex w-full max-w-sm flex-col overflow-hidden rounded-sm border light:border-border"
         style={{
           height: "min(580px, 88vh)",
-          backgroundColor: "#1A1618",
+          backgroundColor: "var(--background)",
           animation: "chatSlideUp 0.3s cubic-bezier(0.22,1,0.36,1)",
         }}
       >
-        <div className="flex shrink-0 items-center gap-3 border-b border-[--border] px-4 py-3">
+        <div className="flex shrink-0 items-center gap-3 border-b light:border-border px-4 py-3">
           <div className="relative">
             <div
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-[--border] bg-[--muted] text-sm font-bold text-[--foreground]"
+              className="flex h-8 w-8 items-center justify-center rounded-full border light:border-border light:bg-muted text-sm font-bold light:text-foreground"
               style={{ fontFamily: "var(--font-playfair)" }}
             >
               X
             </div>
-            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[--background] bg-emerald-400" />
+            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 light:border-background bg-emerald-400" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="m-0 text-sm font-semibold leading-none text-[--foreground]">
+            <p className="m-0 text-sm font-semibold leading-none light:text-foreground">
               xander
             </p>
-            <p className="m-0 mt-0.5 text-[10px] uppercase tracking-wider text-[--muted-foreground]">
+            <p className="m-0 mt-0.5 text-[10px] uppercase tracking-wider light:text-muted-foreground">
               {done ? "left the chat" : typing ? "typing..." : "online"}
             </p>
           </div>
           <button
             onClick={handleClose}
-            className="border-none bg-transparent text-xl leading-none text-[--muted-foreground] transition-colors hover:text-[--foreground]"
+            className="border-none bg-transparent text-xl leading-none light:text-muted-foreground transition-colors light:hover:text-foreground"
             aria-label="Close chat"
           >
             ×
@@ -186,7 +188,7 @@ export function KonamiChat() {
           data-lenis-prevent
           className="konami-scrollbar flex flex-1 flex-col gap-2.5 overflow-y-auto overscroll-contain px-4 py-4"
         >
-          <p className="mb-1 text-center text-[10px] uppercase tracking-widest text-[--muted-foreground]">
+          <p className="mb-1 text-center text-[10px] uppercase tracking-widest light:text-muted-foreground">
             ↑↑↓↓←→←→BA · easter egg unlocked
           </p>
 
@@ -204,7 +206,7 @@ export function KonamiChat() {
               {message.from === "claude" && (
                 <span
                   className="ml-1 text-[9px] uppercase tracking-wider"
-                  style={{ color: "#C47A8A" }}
+                  style={{ color: "var(--primary)" }}
                 >
                   claude 👀
                 </span>
@@ -212,17 +214,17 @@ export function KonamiChat() {
               <div
                 className={`max-w-[80%] px-3.5 py-2.5 text-sm leading-relaxed ${
                   message.from === "you"
-                    ? "rounded-sm rounded-tr-none bg-[--muted] text-[--foreground]"
+                    ? "rounded-sm rounded-tr-none light:bg-muted light:text-foreground"
                     : message.from === "claude"
                       ? "rounded-sm rounded-tl-none text-xs italic"
-                      : "rounded-sm rounded-tl-none bg-[--card] text-[--foreground]"
+                      : "rounded-sm rounded-tl-none light:bg-card light:text-foreground"
                 }`}
                 style={
                   message.from === "claude"
                     ? {
-                        backgroundColor: "rgba(196,122,138,0.10)",
-                        color: "#C47A8A",
-                        border: "1px solid rgba(196,122,138,0.2)",
+                        backgroundColor: "var(--chat-bubble)",
+                        color: "var(--primary-ink)",
+                        border: "1px solid var(--chat-border)",
                       }
                     : { border: "1px solid var(--border)" }
                 }
@@ -240,7 +242,7 @@ export function KonamiChat() {
                   "msgSlideIn 0.25s cubic-bezier(0.22,1,0.36,1) both",
               }}
             >
-              <div className="flex items-center gap-1 rounded-sm rounded-tl-none border border-[--border] bg-[--card] px-3.5 py-3">
+              <div className="flex items-center gap-1 rounded-sm rounded-tl-none border light:border-border light:bg-card px-3.5 py-3">
                 <span
                   className="typing-dot"
                   style={{ animationDelay: "0ms" }}
@@ -258,7 +260,7 @@ export function KonamiChat() {
           )}
 
           {done && (
-            <p className="mt-2 text-center text-[10px] uppercase tracking-widest text-[--muted-foreground]">
+            <p className="mt-2 text-center text-[10px] uppercase tracking-widest light:text-muted-foreground">
               conversation ended
             </p>
           )}
@@ -267,14 +269,14 @@ export function KonamiChat() {
         </div>
 
         {!typing && !done && (
-          <div className="flex shrink-0 flex-col gap-2 border-t border-[--border] px-4 py-3">
+          <div className="flex shrink-0 flex-col gap-2 border-t light:border-border px-4 py-3">
             {currentNode.replies
               .filter(reply => !reply.requires || visited.has(reply.requires))
               .map((reply, index) => (
                 <button
                   key={index}
                   onClick={() => handleReply(reply)}
-                  className="w-full rounded-sm border border-[--border] px-3.5 py-2.5 text-left text-sm text-[--muted-foreground] transition-colors duration-150 hover:border-[--primary] hover:text-[--foreground]"
+                  className="w-full rounded-sm border light:border-border px-3.5 py-2.5 text-left text-sm light:text-muted-foreground transition-colors duration-150 light:hover:border-primary light:hover:text-foreground"
                   style={{ backgroundColor: "var(--card)" }}
                 >
                   {reply.label}
@@ -303,7 +305,7 @@ export function KonamiChat() {
 
         .konami-scrollbar {
           scrollbar-width: thin;
-          scrollbar-color: rgba(196,122,138,0.72) rgba(242,236,240,0.06);
+          scrollbar-color: var(--chat-scroll-color) var(--chat-scroll-track);
         }
 
         .konami-scrollbar::-webkit-scrollbar {
@@ -311,19 +313,19 @@ export function KonamiChat() {
         }
 
         .konami-scrollbar::-webkit-scrollbar-track {
-          background: rgba(242,236,240,0.06);
-          border-left: 1px solid rgba(196,122,138,0.08);
+          background: var(--chat-scroll-track);
+          border-left: 1px solid var(--chat-scroll-border);
         }
 
         .konami-scrollbar::-webkit-scrollbar-thumb {
-          background: linear-gradient(180deg, rgba(196,122,138,0.92), rgba(140,84,98,0.92));
+          background: var(--chat-scroll-thumb);
           border: 2px solid transparent;
           border-radius: 999px;
           background-clip: padding-box;
         }
 
         .konami-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(180deg, rgba(214,140,155,0.96), rgba(164,98,114,0.96));
+          background: var(--chat-scroll-hover);
           border: 2px solid transparent;
           background-clip: padding-box;
         }

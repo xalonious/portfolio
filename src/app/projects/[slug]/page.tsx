@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { ProjectCaseStudy } from "@/components/sections/ProjectCaseStudy"
-import { getPublishedProjectBySlug } from "@/lib/cms/project-repository"
+import { getPublishedCaseStudyIds, getPublishedProjectBySlug } from "@/lib/cms/project-repository"
 import { isProjectWithCaseStudy } from "@/lib/project-types"
 
 type ProjectPageProps = {
@@ -38,5 +38,5 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound()
   }
 
-  return <ProjectCaseStudy project={project} />
+  return <ProjectCaseStudy project={project} achievementCaseStudyId={project.id} publishedCaseStudyIds={getPublishedCaseStudyIds()} />
 }

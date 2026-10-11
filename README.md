@@ -18,3 +18,5 @@ this is my personal site, built to bring together my story, projects, tech stack
 - Contact form with validation, rate limiting, spam checks, and Discord webhook delivery
 - Custom preloader, scroll progress, magnetic buttons, and scramble text effects
 - Hidden Konami chat feature
+- Game-style achievements with persistent progress, unlock notifications and sounds, and hidden Easter eggs
+- Charcoal dark mode and Rose Porcelain light mode with saved theme preferences

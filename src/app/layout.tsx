@@ -5,8 +5,13 @@ import { Preloader } from "@/components/ui/Preloader"
 import { PageWrapper } from "@/components/layout/PageWrapper"
 import { LenisProvider } from "@/components/layout/LenisProvider"
 import { KonamiChat } from "@/components/features/KonamiChat"
+import { AchievementNotifications } from "@/components/features/AchievementNotifications"
+import { AchievementPanelProvider } from "@/components/features/AchievementPanel"
 import { ScrollProgress } from "@/components/ui/ScrollProgress"
+import { getPublishedCaseStudyIds } from "@/lib/cms/project-repository"
+import { connection } from "next/server"
 import { Playfair_Display, DM_Sans } from "next/font/google"
+import { themeBootstrap } from "@/lib/theme"
 
 export const metadata = {
   title: {
@@ -55,23 +60,30 @@ const dmSans = DM_Sans({
   weight: ["300", "400", "500", "600"],
 })
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  await connection()
+  const publishedCaseStudyIds = getPublishedCaseStudyIds()
   return (
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${playfair.variable} ${dmSans.variable}`}
+      className={`${playfair.variable} ${dmSans.variable} dark`}
+      data-theme="dark"
       data-scroll-behavior="smooth"
     >
-      <body className="min-h-screen bg-background text-foreground antialiased font-sans selection:bg-[#C47A8A33] selection:text-foreground">
-        <LenisProvider>
-          <ScrollProgress />
-          <KonamiChat />
-          <Preloader />
-          <Header />
-          <PageWrapper>{children}</PageWrapper>
-          <Footer />
-        </LenisProvider>
+      <head><script dangerouslySetInnerHTML={{ __html: themeBootstrap }} /></head>
+      <body className="min-h-screen bg-background text-foreground antialiased font-sans">
+        <AchievementPanelProvider>
+          <AchievementNotifications publishedCaseStudyIds={publishedCaseStudyIds} />
+          <LenisProvider>
+            <ScrollProgress />
+            <KonamiChat />
+            <Preloader />
+            <Header />
+            <PageWrapper>{children}</PageWrapper>
+            <Footer />
+          </LenisProvider>
+        </AchievementPanelProvider>
       </body>
     </html>
   )

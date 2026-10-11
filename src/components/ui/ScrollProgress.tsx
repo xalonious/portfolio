@@ -16,7 +16,7 @@ export function ScrollProgress() {
         className="h-full origin-left"
         style={{
           scaleX,
-          background: "linear-gradient(90deg, #C47A8A 0%, #D4899A 50%, #C47A8A 100%)",
+          background: "linear-gradient(90deg, var(--primary) 0%, var(--primary-highlight) 50%, var(--primary) 100%)",
         }}
       />
     </div>

@@ -14,26 +14,26 @@ export function ProjectSidebar({
 }) {
   return (
     <aside className="space-y-6">
-      <section className="rounded-sm border border-[--border] bg-[--card] p-5">
+      <section className="rounded-sm border light:border-border light:bg-card p-5">
         <p className={labelStyles}>Publishing</p>
-        <p className="mt-3 text-sm leading-6 text-[--muted-foreground]">
+        <p className="mt-3 text-sm leading-6 light:text-muted-foreground">
           Saving keeps changes private. Publishing updates the website, creates
           a revision, and exposes the project through the shared database view.
         </p>
       </section>
 
       {revisions.length > 0 && (
-        <section className="rounded-sm border border-[--border] bg-[--card] p-5">
+        <section className="rounded-sm border light:border-border light:bg-card p-5">
           <p className={labelStyles}>Published revisions</p>
           <div className="mt-4 space-y-3">
             {revisions.map((revision) => (
               <div
                 key={revision.id}
-                className="border-b border-[--border] pb-3 last:border-0 last:pb-0"
+                className="border-b light:border-border pb-3 last:border-0 last:pb-0"
               >
                 <time
                   dateTime={revision.createdAt}
-                  className="block text-xs text-[--muted-foreground]"
+                  className="block text-xs light:text-muted-foreground"
                 >
                   {new Intl.DateTimeFormat("en", {
                     dateStyle: "medium",
@@ -44,7 +44,7 @@ export function ProjectSidebar({
                   type="button"
                   onClick={() => onRestoreRevision(revision.id)}
                   disabled={isPending}
-                  className="mt-2 text-xs font-medium text-[--primary] hover:underline"
+                  className="mt-2 text-xs font-medium light:text-primary-ink hover:underline"
                 >
                   Restore to draft
                 </button>

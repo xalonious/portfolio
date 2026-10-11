@@ -1,0 +1,75 @@
+.viewport {
+  position: fixed;
+  top: max(1rem, env(safe-area-inset-top));
+  right: max(1rem, env(safe-area-inset-right));
+  width: min(23rem, calc(100vw - 2rem));
+  z-index: 100000;
+  pointer-events: none;
+}
+
+.notification {
+  width: 100%;
+  text-align: left;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--notification-shadow);
+  overflow-wrap: anywhere;
+  animation: achievement-unlock 4500ms both;
+}
+
+.notification:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+}
+
+.label {
+  color: var(--primary-ink);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.description {
+  margin-top: 0.25rem;
+  color: var(--foreground);
+  opacity: 0.7;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+:global([data-theme="light"]) .description {
+  color: var(--muted-foreground);
+  opacity: 1;
+}
+
+@keyframes achievement-unlock {
+  0% { opacity: 0; transform: translateX(calc(100% + 2rem)); }
+  6.67%, 95.56% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notification { animation-name: achievement-unlock-reduced; }
+}
+
+@keyframes achievement-unlock-reduced {
+  0%, 95.56% { opacity: 1; }
+  100% { opacity: 0; }
+}

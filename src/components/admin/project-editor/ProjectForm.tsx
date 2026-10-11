@@ -111,7 +111,7 @@ export function ProjectForm({
           }}
         />
 
-        <label className="flex items-center gap-3 text-sm text-[--foreground]">
+        <label className="flex items-center gap-3 text-sm light:text-foreground">
           <input
             type="checkbox"
             checked={document.featured}
@@ -164,7 +164,7 @@ export function ProjectForm({
       </EditorPanel>
 
       <EditorPanel eyebrow="Case study" title="Content">
-        <label className="flex items-center gap-3 text-sm text-[--foreground]">
+        <label className="flex items-center gap-3 text-sm light:text-foreground">
           <input
             type="checkbox"
             checked={Boolean(document.caseStudy)}
@@ -196,7 +196,7 @@ export function ProjectForm({
 
       {document.id && (
         <EditorPanel eyebrow="Danger zone" title="Project deletion">
-          <p className="text-sm leading-6 text-[--muted-foreground]">
+          <p className="text-sm leading-6 light:text-muted-foreground">
             This removes the project, its draft, and its revision history. Every
             image referenced by them is also permanently deleted. Uploaded media
             that was never attached to this project is retained.
@@ -205,7 +205,7 @@ export function ProjectForm({
             type="button"
             onClick={onDelete}
             disabled={isPending}
-            className="mt-5 rounded-sm border border-red-800/70 px-4 py-2 text-sm text-red-300 transition hover:bg-red-950/30"
+            className="mt-5 rounded-sm border border-red-800/70 px-4 py-2 text-sm text-red-300 light:text-destructive transition hover:bg-red-950/30"
           >
             Delete project
           </button>

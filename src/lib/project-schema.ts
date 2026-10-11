@@ -164,6 +164,7 @@ export function slugifyProjectTitle(value: string) {
 
 export function documentToPublicProject(document: ProjectDocument): Project {
   const base = {
+    id: document.id,
     title: document.title,
     description: document.description,
     image: document.image,

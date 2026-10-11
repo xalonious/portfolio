@@ -11,6 +11,7 @@ import {
   type ProjectDocument,
 } from "@/lib/project-schema"
 import type { Project } from "@/lib/project-types"
+import { hasCaseStudySectionContent, isProjectWithCaseStudy } from "@/lib/project-types"
 
 type ProjectRow = {
   id: string
@@ -79,8 +80,7 @@ function collectJsonMediaPaths(value: string | null, paths: Set<string>) {
   try {
     collectMediaPaths(JSON.parse(value), paths)
   } catch {
-    // Invalid historical JSON should not prevent the rest of a project from
-    // being deleted. Its media row will remain available for manual cleanup.
+
   }
 }
 
@@ -152,6 +152,12 @@ export function getPublishedProjects(): Project[] {
 
 export function getFeaturedPublishedProjects() {
   return getPublishedProjects().filter((project) => project.featured)
+}
+
+export function getPublishedCaseStudyIds(): string[] {
+  return getPublishedProjects()
+    .filter(project => isProjectWithCaseStudy(project) && project.caseStudy.sections.some(hasCaseStudySectionContent))
+    .flatMap(project => project.id ? [project.id] : [])
 }
 
 export function getPublishedProjectBySlug(slug: string) {

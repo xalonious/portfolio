@@ -147,8 +147,8 @@ export function ProjectOrderList({
 
   return (
     <div>
-      <div className="border-b border-[--border] bg-[--background]/50 px-5 py-3">
-        <p className="text-xs text-[--muted-foreground]">
+      <div className="border-b light:border-border light:bg-background/50 px-5 py-3">
+        <p className="text-xs light:text-muted-foreground">
           Drag projects into the order they should appear publicly. Changes save
           automatically.
         </p>
@@ -156,8 +156,8 @@ export function ProjectOrderList({
           <p
             className={`mt-2 text-xs ${
               message === "Project order saved."
-                ? "text-emerald-400"
-                : "text-red-300"
+                ? "text-emerald-400 light:text-[var(--success)]"
+                : "text-red-300 light:text-destructive"
             }`}
           >
             {message}
@@ -165,7 +165,7 @@ export function ProjectOrderList({
         )}
       </div>
 
-      <div className="divide-y divide-[--border]">
+      <div className="divide-y light:divide-border">
         {projects.map((project, index) => (
           <div
             key={project.id}
@@ -175,10 +175,10 @@ export function ProjectOrderList({
               event.dataTransfer.dropEffect = "move"
             }}
             onDrop={handleDrop}
-            className={`grid gap-4 bg-[--card] px-4 py-4 transition sm:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto] sm:items-center ${
+            className={`grid gap-4 light:bg-card px-4 py-4 transition sm:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto] sm:items-center ${
               draggedId === project.id
-                ? "bg-[--muted]/70 opacity-60"
-                : "hover:bg-[--muted]/40"
+                ? "light:bg-muted/70 opacity-60"
+                : "light:hover:bg-muted/40"
             }`}
           >
             <button
@@ -187,7 +187,7 @@ export function ProjectOrderList({
               onDragStart={(event) => handleDragStart(event, project.id)}
               onDragEnd={handleDragEnd}
               aria-label={`Drag ${project.title} to reorder`}
-              className="hidden cursor-grab select-none rounded-sm border border-[--border] px-2 py-3 text-sm tracking-[0.16em] text-[--muted-foreground] transition hover:border-[--muted-foreground] hover:text-[--foreground] active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-40 sm:block"
+              className="hidden cursor-grab select-none rounded-sm border light:border-border px-2 py-3 text-sm tracking-[0.16em] light:text-muted-foreground transition light:hover:border-muted-foreground light:hover:text-foreground active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-40 sm:block"
             >
               {"\u283f"}
             </button>
@@ -196,10 +196,10 @@ export function ProjectOrderList({
               href={`/admin/projects/${project.id}`}
               className="min-w-0"
             >
-              <h2 className="font-display text-xl font-bold text-[--foreground]">
+              <h2 className="font-display text-xl font-bold light:text-foreground">
                 {project.title}
               </h2>
-              <p className="mt-1 line-clamp-1 text-sm text-[--muted-foreground]">
+              <p className="mt-1 line-clamp-1 text-sm light:text-muted-foreground">
                 {project.description}
               </p>
             </Link>
@@ -207,8 +207,8 @@ export function ProjectOrderList({
             <span
               className={`w-fit rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
                 project.status === "published"
-                  ? "border-emerald-700/60 text-emerald-400"
-                  : "border-amber-700/60 text-amber-300"
+                  ? "border-emerald-700/60 text-emerald-400 light:text-[var(--success)]"
+                  : "border-amber-700/60 text-amber-300 light:text-[var(--rarity-legendary)]"
               }`}
             >
               {project.status}
@@ -216,7 +216,7 @@ export function ProjectOrderList({
 
             <time
               dateTime={project.updatedAt}
-              className="text-xs text-[--muted-foreground]"
+              className="text-xs light:text-muted-foreground"
             >
               {new Intl.DateTimeFormat("en", {
                 dateStyle: "medium",
@@ -230,7 +230,7 @@ export function ProjectOrderList({
                 onClick={() => moveBy(project.id, -1)}
                 disabled={isPending || index === 0}
                 aria-label={`Move ${project.title} up`}
-                className="rounded-sm border border-[--border] px-2 py-1 text-sm text-[--muted-foreground] transition hover:text-[--foreground] disabled:opacity-25"
+                className="rounded-sm border light:border-border px-2 py-1 text-sm light:text-muted-foreground transition light:hover:text-foreground disabled:opacity-25"
               >
                 {"\u2191"}
               </button>
@@ -239,7 +239,7 @@ export function ProjectOrderList({
                 onClick={() => moveBy(project.id, 1)}
                 disabled={isPending || index === projects.length - 1}
                 aria-label={`Move ${project.title} down`}
-                className="rounded-sm border border-[--border] px-2 py-1 text-sm text-[--muted-foreground] transition hover:text-[--foreground] disabled:opacity-25"
+                className="rounded-sm border light:border-border px-2 py-1 text-sm light:text-muted-foreground transition light:hover:text-foreground disabled:opacity-25"
               >
                 {"\u2193"}
               </button>

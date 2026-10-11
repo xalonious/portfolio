@@ -2,40 +2,23 @@ import Image from "next/image"
 import { CaseStudyReveal } from "@/components/ui/CaseStudyReveal"
 import { CaseStudyImageLightbox } from "@/components/ui/CaseStudyImageLightbox"
 import { TransitionLink } from "@/components/ui/TransitionLink"
+import { CaseStudyReadingTracker } from "@/components/features/CaseStudyReadingTracker"
+import { hasCaseStudyBlockContent as hasBlockContent, hasCaseStudySectionContent as hasContent } from "@/lib/project-types"
 import type {
   CaseStudyContentBlock,
   CaseStudyImage,
-  CaseStudySection,
   ProjectWithCaseStudy,
 } from "@/lib/project-types"
 
 const focusStyles =
-  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--primary]"
-
-function hasBlockContent(block: CaseStudyContentBlock) {
-  switch (block.type) {
-    case "paragraphs":
-      return block.paragraphs.some((paragraph) => paragraph.trim())
-    case "highlights":
-      return block.highlights.some((highlight) => highlight.trim())
-    case "steps":
-    case "details":
-      return block.items.length > 0
-    case "images":
-      return block.images.length > 0
-  }
-}
-
-function hasContent(section: CaseStudySection) {
-  return section.content.some(hasBlockContent)
-}
+  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
 
 function CaseStudyImages({ images }: { images: CaseStudyImage[] }) {
   const hasMultipleImages = images.length > 1
 
   return (
     <div
-      className={`mt-10 border-y border-[--border] py-4 sm:py-5 ${hasMultipleImages ? "lg:-mx-24" : ""}`}
+      className={`mt-10 border-y light:border-border py-4 sm:py-5 ${hasMultipleImages ? "lg:-mx-24" : ""}`}
     >
       <div
         className={
@@ -59,7 +42,7 @@ function CaseStudyImages({ images }: { images: CaseStudyImage[] }) {
             >
               <CaseStudyImageLightbox image={image} sizes={sizes} />
               {image.caption && (
-                <figcaption className="mt-3 text-xs leading-relaxed text-[--muted-foreground] sm:text-sm">
+                <figcaption className="mt-3 text-xs leading-relaxed light:text-muted-foreground sm:text-sm">
                   {image.caption}
                 </figcaption>
               )}
@@ -73,7 +56,7 @@ function CaseStudyImages({ images }: { images: CaseStudyImage[] }) {
 
 function CaseStudyParagraphs({ paragraphs }: { paragraphs: string[] }) {
   return (
-    <div className="mt-6 space-y-5 text-base leading-8 text-[--muted-foreground] sm:text-lg">
+    <div className="mt-6 space-y-5 text-base leading-8 light:text-muted-foreground sm:text-lg">
       {paragraphs
         .filter((paragraph) => paragraph.trim())
         .map((paragraph) => (
@@ -85,7 +68,7 @@ function CaseStudyParagraphs({ paragraphs }: { paragraphs: string[] }) {
 
 function CaseStudyHighlights({ highlights }: { highlights: string[] }) {
   return (
-    <ul className="mt-8 space-y-3 border-l border-[--primary] pl-6 text-base leading-relaxed text-[--foreground]">
+    <ul className="mt-8 space-y-3 border-l light:border-primary pl-6 text-base leading-relaxed light:text-foreground">
       {highlights
         .filter((highlight) => highlight.trim())
         .map((highlight) => (
@@ -107,15 +90,15 @@ function CaseStudySteps({ items }: { items: Extract<CaseStudyContentBlock, { typ
 
   return (
     <ol
-      className={`mt-8 grid gap-px overflow-hidden rounded-sm border border-[--border] bg-[--border] sm:grid-cols-2 lg:-mx-24 ${columnStyles}`}
+      className={`mt-8 grid gap-px overflow-hidden rounded-sm border light:border-border light:bg-border sm:grid-cols-2 lg:-mx-24 ${columnStyles}`}
     >
       {items.map((step, stepIndex) => (
-        <li key={step.title} className="bg-[--card] p-5">
-          <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-[--primary]">
+        <li key={step.title} className="light:bg-card p-5">
+          <span className="text-[10px] font-medium uppercase tracking-[0.2em] light:text-primary-ink">
             {String(stepIndex + 1).padStart(2, "0")}
           </span>
-          <h3 className="mt-4 text-base font-medium text-[--foreground]">{step.title}</h3>
-          <p className="mt-2 text-sm leading-6 text-[--muted-foreground]">
+          <h3 className="mt-4 text-base font-medium light:text-foreground">{step.title}</h3>
+          <p className="mt-2 text-sm leading-6 light:text-muted-foreground">
             {step.description}
           </p>
         </li>
@@ -126,14 +109,14 @@ function CaseStudySteps({ items }: { items: Extract<CaseStudyContentBlock, { typ
 
 function CaseStudyDetails({ items }: { items: Extract<CaseStudyContentBlock, { type: "details" }>["items"] }) {
   return (
-    <dl className="mt-8 divide-y divide-[--border] border-y border-[--border]">
+    <dl className="mt-8 divide-y light:divide-border border-y light:border-border">
       {items.map((detail) => (
         <div
           key={detail.title}
           className="grid gap-2 py-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-8"
         >
-          <dt className="text-sm font-medium text-[--foreground]">{detail.title}</dt>
-          <dd className="text-sm leading-7 text-[--muted-foreground] sm:text-base">
+          <dt className="text-sm font-medium light:text-foreground">{detail.title}</dt>
+          <dd className="text-sm leading-7 light:text-muted-foreground sm:text-base">
             {detail.description}
           </dd>
         </div>
@@ -163,7 +146,7 @@ function ExternalProjectLink({ href, children }: { href: string; children: React
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`group inline-flex items-center gap-2 text-sm font-medium text-[--foreground] underline decoration-[--border] underline-offset-4 transition-colors duration-200 hover:text-[--primary] hover:decoration-[--primary] ${focusStyles}`}
+      className={`group inline-flex items-center gap-2 text-sm font-medium light:text-foreground underline light:decoration-border underline-offset-4 transition-colors duration-200 light:hover:text-primary-ink light:hover:decoration-primary ${focusStyles}`}
     >
       {children}
       <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">
@@ -180,8 +163,8 @@ function ProjectImage({ project }: { project: ProjectWithCaseStudy }) {
     <figure
       className={
         isPortrait
-          ? "mx-auto w-[min(100%,20rem)] overflow-hidden rounded-sm border border-[--border] bg-[--card] p-2 sm:w-[min(100%,26rem)] sm:p-3"
-          : "relative mx-auto aspect-video w-full max-w-[60rem] overflow-hidden rounded-sm border border-[--border] bg-[--card]"
+          ? "mx-auto w-[min(100%,20rem)] overflow-hidden rounded-sm border light:border-border light:bg-card p-2 sm:w-[min(100%,26rem)] sm:p-3"
+          : "relative mx-auto aspect-video w-full max-w-[60rem] overflow-hidden rounded-sm border light:border-border light:bg-card"
       }
     >
       {!isPortrait && (
@@ -194,7 +177,7 @@ function ProjectImage({ project }: { project: ProjectWithCaseStudy }) {
             sizes="(min-width: 1024px) 470px, calc(100vw - 48px)"
             className="scale-105 object-cover opacity-25 blur-xl"
           />
-          <div className="absolute inset-0 bg-[--background]/35" aria-hidden="true" />
+          <div className="absolute inset-0 light:bg-background/35" aria-hidden="true" />
         </>
       )}
       <div
@@ -219,7 +202,11 @@ function ProjectImage({ project }: { project: ProjectWithCaseStudy }) {
   )
 }
 
-export function ProjectCaseStudy({ project }: { project: ProjectWithCaseStudy }) {
+export function ProjectCaseStudy({ project, achievementCaseStudyId, publishedCaseStudyIds }: {
+  project: ProjectWithCaseStudy
+  achievementCaseStudyId?: string
+  publishedCaseStudyIds?: readonly string[]
+}) {
   const { caseStudy } = project
   const sections = caseStudy.sections.filter(hasContent)
   const metadata = [
@@ -229,13 +216,13 @@ export function ProjectCaseStudy({ project }: { project: ProjectWithCaseStudy })
   ].filter((item): item is { label: string; value: string } => Boolean(item.value))
 
   return (
-    <div className="min-h-screen bg-[--background] text-[--foreground]">
+    <div className="min-h-screen light:bg-background light:text-foreground">
       <main className="mx-auto max-w-6xl px-6 pb-24 pt-28 sm:pb-32 sm:pt-32">
         <CaseStudyReveal>
           <nav aria-label="Project navigation" className="mb-10 sm:mb-12">
             <TransitionLink
               href="/projects"
-              className={`inline-flex items-center gap-2 text-sm font-medium text-[--muted-foreground] transition-colors duration-200 hover:text-[--foreground] ${focusStyles}`}
+              className={`inline-flex items-center gap-2 text-sm font-medium light:text-muted-foreground transition-colors duration-200 light:hover:text-foreground ${focusStyles}`}
             >
               <span aria-hidden="true">←</span>
               All projects
@@ -245,13 +232,13 @@ export function ProjectCaseStudy({ project }: { project: ProjectWithCaseStudy })
           <header>
             <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)] lg:gap-14">
               <div className="min-w-0">
-                <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-[--primary]">
+                <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] light:text-primary-ink">
                   Case study
                 </p>
-                <h1 className="max-w-5xl font-display text-[clamp(3rem,8vw,6.5rem)] font-bold leading-[0.95] tracking-tight text-[--foreground]">
+                <h1 className="max-w-5xl font-display text-[clamp(3rem,8vw,6.5rem)] font-bold leading-[0.95] tracking-tight light:text-foreground">
                   {project.title}
                 </h1>
-                <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[--muted-foreground] sm:text-xl">
+                <p className="mt-6 max-w-3xl text-lg leading-relaxed light:text-muted-foreground sm:text-xl">
                   {project.description}
                 </p>
               </div>
@@ -259,16 +246,16 @@ export function ProjectCaseStudy({ project }: { project: ProjectWithCaseStudy })
               <ProjectImage project={project} />
             </div>
 
-            <div className="mt-8 grid gap-8 border-y border-[--border] py-7 sm:mt-10 md:grid-cols-[minmax(0,1fr)_auto] md:items-end md:gap-12">
+            <div className="mt-8 grid gap-8 border-y light:border-border py-7 sm:mt-10 md:grid-cols-[minmax(0,1fr)_auto] md:items-end md:gap-12">
               <div>
-                <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.2em] text-[--primary]">
+                <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.2em] light:text-primary-ink">
                   Technology
                 </p>
                 <ul className="flex flex-wrap gap-2" aria-label="Technologies used">
                   {project.tech.map((technology) => (
                     <li
                       key={technology}
-                      className="rounded-sm border border-[--border] bg-[--card] px-2.5 py-1.5 text-[10px] font-medium uppercase tracking-wide text-[--muted-foreground]"
+                      className="rounded-sm border light:border-border light:bg-card px-2.5 py-1.5 text-[10px] font-medium uppercase tracking-wide light:text-muted-foreground"
                     >
                       {technology}
                     </li>
@@ -280,10 +267,10 @@ export function ProjectCaseStudy({ project }: { project: ProjectWithCaseStudy })
                 <dl className="grid grid-cols-1 gap-x-8 gap-y-5 min-[420px]:grid-cols-2 sm:grid-cols-3">
                   {metadata.map((item) => (
                     <div key={item.label} className="min-w-24">
-                      <dt className="text-[10px] font-medium uppercase tracking-[0.2em] text-[--primary]">
+                      <dt className="text-[10px] font-medium uppercase tracking-[0.2em] light:text-primary-ink">
                         {item.label}
                       </dt>
-                      <dd className="mt-1 text-sm text-[--foreground]">{item.value}</dd>
+                      <dd className="mt-1 text-sm light:text-foreground">{item.value}</dd>
                     </div>
                   ))}
                 </dl>
@@ -297,7 +284,9 @@ export function ProjectCaseStudy({ project }: { project: ProjectWithCaseStudy })
             )}
           </header>
 
-          <div
+          <CaseStudyReadingTracker
+            id={achievementCaseStudyId}
+            publishedCaseStudyIds={publishedCaseStudyIds}
             className={`mx-auto max-w-3xl ${
               sections.length > 0 ? "mt-10 sm:mt-12" : "mt-8 sm:mt-10"
             }`}
@@ -310,13 +299,13 @@ export function ProjectCaseStudy({ project }: { project: ProjectWithCaseStudy })
                   return (
                     <section key={headingId} aria-labelledby={headingId}>
                       {section.eyebrow && (
-                        <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-[--primary]">
+                        <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] light:text-primary-ink">
                           {section.eyebrow}
                         </p>
                       )}
                       <h2
                         id={headingId}
-                        className="font-display text-3xl font-bold leading-tight text-[--foreground] sm:text-4xl"
+                        className="font-display text-3xl font-bold leading-tight light:text-foreground sm:text-4xl"
                       >
                         {section.title}
                       </h2>
@@ -335,34 +324,34 @@ export function ProjectCaseStudy({ project }: { project: ProjectWithCaseStudy })
             ) : (
               <section
                 aria-labelledby="case-study-status"
-                className="border-y border-[--border] py-8 sm:py-10"
+                className="border-y light:border-border py-8 sm:py-10"
               >
-                <p className="text-xs font-medium uppercase tracking-[0.2em] text-[--primary]">
+                <p className="text-xs font-medium uppercase tracking-[0.2em] light:text-primary-ink">
                   Case study in progress
                 </p>
                 <h2
                   id="case-study-status"
-                  className="mt-3 font-display text-3xl font-bold leading-tight text-[--foreground] sm:text-4xl"
+                  className="mt-3 font-display text-3xl font-bold leading-tight light:text-foreground sm:text-4xl"
                 >
                   Detailed write-up coming soon
                 </h2>
-                <p className="mt-4 max-w-2xl text-base leading-relaxed text-[--muted-foreground] sm:text-lg">
+                <p className="mt-4 max-w-2xl text-base leading-relaxed light:text-muted-foreground sm:text-lg">
                   The full technical breakdown, decisions, challenges, and lessons will be added
                   here later.
                 </p>
               </section>
             )}
-          </div>
+          </CaseStudyReadingTracker>
 
           <nav
             aria-label="Project navigation"
-            className={`border-t border-[--border] pt-8 ${
+            className={`border-t light:border-border pt-8 ${
               sections.length > 0 ? "mt-20 sm:mt-28" : "mt-12 sm:mt-16"
             }`}
           >
             <TransitionLink
               href="/projects"
-              className={`inline-flex items-center gap-2 text-sm font-medium text-[--muted-foreground] transition-colors duration-200 hover:text-[--foreground] ${focusStyles}`}
+              className={`inline-flex items-center gap-2 text-sm font-medium light:text-muted-foreground transition-colors duration-200 light:hover:text-foreground ${focusStyles}`}
             >
               <span aria-hidden="true">←</span>
               Back to all projects

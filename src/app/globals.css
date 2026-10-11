@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
 
 @theme inline {
   --color-background: var(--background);
@@ -9,6 +10,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-primary: var(--primary);
+  --color-primary-ink: var(--primary-ink);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -34,6 +36,7 @@
 }
 
 :root {
+  color-scheme: dark;
   --radius: 0.375rem;
 
   
@@ -70,8 +73,105 @@
   --scrollbar-thumb:   rgba(196, 122, 138, 0.78);
   --scrollbar-thumb-hover: rgba(214, 140, 155, 0.94);
   --scrollbar-thumb-shadow: rgba(112, 63, 77, 0.35);
+  --selection-background: #C47A8A33;
+  --hover-background: rgba(196, 122, 138, 0.12);
+  --primary-highlight: #D4899A;
+  --primary-ink: #C47A8A;
+  --button-foreground: #F2ECF0;
+  --button-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 1px 3px rgba(0,0,0,0.3);
+  --notification-shadow: 0 8px 32px rgb(0 0 0 / 20%);
+  --overlay: rgb(0 0 0 / 45%);
+  --chat-overlay: rgb(0 0 0 / 60%);
+  --chat-bubble: rgba(196,122,138,0.10);
+  --chat-border: rgba(196,122,138,0.2);
+  --chat-scroll-track: rgba(242,236,240,0.06);
+  --chat-scroll-color: rgba(196,122,138,0.72);
+  --chat-scroll-border: rgba(196,122,138,0.08);
+  --chat-scroll-thumb: linear-gradient(180deg, rgba(196,122,138,0.92), rgba(140,84,98,0.92));
+  --chat-scroll-hover: linear-gradient(180deg, rgba(214,140,155,0.96), rgba(164,98,114,0.96));
+  --image-overlay: rgb(0 0 0 / 90%);
+  --image-toolbar: rgb(0 0 0 / 80%);
+  --image-text: #FFFFFF;
+  --image-caption: rgb(255 255 255 / 70%);
+  --image-control: rgb(0 0 0 / 55%);
+  --image-border: rgb(255 255 255 / 20%);
+  --image-hover: rgb(255 255 255 / 10%);
+  --rarity-uncommon: #89A98C;
+  --rarity-rare: #89A8C7;
+  --rarity-epic: #B59BCB;
+  --rarity-legendary: #C9AA73;
+  --spotify: #1DB954;
+  --success: #34D399;
+  --error: #F87171;
+}
 
-  
+:root[data-theme="light"] {
+  color-scheme: light;
+  --background: #F8F4F3;
+  --foreground: #32282E;
+  --card: #FFFFFF;
+  --card-foreground: #32282E;
+  --popover: #FFFFFF;
+  --popover-foreground: #32282E;
+  --muted: #F0E8E9;
+  --muted-foreground: #73656C;
+  --primary: #A45876;
+  --primary-ink: #9B506E;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F0E8E9;
+  --secondary-foreground: #32282E;
+  --accent: #EAD5DE;
+  --accent-foreground: #32282E;
+  --destructive: #B33E49;
+  --destructive-foreground: #FFFFFF;
+  --border: #DED1D6;
+  --input: #DED1D6;
+  --ring: #A45876;
+  --selection-background: #EAD5DE;
+  --hover-background: #F3E6EB;
+  --primary-highlight: #BC7792;
+  --button-foreground: #FFFFFF;
+  --button-shadow: inset 0 1px 0 rgb(255 255 255 / 25%), 0 2px 5px rgb(82 45 63 / 10%);
+  --notification-shadow: 0 8px 32px rgb(82 45 63 / 12%);
+  --overlay: rgb(65 43 54 / 25%);
+  --chat-overlay: rgb(65 43 54 / 35%);
+  --chat-bubble: #F3E6EB;
+  --chat-border: #DED1D6;
+  --chat-scroll-track: #F0E8E9;
+  --chat-scroll-color: #BC879B;
+  --chat-scroll-border: #DED1D6;
+  --chat-scroll-thumb: #BC879B;
+  --chat-scroll-hover: #AC607E;
+  --image-overlay: rgb(65 43 54 / 40%);
+  --image-toolbar: rgb(248 244 243 / 96%);
+  --image-text: #32282E;
+  --image-caption: #75676E;
+  --image-control: #FFFFFF;
+  --image-border: #DED1D6;
+  --image-hover: #F3E6EB;
+  --rarity-uncommon: #48734E;
+  --rarity-rare: #486F96;
+  --rarity-epic: #806092;
+  --rarity-legendary: #866722;
+  --spotify: #187A43;
+  --success: #237A58;
+  --error: #B33E49;
+  --scrollbar-track: #F0E8E9;
+  --scrollbar-thumb: #BC879B;
+  --scrollbar-thumb-hover: #AC607E;
+  --scrollbar-thumb-shadow: rgb(82 45 63 / 10%);
+}
+
+.theme-moon { display: none; }
+[data-theme="light"] .theme-moon { display: block; }
+[data-theme="light"] .theme-sun { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  @layer base {
+    *, ::before, ::after, ::backdrop {
+      transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+    }
+  }
 }
 
 @layer base {
@@ -134,16 +234,19 @@
 
   body {
     @apply text-foreground;
-    background-color: #1A1618;
+    background-color: var(--background);
     background-image:
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
     background-repeat: repeat;
   }
 
   ::selection {
-    background-color: #C47A8A33;
-    color: #F2ECF0;
+    background-color: var(--selection-background);
+    color: var(--foreground);
   }
+
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }
+  [data-theme="light"] :is(input, textarea)::placeholder { color: var(--muted-foreground); opacity: 1; }
 }
 
 @keyframes fade-in {
@@ -156,6 +259,16 @@
   to   { opacity: 0; transform: translateY(-8px); }
 }
 
+@keyframes achievement-drawer-in {
+  from { opacity: 0; transform: translateX(100%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes achievement-sheet-in {
+  from { opacity: 0; transform: translateY(100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 ::view-transition-old(root) {
   animation: 220ms cubic-bezier(0.22, 1, 0.36, 1) both fade-out;
 }
@@ -165,6 +278,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after, ::backdrop {
+    transition-duration: 0s !important;
+  }
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none;

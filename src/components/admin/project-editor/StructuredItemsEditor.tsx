@@ -26,7 +26,7 @@ export function StructuredItemsEditor({
       {block.items.map((item, itemIndex) => (
         <div
           key={itemIndex}
-          className="grid gap-3 border-b border-[--border] pb-4 sm:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)_auto]"
+          className="grid gap-3 border-b light:border-border pb-4 sm:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)_auto]"
         >
           <TextField
             label={block.type === "steps" ? `Step ${itemIndex + 1}` : "Label"}

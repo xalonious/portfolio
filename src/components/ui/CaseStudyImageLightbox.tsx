@@ -59,7 +59,7 @@ export function CaseStudyImageLightbox({ image, sizes }: CaseStudyImageLightboxP
         type="button"
         onClick={() => setIsOpen(true)}
         aria-label={`Expand image: ${image.alt}`}
-        className="group relative block w-full overflow-hidden rounded-sm border border-[--border] bg-[--card] p-2 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--primary]"
+        className="group relative block w-full overflow-hidden rounded-sm border light:border-border light:bg-card p-2 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
       >
         <Image
           src={image.src}
@@ -99,13 +99,13 @@ export function CaseStudyImageLightbox({ image, sizes }: CaseStudyImageLightboxP
           onClick={(event) => {
             if (event.target === event.currentTarget) event.currentTarget.close()
           }}
-          className="fixed inset-0 m-0 h-dvh max-h-none w-screen max-w-none overflow-y-auto border-0 bg-transparent p-3 text-[--foreground] backdrop:bg-black/90 sm:p-6"
+          className="fixed inset-0 m-0 h-dvh max-h-none w-screen max-w-none overflow-y-auto border-0 bg-transparent p-3 light:text-foreground backdrop:bg-[var(--image-overlay)] sm:p-6"
         >
           <div className="flex min-h-full w-full flex-col items-center gap-4">
             <div
-              className={`sticky top-0 z-10 flex w-full max-w-[calc(100vw-1.5rem)] items-center justify-end gap-2 bg-black/80 py-2 backdrop-blur-sm sm:justify-between sm:gap-4 ${widthPreset.header}`}
+              className={`sticky top-0 z-10 flex w-full max-w-[calc(100vw-1.5rem)] items-center justify-end gap-2 bg-[var(--image-toolbar)] py-2 backdrop-blur-sm sm:justify-between sm:gap-4 ${widthPreset.header}`}
             >
-              <p className="hidden truncate text-xs text-white/70 sm:block sm:text-sm">
+              <p className="hidden truncate text-xs text-[var(--image-caption)] sm:block sm:text-sm">
                 {image.caption ?? image.alt}
               </p>
               <div className="flex shrink-0 items-center gap-2">
@@ -113,7 +113,7 @@ export function CaseStudyImageLightbox({ image, sizes }: CaseStudyImageLightboxP
                   type="button"
                   onClick={() => setIsZoomed((zoomed) => !zoomed)}
                   aria-pressed={isZoomed}
-                  className="rounded-sm border border-white/20 bg-black/55 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:text-sm"
+                  className="rounded-sm border border-[var(--image-border)] bg-[var(--image-control)] px-3 py-2 text-xs font-medium text-[var(--image-text)] transition-colors hover:bg-[var(--image-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:text-sm"
                 >
                   {isZoomed ? "Zoom out" : "Zoom in"}
                 </button>
@@ -121,7 +121,7 @@ export function CaseStudyImageLightbox({ image, sizes }: CaseStudyImageLightboxP
                   href={image.src}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-sm border border-white/20 bg-black/55 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:text-sm"
+                  className="rounded-sm border border-[var(--image-border)] bg-[var(--image-control)] px-3 py-2 text-xs font-medium text-[var(--image-text)] transition-colors hover:bg-[var(--image-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:text-sm"
                 >
                   Open original
                 </a>
@@ -129,7 +129,7 @@ export function CaseStudyImageLightbox({ image, sizes }: CaseStudyImageLightboxP
                   type="button"
                   onClick={() => dialogRef.current?.close()}
                   aria-label="Close expanded image"
-                  className="grid h-9 w-9 place-items-center rounded-sm border border-white/20 bg-black/55 text-xl leading-none text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="grid h-9 w-9 place-items-center rounded-sm border border-[var(--image-border)] bg-[var(--image-control)] text-xl leading-none text-[var(--image-text)] transition-colors hover:bg-[var(--image-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 >
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -145,7 +145,7 @@ export function CaseStudyImageLightbox({ image, sizes }: CaseStudyImageLightboxP
                 type="button"
                 onClick={() => setIsZoomed((zoomed) => !zoomed)}
                 aria-label={isZoomed ? "Zoom image out" : "Zoom image in"}
-                className={`block shrink-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white ${
+                className={`block shrink-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary ${
                   isZoomed ? widthPreset.zoomed : widthPreset.default
                 }`}
               >
@@ -155,7 +155,7 @@ export function CaseStudyImageLightbox({ image, sizes }: CaseStudyImageLightboxP
                   width={image.width}
                   height={image.height}
                   sizes={isZoomed ? widthPreset.zoomedSizes : widthPreset.defaultSizes}
-                  className="h-auto w-full rounded-sm border border-white/15 bg-black object-contain shadow-2xl"
+                  className="h-auto w-full rounded-sm border border-white/15 bg-black object-contain shadow-2xl light:border-border light:bg-card light:shadow-primary/10"
                 />
               </button>
             </div>
