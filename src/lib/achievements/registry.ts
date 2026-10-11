@@ -83,7 +83,8 @@ export function createAchievementRegistry(publishedCaseStudyIds: readonly string
     },
     {
       id: "cheater-cheater", name: "Cheater, Cheater!", description: "You really thought I wouldn't notice?",
-      icon: FiUserX, rarity: "rare", hidden: true,
+      hint: "Some shortcuts leave a trace.",
+      icon: FiUserX, rarity: "rare", hidden: false,
       trigger: { type: "event", event: ACHIEVEMENT_TAMPER_EVENT },
     },
     {
