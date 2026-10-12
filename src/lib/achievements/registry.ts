@@ -1,6 +1,6 @@
 import { FiBookOpen, FiClock, FiCode, FiCompass, FiFeather, FiLayers, FiMessageCircle, FiMusic, FiShield, FiSun, FiTerminal, FiUserX, FiZap } from "react-icons/fi"
 import { ACHIEVEMENT_TAMPER_EVENT } from "./storage"
-import { SSH_ACHIEVEMENT_ID, SSH_CONNECTED_EVENT, SSH_WATCH_EVENT, SSH_WATCH_WINDOW_MS } from "./ssh-config"
+import { SSH_ACHIEVEMENT_ID, SSH_CONNECTED_EVENT, SSH_WATCH_EVENT, SSH_WATCH_WINDOW_MS, SSH_CONNECTION_WINDOW_MS } from "./ssh-config"
 import type { AchievementDefinition, CustomAchievementHandler } from "./types"
 
 export function createAchievementRegistry(publishedCaseStudyIds: readonly string[] = []): readonly AchievementDefinition[] {
@@ -112,7 +112,12 @@ export const customAchievementHandlers: Readonly<Record<string, CustomAchievemen
     if (typeof startedAt !== "number" || !Number.isSafeInteger(startedAt) || startedAt <= 0) return
     const custom = progress.custom
     const existing = custom && typeof custom === "object" && !Array.isArray(custom) && "watchingSince" in custom ? custom.watchingSince : undefined
-    if (typeof existing === "number" && existing > 0 && existing <= startedAt && startedAt - existing < SSH_WATCH_WINDOW_MS) return
+    if (typeof existing === "number" && Number.isSafeInteger(existing) && existing > 0 && existing <= startedAt) {
+      if (startedAt - existing < SSH_WATCH_WINDOW_MS) return
+      // Renew an expired watch without excluding a connection made just before
+      // returning to the browser. The server still limits matches to 30 minutes.
+      return { progress: { custom: { watchingSince: Math.max(existing, startedAt - SSH_CONNECTION_WINDOW_MS) } } }
+    }
     return { progress: { custom: { watchingSince: startedAt } } }
   },
 }

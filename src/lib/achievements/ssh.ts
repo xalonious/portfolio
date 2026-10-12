@@ -1,6 +1,7 @@
 import type { AchievementEngine } from "./engine"
 import type { AchievementProgress } from "./types"
 import { SSH_ACHIEVEMENT_ID, SSH_CONNECTED_EVENT, SSH_WATCH_EVENT } from "./ssh-config"
+import { getSSHVisitorToken, SSH_VISITOR_TOKEN_HEADER } from "./ssh-token"
 
 function watchingSince(progress: AchievementProgress): number | undefined {
   const custom = progress.custom
@@ -8,7 +9,7 @@ function watchingSince(progress: AchievementProgress): number | undefined {
   return typeof custom.watchingSince === "number" ? custom.watchingSince : undefined
 }
 
-export function watchSSHPortfolio(engine: AchievementEngine, request: typeof fetch = fetch, now: () => number = Date.now): () => void {
+export function watchSSHPortfolio(engine: AchievementEngine, request: typeof fetch = fetch, now: () => number = Date.now, getToken = getSSHVisitorToken): () => void {
   if (typeof window === "undefined" || typeof document === "undefined" || engine.isUnlocked(SSH_ACHIEVEMENT_ID)) return () => {}
   let stopped = false
   let active: AbortController | undefined
@@ -35,19 +36,21 @@ export function watchSSHPortfolio(engine: AchievementEngine, request: typeof fet
     lastCheckedAt = currentTime
     engine.emit(SSH_WATCH_EVENT, { startedAt: currentTime })
     const since = watchingSince(engine.getProgress(SSH_ACHIEVEMENT_ID))
-    if (since === undefined) return
+    const token = getToken()
+    if (since === undefined || !token || stopped) return
     const controller = new AbortController()
     active = controller
     timeout = setTimeout(() => controller.abort(), 10_000)
     try {
       const response = await request(`/api/achievements/ssh-status?since=${since}`, {
         cache: "no-store", credentials: "same-origin", signal: controller.signal,
+        headers: { [SSH_VISITOR_TOKEN_HEADER]: token },
       })
       if (!response.ok) return
       const result: unknown = await response.json()
       if (stopped || controller.signal.aborted) return
       engine.refreshStorage()
-      if (watchingSince(engine.getProgress(SSH_ACHIEVEMENT_ID)) !== since) return
+      if (stopped || getToken() !== token || watchingSince(engine.getProgress(SSH_ACHIEVEMENT_ID)) !== since) return
       if (result && typeof result === "object" && "connected" in result && result.connected === true) {
         engine.emit(SSH_CONNECTED_EVENT)
       }

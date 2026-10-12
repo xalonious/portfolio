@@ -3,6 +3,7 @@ import path from "node:path"
 import { DatabaseSync } from "node:sqlite"
 import { getDatabasePath } from "@/lib/cms/config"
 import { SSH_CONNECTION_RETENTION_MS } from "@/lib/achievements/ssh-config"
+import { migrateSSHConnections } from "./ssh-schema"
 
 type DatabaseGlobal = typeof globalThis & {
   __portfolioDatabase?: DatabaseSync
@@ -22,6 +23,7 @@ function openDatabase() {
   const database = new DatabaseSync(databasePath)
   const schemaPath = path.join(process.cwd(), "database", "schema.sql")
   database.exec(fs.readFileSync(schemaPath, "utf8"))
+  migrateSSHConnections(database)
 
   const projectColumns = database
     .prepare("PRAGMA table_info(projects)")

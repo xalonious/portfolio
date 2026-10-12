@@ -2,6 +2,7 @@ import { AchievementEngine, EMPTY_ACHIEVEMENT_PROGRESS } from "./engine"
 import { AchievementNotificationQueue } from "./notifications"
 import { achievementRegistry, configurePublishedCaseStudies, customAchievementHandlers } from "./registry"
 import { ACHIEVEMENT_RECOVERY_KEY, ACHIEVEMENT_STORAGE_KEY, createAchievementStorage } from "./storage"
+import { getSSHVisitorToken } from "./ssh-token"
 
 export { achievementRegistry } from "./registry"
 export type { AchievementDefinition, AchievementProgress, AchievementRarity, AchievementState, CustomAchievementHandler } from "./types"
@@ -16,6 +17,7 @@ let runtime: AchievementRuntime | undefined
 export function getAchievementRuntime(): AchievementRuntime | undefined {
   if (typeof window === "undefined") return undefined
   if (!runtime) {
+    getSSHVisitorToken()
     const engine = new AchievementEngine(
       achievementRegistry,
       createAchievementStorage(() => window.localStorage),

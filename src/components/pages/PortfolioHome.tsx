@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { TechRadar } from "@/components/sections/TechRadar"
@@ -14,15 +14,26 @@ import { TransitionLink } from "@/components/ui/TransitionLink"
 import type { Project } from "@/lib/project-types"
 import { useCodingYears } from "@/hooks/useCodingYears"
 import { FaCheck, FaRegCopy } from "react-icons/fa"
+import { copySSHCommand, SSH_PORTFOLIO_COMMAND } from "@/lib/achievements/ssh-command"
 
 function TerminalHint({ className = "" }: { className?: string }) {
   const [copied, setCopied] = useState(false)
-  const command = "ssh term.whoisxander.dev -p 2323"
+  const feedbackTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const mounted = useRef(false)
+
+  useEffect(() => {
+    mounted.current = true
+    return () => {
+      mounted.current = false
+      if (feedbackTimer.current !== undefined) clearTimeout(feedbackTimer.current)
+    }
+  }, [])
 
   async function copyCommand() {
-    await navigator.clipboard.writeText(command)
+    if (!await copySSHCommand() || !mounted.current) return
+    if (feedbackTimer.current !== undefined) clearTimeout(feedbackTimer.current)
     setCopied(true)
-    window.setTimeout(() => setCopied(false), 1600)
+    feedbackTimer.current = setTimeout(() => setCopied(false), 1600)
   }
 
   return (
@@ -30,7 +41,7 @@ function TerminalHint({ className = "" }: { className?: string }) {
       <p>psst... terminal wizard? check out the ssh version:</p>
       <div className="mt-1 inline-flex items-center overflow-hidden rounded-sm border light:border-border/70 light:bg-card/60">
         <code className="whitespace-nowrap px-2 py-1 font-mono light:text-foreground">
-          {command}
+          {SSH_PORTFOLIO_COMMAND}
         </code>
         <button
           type="button"
