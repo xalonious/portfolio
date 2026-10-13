@@ -15,7 +15,7 @@ export const EMPTY_ACHIEVEMENT_STATE: AchievementState = Object.freeze({
 
 export type StorageLoadResult = {
   state: AchievementState
-  status: "missing" | "loaded" | "migrated" | "malformed" | "integrity-mismatch" | "tampered" | "recovered" | "unsupported-version" | "unavailable"
+  status: "missing" | "loaded" | "malformed" | "integrity-mismatch" | "tampered" | "recovered" | "unsupported-version" | "unavailable"
   raw: string | null
 }
 
@@ -80,26 +80,19 @@ export function decodeAchievementState(raw: string | null): StorageLoadResult {
   try {
     const value: unknown = JSON.parse(raw)
     if (!isRecord(value) || !Number.isInteger(value.version)) throw new Error("Invalid schema")
-    if (value.version !== 1 && value.version !== ACHIEVEMENT_STORAGE_VERSION) {
+    if (value.version === 1) throw new Error("Unsigned legacy save")
+    if (value.version !== ACHIEVEMENT_STORAGE_VERSION) {
       return { state: EMPTY_ACHIEVEMENT_STATE, status: "unsupported-version", raw }
     }
     const { checksum, ...payload } = value
-    if (value.version === ACHIEVEMENT_STORAGE_VERSION) {
-      if (typeof checksum !== "string" || !/^[a-f0-9]{64}$/.test(checksum)) throw new Error("Missing integrity information")
-      if (checksum !== achievementChecksum(payload)) {
-        return { state: EMPTY_ACHIEVEMENT_STATE, status: "integrity-mismatch", raw }
-      }
-    }
-    if (value.version === 1 && isRecord(payload.progress)) {
-      payload.progress = Object.fromEntries(Object.entries(payload.progress).map(([id, saved]) => {
-        if (!isRecord(saved) || !Array.isArray(saved.ids)) return [id, saved]
-        return [id, { ...saved, ids: [...new Set(saved.ids)] }]
-      }))
+    if (typeof checksum !== "string" || !/^[a-f0-9]{64}$/.test(checksum)) throw new Error("Missing integrity information")
+    if (checksum !== achievementChecksum(payload)) {
+      return { state: EMPTY_ACHIEVEMENT_STATE, status: "integrity-mismatch", raw }
     }
     if (!isState(payload)) throw new Error("Invalid progress")
     return {
-      state: freezeAchievementState({ ...payload, version: ACHIEVEMENT_STORAGE_VERSION } as AchievementState),
-      status: value.version === 1 ? "migrated" : "loaded",
+      state: freezeAchievementState(payload as AchievementState),
+      status: "loaded",
       raw,
     }
   } catch {
@@ -158,13 +151,10 @@ export function createAchievementStorage(getStorage: () => Pick<Storage, "getIte
       trusted = undefined
       handledSuspiciousRaw = undefined
       try { getStorage().removeItem(ACHIEVEMENT_RECOVERY_KEY) } catch {}
-    } else if (result.status === "loaded" || result.status === "migrated") {
+    } else if (result.status === "loaded") {
       trusted = result.state
       handledSuspiciousRaw = undefined
-      if (result.status === "migrated") writeTrusted(result.state)
-      else {
-        try { getStorage().setItem(ACHIEVEMENT_RECOVERY_KEY, encodeAchievementState(result.state)) } catch {}
-      }
+      try { getStorage().setItem(ACHIEVEMENT_RECOVERY_KEY, encodeAchievementState(result.state)) } catch {}
     } else if (result.status === "malformed" || result.status === "integrity-mismatch") {
       const backup = recoverySnapshot()
       const recovered = trusted ?? backup
