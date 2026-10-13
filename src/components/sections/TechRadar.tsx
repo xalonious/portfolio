@@ -44,17 +44,17 @@ const LEVEL_SIZE: Record<Tech["level"], number> = {
 }
 
 const CATEGORY_COLOR: Record<Tech["category"], string> = {
-  Frontend:       "rgba(196, 122, 138, 0.14)",
-  Backend:        "rgba(99,  179, 237, 0.11)",
-  Infrastructure: "rgba(154, 205, 100, 0.11)",
-  Tools:          "rgba(180, 180, 180, 0.09)",
+  Frontend:       "var(--radar-frontend, rgba(196, 122, 138, 0.14))",
+  Backend:        "var(--radar-backend, rgba(99, 179, 237, 0.11))",
+  Infrastructure: "var(--radar-infrastructure, rgba(154, 205, 100, 0.11))",
+  Tools:          "var(--radar-tools, rgba(180, 180, 180, 0.09))",
 }
 
 const CATEGORY_BORDER: Record<Tech["category"], string> = {
-  Frontend:       "rgba(196, 122, 138, 0.35)",
-  Backend:        "rgba(99,  179, 237, 0.28)",
-  Infrastructure: "rgba(154, 205, 100, 0.28)",
-  Tools:          "rgba(180, 180, 180, 0.22)",
+  Frontend:       "var(--radar-frontend-border, rgba(196, 122, 138, 0.35))",
+  Backend:        "var(--radar-backend-border, rgba(99, 179, 237, 0.28))",
+  Infrastructure: "var(--radar-infrastructure-border, rgba(154, 205, 100, 0.28))",
+  Tools:          "var(--radar-tools-border, rgba(180, 180, 180, 0.22))",
 }
 
 function sr(seed: number) {

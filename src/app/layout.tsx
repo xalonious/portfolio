@@ -7,6 +7,7 @@ import { LenisProvider } from "@/components/layout/LenisProvider"
 import { KonamiChat } from "@/components/features/KonamiChat"
 import { AchievementNotifications } from "@/components/features/AchievementNotifications"
 import { AchievementPanelProvider } from "@/components/features/AchievementPanel"
+import { SealyModeProvider } from "@/components/features/SealyModeProvider"
 import { ScrollProgress } from "@/components/ui/ScrollProgress"
 import { getPublishedCaseStudyIds } from "@/lib/cms/project-repository"
 import { connection } from "next/server"
@@ -73,17 +74,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     >
       <head><script dangerouslySetInnerHTML={{ __html: themeBootstrap }} /></head>
       <body className="min-h-screen bg-background text-foreground antialiased font-sans">
-        <AchievementPanelProvider>
-          <AchievementNotifications publishedCaseStudyIds={publishedCaseStudyIds} />
-          <LenisProvider>
-            <ScrollProgress />
-            <KonamiChat />
-            <Preloader />
-            <Header />
-            <PageWrapper>{children}</PageWrapper>
-            <Footer />
-          </LenisProvider>
-        </AchievementPanelProvider>
+        <SealyModeProvider>
+          <AchievementPanelProvider>
+            <AchievementNotifications publishedCaseStudyIds={publishedCaseStudyIds} />
+            <LenisProvider>
+              <ScrollProgress />
+              <KonamiChat />
+              <Preloader />
+              <Header />
+              <PageWrapper>{children}</PageWrapper>
+              <Footer />
+            </LenisProvider>
+          </AchievementPanelProvider>
+        </SealyModeProvider>
       </body>
     </html>
   )

@@ -1,0 +1,25 @@
+.dialog::backdrop {
+  background: transparent;
+}
+
+.dialog[data-phase="entering"] {
+  animation: fade-in var(--transition-duration) ease-in-out both;
+}
+
+.dialog[data-phase="leaving"] {
+  animation: fade-out var(--transition-duration) ease-in-out both;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: var(--exit-opacity, 1); }
+  to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog[data-phase] { animation: none; }
+}

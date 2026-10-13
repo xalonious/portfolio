@@ -1,0 +1,78 @@
+:root {
+  --sealy-background: #30231F;
+  --sealy-surface: #48332B;
+  --sealy-elevated: #594035;
+  --sealy-cream: #F5E6D0;
+  --sealy-secondary: #DDC4AE;
+  --sealy-blue: #8BC2DD;
+  --sealy-sand: #B9957D;
+  --sealy-chocolate: var(--sealy-border);
+  --sealy-border: #6A4D40;
+  --sealy-button-text: #25343C;
+}
+
+:root[data-theme="sealy"] {
+  color-scheme: dark;
+  --background: var(--sealy-background);
+  --foreground: var(--sealy-cream);
+  --card: var(--sealy-surface);
+  --card-foreground: var(--sealy-cream);
+  --popover: var(--sealy-elevated);
+  --popover-foreground: var(--sealy-cream);
+  --muted: var(--sealy-elevated);
+  --muted-foreground: var(--sealy-secondary);
+  --primary: var(--sealy-blue);
+  --primary-ink: var(--sealy-blue);
+  --primary-highlight: color-mix(in srgb, var(--sealy-blue) 80%, var(--sealy-cream));
+  --primary-foreground: var(--sealy-button-text);
+  --secondary: var(--sealy-elevated);
+  --secondary-foreground: var(--sealy-cream);
+  --accent: var(--sealy-sand);
+  --accent-foreground: var(--sealy-background);
+  --border: var(--sealy-border);
+  --input: var(--sealy-border);
+  --ring: var(--sealy-blue);
+  --button-foreground: var(--sealy-button-text);
+  --button-shadow: inset 0 1px 0 color-mix(in srgb, var(--sealy-cream) 18%, transparent), 0 2px 6px rgb(0 0 0 / 20%);
+  --hover-background: var(--sealy-elevated);
+  --selection-background: color-mix(in srgb, var(--sealy-blue) 25%, var(--sealy-background));
+  --scrollbar-track: var(--sealy-surface);
+  --scrollbar-thumb: var(--sealy-border);
+  --scrollbar-thumb-hover: var(--sealy-blue);
+  --scrollbar-thumb-shadow: rgb(0 0 0 / 15%);
+  --notification-shadow: 0 8px 32px rgb(0 0 0 / 25%);
+  --overlay: color-mix(in srgb, var(--sealy-background) 65%, transparent);
+  --chat-overlay: color-mix(in srgb, var(--sealy-background) 75%, transparent);
+  --chat-bubble: var(--sealy-elevated);
+  --chat-border: var(--sealy-border);
+  --chat-scroll-track: var(--sealy-surface);
+  --chat-scroll-color: var(--sealy-blue);
+  --chat-scroll-border: var(--sealy-border);
+  --chat-scroll-thumb: var(--sealy-blue);
+  --chat-scroll-hover: var(--primary-highlight);
+  --image-overlay: color-mix(in srgb, var(--sealy-background) 90%, transparent);
+  --image-toolbar: var(--sealy-surface);
+  --image-text: var(--sealy-cream);
+  --image-caption: var(--sealy-secondary);
+  --image-control: var(--sealy-elevated);
+  --image-border: var(--sealy-border);
+  --image-hover: var(--sealy-elevated);
+  --rarity-rare: var(--sealy-blue);
+  --rarity-epic: var(--sealy-secondary);
+  --rarity-legendary: var(--sealy-sand);
+  --paw-color: var(--sealy-sand);
+  --neko-outline: drop-shadow(1px 0 0 var(--sealy-sand)) drop-shadow(-1px 0 0 var(--sealy-sand)) drop-shadow(0 1px 1px var(--sealy-background));
+  --radar-frontend: color-mix(in srgb, var(--sealy-blue) 14%, transparent);
+  --radar-backend: color-mix(in srgb, var(--sealy-sand) 11%, transparent);
+  --radar-infrastructure: color-mix(in srgb, var(--sealy-chocolate) 18%, transparent);
+  --radar-tools: color-mix(in srgb, var(--sealy-cream) 9%, transparent);
+  --radar-frontend-border: color-mix(in srgb, var(--sealy-blue) 35%, transparent);
+  --radar-backend-border: color-mix(in srgb, var(--sealy-sand) 28%, transparent);
+  --radar-infrastructure-border: color-mix(in srgb, var(--sealy-chocolate) 35%, transparent);
+  --radar-tools-border: color-mix(in srgb, var(--sealy-cream) 22%, transparent);
+}
+
+:root[data-theme="sealy"] :is(input, textarea)::placeholder {
+  color: var(--muted-foreground);
+  opacity: 1;
+}

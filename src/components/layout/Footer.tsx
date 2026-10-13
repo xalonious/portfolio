@@ -2,20 +2,24 @@
 
 import Link from "next/link"
 import { emitAchievementEvent } from "@/lib/achievements"
+import { useSealyMode } from "@/components/features/useSealyMode"
 
 export function Footer() {
+  const { active: sealyActive } = useSealyMode()
   return (
     <footer className="border-t light:border-border light:bg-card">
       <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
 
         <div className="space-y-1">
           <p className="text-sm light:text-muted-foreground">
+            {sealyActive ? <>Made by <Link href="/" className="font-medium transition-colors duration-200 hover:text-primary-ink">Xander</Link>. Supervised by Sealy.</> : <>
             Made with{" "}
             <span className="light:text-primary-ink" aria-label="love">♥</span>
             {" "}by{" "}
             <Link href="/" className="light:text-foreground font-medium light:hover:text-primary-ink transition-colors duration-200">
               Xander
             </Link>
+            </>}
           </p>
           <p className="text-xs light:text-muted-foreground">© {new Date().getFullYear()}</p>
         </div>

@@ -7,17 +7,21 @@ import { trackVisibleTime } from "@/lib/achievements/activity"
 import { watchSSHPortfolio } from "@/lib/achievements/ssh"
 import { SSH_ACHIEVEMENT_ID } from "@/lib/achievements/ssh-config"
 import { installAchievementConsole } from "@/lib/achievements/console"
+import { installAchievementDevtools } from "@/lib/achievements/devtools"
 import { createAchievementSound } from "@/lib/achievement-sound"
 import type { AchievementEngine } from "@/lib/achievements/engine"
 import type { AchievementNotificationQueue } from "@/lib/achievements/notifications"
 import { achievementRarityColors } from "@/lib/achievements/presentation"
 import { useAchievementPanel } from "./AchievementPanel"
+import { useTouchGrassCinematic } from "./TouchGrassCinematicProvider"
 import styles from "./AchievementNotifications.module.css"
 
 const NOTIFICATION_MS = 4_500
+const TOUCH_GRASS_NOTICE_MS = 2_500
 
 function NotificationHost({ engine, queue }: { engine: AchievementEngine; queue: AchievementNotificationQueue }) {
-  const { openPanel } = useAchievementPanel()
+  const { openPanel, closePanel } = useAchievementPanel()
+  const { isPlaying, launch } = useTouchGrassCinematic()
   const notifications = useSyncExternalStore(queue.subscribe, queue.getSnapshot, queue.getServerSnapshot)
   const active = notifications[0]
   const sound = useRef<ReturnType<typeof createAchievementSound> | null>(null)
@@ -35,22 +39,27 @@ function NotificationHost({ engine, queue }: { engine: AchievementEngine; queue:
   }, [engine])
 
   useEffect(() => {
-    if (!active) return
+    if (!active || isPlaying) return
     const id = active.achievement.id
     if (lastPlayed.current !== active) {
       sound.current?.play()
       lastPlayed.current = active
     }
-    const timer = setTimeout(() => queue.complete(id), NOTIFICATION_MS)
+    const timer = setTimeout(() => {
+      if (id === "touch-grass") {
+        closePanel()
+        if (launch("achievement")) queue.complete(id)
+      } else queue.complete(id)
+    }, id === "touch-grass" ? TOUCH_GRASS_NOTICE_MS : NOTIFICATION_MS)
     return () => clearTimeout(timer)
-  }, [active, queue])
+  }, [active, queue, isPlaying, launch, closePanel])
 
   const achievement = active?.achievement
   const Icon = achievement?.icon
 
   return (
     <div className={styles.viewport} role="status" aria-live="polite" aria-atomic="true">
-      {achievement && Icon && (
+      {!isPlaying && achievement && Icon && (
         <button
           key={achievement.id}
           type="button"
@@ -106,9 +115,11 @@ export function AchievementNotifications({ publishedCaseStudyIds }: { publishedC
     const current = getAchievementRuntime()
     setRuntime(current)
     const removeConsole = installAchievementConsole()
+    const removeDevtools = installAchievementDevtools()
     const stopWatchingStorage = current ? listenForAchievementStorage(current.engine) : () => {}
     return () => {
       removeConsole()
+      removeDevtools()
       stopWatchingStorage()
     }
   }, [publishedCaseStudyIds])

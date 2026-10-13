@@ -10,8 +10,10 @@ import type { AchievementEngine } from "@/lib/achievements/engine"
 import type { AchievementDefinition, AchievementState } from "@/lib/achievements/types"
 import { achievementRarityColors, getAchievementDisplayProgress } from "@/lib/achievements/presentation"
 import { EMPTY_ACHIEVEMENT_STATE } from "@/lib/achievements/storage"
+import { useTouchGrassCinematic } from "./TouchGrassCinematicProvider"
+import { SealyModeReward } from "./SealyModeReward"
 
-const AchievementPanelContext = createContext<{ isOpen: boolean; openPanel: () => void } | undefined>(undefined)
+const AchievementPanelContext = createContext<{ isOpen: boolean; openPanel: () => void; closePanel: () => void } | undefined>(undefined)
 const getServerSnapshot = () => EMPTY_ACHIEVEMENT_STATE
 const dateFormatter = new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" })
 const progressClassName = "block h-[3px] w-full overflow-hidden rounded-full border-0 bg-border accent-primary [&::-webkit-progress-bar]:bg-border [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-primary [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:bg-primary"
@@ -61,12 +63,19 @@ function AchievementRow({ achievement, state }: { achievement: AchievementDefini
 }
 
 function AchievementPanelDialog({ engine, onClose }: { engine: AchievementEngine; onClose: () => void }) {
+  const { launch } = useTouchGrassCinematic()
+  const replay = () => {
+    dialogRef.current?.close()
+    onClose()
+    launch("replay")
+  }
   const state = useSyncExternalStore(engine.subscribe, engine.getSnapshot, getServerSnapshot)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const unlockedAchievements = achievementRegistry.filter(achievement => Object.prototype.hasOwnProperty.call(state.unlocked, achievement.id))
   const lockedAchievements = achievementRegistry.filter(achievement => !achievement.hidden && !Object.prototype.hasOwnProperty.call(state.unlocked, achievement.id))
   const earned = unlockedAchievements.length
   const total = achievementRegistry.length
+  const completed = Object.prototype.hasOwnProperty.call(state.unlocked, "touch-grass")
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -104,6 +113,7 @@ function AchievementPanelDialog({ engine, onClose }: { engine: AchievementEngine
           <div>
             <p className="text-[9px] tracking-[0.12em] text-primary-ink uppercase">A little curiosity goes a long way</p>
             <h2 id="achievement-panel-title" className="mt-2.5 font-display text-3xl leading-tight font-semibold max-sm:text-[26px]">Achievements<span className="text-primary-ink">.</span></h2>
+            {completed && <p className="mt-3 text-xs leading-relaxed text-muted-foreground">You&apos;ve unlocked all achievements. Now please, go touch some grass.</p>}
           </div>
           <button type="button" className="grid h-9 w-9 shrink-0 place-items-center rounded-sm border border-border bg-card text-foreground hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-primary" aria-label="Close achievements" onClick={onClose} autoFocus><FiX size={20} /></button>
         </div>
@@ -114,6 +124,7 @@ function AchievementPanelDialog({ engine, onClose }: { engine: AchievementEngine
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin] max-sm:px-5" data-lenis-prevent>
           {total ? (
             <div className="space-y-6">
+              {completed && <SealyModeReward onReplay={replay} />}
               <section aria-labelledby="unlocked-achievements-title">
                 <h3 id="unlocked-achievements-title" className="mb-3 text-xs font-medium text-foreground">Unlocked <span className="text-foreground/50 light:text-muted-foreground">({earned})</span></h3>
                 {earned ? (
@@ -146,7 +157,7 @@ export function AchievementPanelProvider({ children }: { children: ReactNode }) 
     setIsOpen(true)
   }, [])
   const closePanel = useCallback(() => setIsOpen(false), [])
-  const context = useMemo(() => ({ isOpen, openPanel }), [isOpen, openPanel])
+  const context = useMemo(() => ({ isOpen, openPanel, closePanel }), [isOpen, openPanel, closePanel])
 
   useEffect(() => { setRuntime(getAchievementRuntime()) }, [])
 

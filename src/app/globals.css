@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./sealy-mode.css";
 
 @custom-variant dark (&:is(.dark *));
 @custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
@@ -163,8 +164,8 @@
 }
 
 .theme-moon { display: none; }
-[data-theme="light"] .theme-moon { display: block; }
-[data-theme="light"] .theme-sun { display: none; }
+[data-base-theme="light"] .theme-moon { display: block; }
+[data-base-theme="light"] .theme-sun { display: none; }
 
 @media (prefers-reduced-motion: no-preference) {
   @layer base {
