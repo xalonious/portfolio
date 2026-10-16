@@ -14,7 +14,7 @@ const ContactSchema = z.object({
 })
 
 const isSpammy = (text: string) =>
-  /\b(viagra|casino|loan|crypto|http:\/\/|https:\/\/)\b/i.test(text)
+  /\b(viagra|casino|loan|crypto)\b/i.test(text)
 
 function clip(s: string, max = 1900) {
   return s.length > max ? s.slice(0, max - 1) + "…" : s
