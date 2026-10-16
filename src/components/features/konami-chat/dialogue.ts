@@ -16,6 +16,7 @@ export const dialogue = defineDialogue({
   "knows-code": {
     xander: "respect. most people just scroll past and leave. you actually poked around.",
     replies: [
+      { label: "did i just get an achievement",   next: "achievements.intro" },
       { label: "did you vibe code this",          next: "vibe-code-direct" },
       { label: "why is there a rickroll in the nav", next: "rickroll"      },
       { label: "who's the cat",                   next: "cat-intro"        },
@@ -36,8 +37,9 @@ export const dialogue = defineDialogue({
     ],
   },
   "what-is-this": {
-    xander: "an easter egg. you press the code, something happens. congrats, you won a conversation with me.",
+    xander: "an easter egg. you press the code, something happens. congrats, you won a conversation with me. and an achievement. apparently we do those now.",
     replies: [
+      { label: "this site has achievements??",    next: "achievements.intro" },
       { label: "incredible prize",                next: "prize-sarcasm"    },
       { label: "did you build this yourself",     next: "vibe-code-soft"   },
       { label: "i want a refund",                 next: "refund"           },
@@ -668,6 +670,77 @@ export const dialogue = defineDialogue({
       { label: "👋",                              next: ""                 },
     ],
   },
+  // Achievements
+  "achievements.intro": {
+    xander: "yes. i looked at a developer portfolio and thought 'this needs a completionist grind'. very normal thought to have.",
+    claude: "he added a progression system to a website with a contact form",
+    replies: [
+      { label: "what do i get achievements for", next: "achievements.exploring" },
+      { label: "what if i collect them all",      next: "achievements.completion" },
+      { label: "can i just cheat",                next: "achievements.cheating" },
+    ],
+  },
+  "achievements.exploring": {
+    xander: "reading case studies. finding secrets. getting rejected by sealy. even turning on light mode. we're celebrating absolutely anything at this point.",
+    claude: "there's also one for spending thirty minutes here",
+    replies: [
+      { label: "THIRTY MINUTES??",                next: "achievements.no-life" },
+      { label: "does the ssh portfolio count",    next: "achievements.ssh" },
+      { label: "what if i collect them all",      next: "achievements.completion" },
+    ],
+  },
+  "achievements.no-life": {
+    xander: "it's called 'no life'. half an hour of having this site open and visible. i wanted the achievement name to double as feedback.",
+    claude: "he built a timer to judge you with",
+    replies: [
+      { label: "surely there's a shortcut",       next: "achievements.cheating" },
+      { label: "i'm getting them all anyway",     next: "achievements.completion" },
+      { label: "i should probably leave",         next: "bye" },
+    ],
+  },
+  "achievements.ssh": {
+    xander: "yes. two applications coordinate to confirm you opened a terminal. all so a tiny popup can say 'terminally online'.",
+    claude: "an unreasonable amount of engineering went into those two words",
+    replies: [
+      { label: "how do i try the ssh version",    next: "ssh-egg" },
+      { label: "what else did you overengineer",  next: "cms.intro" },
+      { label: "what if i collect them all",      next: "achievements.completion" },
+    ],
+  },
+  "achievements.cheating": {
+    xander: "there's literally an achievement for getting caught messing with the save. i anticipated the kind of person who would ask that.",
+    claude: "he built anti-cheat for a portfolio. please take a moment to process that.",
+    replies: [
+      { label: "so cheating is part of completion", next: "achievements.required-cheating" },
+      { label: "what was the hardest part to build", next: "cms.intro" },
+      { label: "i'll explore normally then",      next: "bye" },
+    ],
+  },
+  "achievements.required-cheating": {
+    xander: "technically yes. you have to get caught trying to cheat to complete the collection. i made bad behaviour a requirement. this probably says something about me.",
+    claude: "he made breaking the rules one of the rules",
+    replies: [
+      { label: "what happens when i finish then", next: "achievements.completion" },
+      { label: "did you build this yourself",     next: "vibe-code-soft" },
+      { label: "i'm going outside already",       next: "bye" },
+    ],
+  },
+  "achievements.completion": {
+    xander: "the final one's called 'touch grass'. unlock every other achievement and the website formally recommends you stop using the website.",
+    claude: "he built an entire retention system with an exit interview",
+    replies: [
+      { label: "where do i see my progress",      next: "achievements.drawer" },
+      { label: "taking that advice early. bye",   next: "bye" },
+    ],
+  },
+  "achievements.drawer": {
+    xander: "open achievements in the navigation. progress, trophies, hints. everything you need to turn a quick portfolio visit into a personal problem.",
+    replies: [
+      { label: "i'm going for 100%",              next: "bye" },
+      { label: "did you vibe code this too",      next: "vibe-code-direct" },
+      { label: "tell me about the cat instead",   next: "cat-intro" },
+    ],
+  },
   // Other easter eggs
   "rickroll": {
     xander: "it's called personality. it's extremely funny and i will die on this hill.",
@@ -697,11 +770,11 @@ export const dialogue = defineDialogue({
     ],
   },
   "eggs": {
-    xander: "the rickroll, this chat, a curl easter egg, and a full terminal portfolio over ssh. quality over quantity.",
+    xander: "the rickroll, this chat, a curl easter egg, and a full terminal portfolio over ssh. then i added achievements to reward people for finding them. the side quests have side quests.",
     replies: [
       { label: "wait a curl easter egg??",        next: "curl-egg"         },
       { label: "a terminal portfolio??",          next: "ssh-egg"          },
-      { label: "this chat is the better one",     next: "eggs-better"      },
+      { label: "wait. achievements too??",        next: "achievements.intro" },
       { label: "what about the 404 page",         next: "fourohfour"       },
       { label: "who's the cat on the homepage",   next: "cat-intro"        },
     ],
