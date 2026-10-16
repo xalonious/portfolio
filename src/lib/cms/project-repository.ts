@@ -4,6 +4,9 @@ import { getDatabase, runTransaction } from "@/lib/cms/database"
 import {
   deleteMediaAssetFiles,
   getMediaAssetsByPublicPaths,
+  persistPreparedImage,
+  type MediaAsset,
+  type PreparedImage,
 } from "@/lib/cms/media"
 import {
   documentToPublicProject,
@@ -259,7 +262,7 @@ export function getProjectRevisions(projectId: string) {
   )
 }
 
-export function saveProjectDraft(input: unknown) {
+function writeProjectDraft(input: unknown) {
   const parsed = projectDocumentSchema.parse(input)
   const id = parsed.id ?? crypto.randomUUID()
   const document = { ...parsed, id }
@@ -268,84 +271,21 @@ export function saveProjectDraft(input: unknown) {
 
   assertSlugAvailable(document.slug, id)
 
-  runTransaction(() => {
-    const existing = database
-      .prepare("SELECT status FROM projects WHERE id = ?")
-      .get(id) as { status: "draft" | "published" } | undefined
+  const existing = database
+    .prepare("SELECT status FROM projects WHERE id = ?")
+    .get(id) as { status: "draft" | "published" } | undefined
 
-    if (!existing) {
-      database
-        .prepare(
-          `INSERT INTO projects (
-             id, slug, title, description, image, image_alt, image_layout,
-             tech_json, repository_url, featured, sort_order,
-             case_study_json, status, created_at, updated_at
-           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?)`,
-        )
-        .run(
-          id,
-          document.slug,
-          document.title,
-          document.description,
-          document.image,
-          document.imageAlt,
-          document.imageLayout ?? null,
-          JSON.stringify(document.tech),
-          document.repo ?? null,
-          document.featured ? 1 : 0,
-          document.sortOrder,
-          document.caseStudy ? JSON.stringify(document.caseStudy) : null,
-          now,
-          now,
-        )
-    } else {
-      database
-        .prepare("UPDATE projects SET updated_at = ? WHERE id = ?")
-        .run(now, id)
-    }
-
+  if (!existing) {
     database
       .prepare(
-        `INSERT INTO project_drafts (project_id, document_json, updated_at)
-         VALUES (?, ?, ?)
-         ON CONFLICT(project_id) DO UPDATE SET
-           document_json = excluded.document_json,
-           updated_at = excluded.updated_at`,
-      )
-      .run(id, JSON.stringify(document), now)
-  })
-
-  return document
-}
-
-export function publishProject(input: unknown) {
-  const document = saveProjectDraft(input)
-  const now = new Date().toISOString()
-  const database = getDatabase()
-
-  assertSlugAvailable(document.slug, document.id)
-
-  runTransaction(() => {
-    database
-      .prepare(
-        `UPDATE projects SET
-           slug = ?,
-           title = ?,
-           description = ?,
-           image = ?,
-           image_alt = ?,
-           image_layout = ?,
-           tech_json = ?,
-           repository_url = ?,
-           featured = ?,
-           sort_order = ?,
-           case_study_json = ?,
-           status = 'published',
-           updated_at = ?,
-           published_at = ?
-         WHERE id = ?`,
+        `INSERT INTO projects (
+           id, slug, title, description, image, image_alt, image_layout,
+           tech_json, repository_url, featured, sort_order,
+           case_study_json, status, created_at, updated_at
+         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?)`,
       )
       .run(
+        id,
         document.slug,
         document.title,
         document.description,
@@ -359,23 +299,115 @@ export function publishProject(input: unknown) {
         document.caseStudy ? JSON.stringify(document.caseStudy) : null,
         now,
         now,
-        document.id!,
       )
-
+  } else {
     database
-      .prepare(
-        `INSERT INTO project_revisions (id, project_id, document_json, created_at)
-         VALUES (?, ?, ?, ?)`,
-      )
-      .run(
-        crypto.randomUUID(),
-        document.id!,
-        JSON.stringify(document),
-        now,
-      )
-  })
+      .prepare("UPDATE projects SET updated_at = ? WHERE id = ?")
+      .run(now, id)
+  }
+
+  database
+    .prepare(
+      `INSERT INTO project_drafts (project_id, document_json, updated_at)
+       VALUES (?, ?, ?)
+       ON CONFLICT(project_id) DO UPDATE SET
+         document_json = excluded.document_json,
+         updated_at = excluded.updated_at`,
+    )
+    .run(id, JSON.stringify(document), now)
 
   return document
+}
+
+function writePublishedProject(input: unknown) {
+  const document = writeProjectDraft(input)
+  const now = new Date().toISOString()
+  const database = getDatabase()
+
+  assertSlugAvailable(document.slug, document.id)
+
+  database
+    .prepare(
+      `UPDATE projects SET
+         slug = ?,
+         title = ?,
+         description = ?,
+         image = ?,
+         image_alt = ?,
+         image_layout = ?,
+         tech_json = ?,
+         repository_url = ?,
+         featured = ?,
+         sort_order = ?,
+         case_study_json = ?,
+         status = 'published',
+         updated_at = ?,
+         published_at = ?
+       WHERE id = ?`,
+    )
+    .run(
+      document.slug,
+      document.title,
+      document.description,
+      document.image,
+      document.imageAlt,
+      document.imageLayout ?? null,
+      JSON.stringify(document.tech),
+      document.repo ?? null,
+      document.featured ? 1 : 0,
+      document.sortOrder,
+      document.caseStudy ? JSON.stringify(document.caseStudy) : null,
+      now,
+      now,
+      document.id!,
+    )
+
+  database
+    .prepare(
+      `INSERT INTO project_revisions (id, project_id, document_json, created_at)
+       VALUES (?, ?, ?, ?)`,
+    )
+    .run(
+      crypto.randomUUID(),
+      document.id!,
+      JSON.stringify(document),
+      now,
+    )
+
+  return document
+}
+
+function saveProject(
+  input: unknown,
+  images: PreparedImage[],
+  publish: boolean,
+) {
+  const writtenAssets: MediaAsset[] = []
+
+  try {
+    return runTransaction(() => {
+      for (const image of images) {
+        persistPreparedImage(image)
+        writtenAssets.push(image.asset)
+      }
+
+      return publish ? writePublishedProject(input) : writeProjectDraft(input)
+    })
+  } catch (error) {
+    const failures = deleteMediaAssetFiles(writtenAssets)
+    for (const failure of failures) {
+      console.error("Failed to roll back an image upload:", failure.error)
+    }
+    throw error
+  }
+}
+
+export function saveProjectDraft(input: unknown, images: PreparedImage[] = []) {
+  return saveProject(input, images, false)
+}
+
+export function publishProject(input: unknown, images: PreparedImage[] = []) {
+  return saveProject(input, images, true)
 }
 
 export function restoreProjectRevision(projectId: string, revisionId: string) {

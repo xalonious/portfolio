@@ -5,19 +5,17 @@ import { useRouter } from "next/navigation"
 import { useRef, useState, useTransition } from "react"
 import {
   deleteProjectAction,
-  publishProjectAction,
   restoreRevisionAction,
-  saveProjectAction,
 } from "@/app/admin/actions"
 import { ProjectForm } from "@/components/admin/project-editor/ProjectForm"
 import { ProjectSidebar } from "@/components/admin/project-editor/ProjectSidebar"
 import { secondaryButton } from "@/components/admin/project-editor/styles"
+import { usePendingProjectImages } from "@/components/admin/project-editor/usePendingProjectImages"
 import {
   formatValidationPath,
   validationPathKey,
 } from "@/components/admin/project-editor/validation"
 import { ProjectCaseStudy } from "@/components/sections/ProjectCaseStudy"
-import type { MediaAsset } from "@/lib/cms/media"
 import type { ProjectRevision } from "@/lib/cms/project-repository"
 import {
   documentToPublicProject,
@@ -56,6 +54,9 @@ export function ProjectEditor({
   >([])
   const validationSummaryRef = useRef<HTMLDivElement>(null)
   const [isPending, startTransition] = useTransition()
+  const { stageImage, createSaveForm, discardImages, isPreparing } =
+    usePendingProjectImages()
+  const isBusy = isPending || isPreparing
 
   function updateDocument(patch: Partial<ProjectDocument>) {
     const nextDocument = { ...document, ...patch }
@@ -91,6 +92,7 @@ export function ProjectEditor({
   }
 
   function save(publish: boolean) {
+    if (isBusy) return
     setMessage(null)
     const localIssues = getProjectValidationIssues(document)
 
@@ -102,29 +104,40 @@ export function ProjectEditor({
     setValidationIssues([])
 
     startTransition(async () => {
-      const result = publish
-        ? await publishProjectAction(document)
-        : await saveProjectAction(document)
+      try {
+        const response = await fetch("/admin/api/projects", {
+          method: "POST",
+          body: createSaveForm(document, publish),
+        })
+        const result = (await response.json()) as
+          | { ok: true; document: ProjectDocument }
+          | { ok: false; error: string; issues: ProjectValidationIssue[] }
 
-      if (!result.ok) {
-        if (result.issues.length) {
-          showValidationIssues(result.issues)
-        } else {
-          setMessage(result.error)
+        if (!result.ok) {
+          if (result.issues.length) {
+            showValidationIssues(result.issues)
+          } else {
+            setMessage(result.error)
+          }
+          return
         }
-        return
-      }
 
-      const wasNew = !document.id
-      setDocument(result.document)
-      setValidationIssues([])
-      setStatus(publish ? "published" : status)
-      setMessage(publish ? "Published successfully." : "Draft saved.")
+        const wasNew = !document.id
+        setDocument(result.document)
+        discardImages()
+        setValidationIssues([])
+        setStatus(publish ? "published" : status)
+        setMessage(publish ? "Published successfully." : "Draft saved.")
 
-      if (wasNew && result.document.id) {
-        router.replace(`/admin/projects/${result.document.id}`)
-      } else {
-        router.refresh()
+        if (wasNew && result.document.id) {
+          router.replace(`/admin/projects/${result.document.id}`)
+        } else {
+          router.refresh()
+        }
+      } catch (error) {
+        setMessage(
+          error instanceof Error ? error.message : "Unable to save the project.",
+        )
       }
     })
   }
@@ -160,31 +173,12 @@ export function ProjectEditor({
       }
 
       setDocument(result.document)
+      discardImages()
       setValidationIssues([])
       setMessage("Revision restored into the draft. Publish when ready.")
       setView("edit")
       router.refresh()
     })
-  }
-
-  async function uploadImage(file: File) {
-    const formData = new FormData()
-    formData.set("file", file)
-
-    const response = await fetch("/admin/api/media", {
-      method: "POST",
-      body: formData,
-    })
-    const payload = (await response.json()) as {
-      media?: MediaAsset
-      error?: string
-    }
-
-    if (!response.ok || !payload.media) {
-      throw new Error(payload.error ?? "Unable to upload the image.")
-    }
-
-    return payload.media
   }
 
   const previewProject = document.caseStudy
@@ -224,6 +218,7 @@ export function ProjectEditor({
                 <button
                   key={option}
                   type="button"
+                  disabled={isBusy}
                   onClick={() => setView(option)}
                   className={`rounded-sm px-3 py-1.5 text-xs font-medium capitalize ${
                     view === option
@@ -238,7 +233,7 @@ export function ProjectEditor({
             <button
               type="button"
               onClick={() => save(false)}
-              disabled={isPending}
+              disabled={isBusy}
               className={secondaryButton}
             >
               Save draft
@@ -246,7 +241,7 @@ export function ProjectEditor({
             <button
               type="button"
               onClick={() => save(true)}
-              disabled={isPending}
+              disabled={isBusy}
               className="rounded-sm light:bg-primary px-4 py-2 text-xs font-semibold light:text-primary-foreground transition hover:brightness-110 disabled:opacity-50"
             >
               {isPending ? "Working…" : "Publish"}
@@ -295,17 +290,19 @@ export function ProjectEditor({
         )
       ) : (
         <div className="mx-auto mt-8 grid max-w-7xl gap-8 px-6 xl:grid-cols-[minmax(0,1fr)_18rem]">
-          <ProjectForm
-            document={document}
-            validationIssues={validationIssues}
-            isPending={isPending}
-            uploadImage={uploadImage}
-            onChange={updateDocument}
-            onDelete={removeProject}
-          />
+          <fieldset disabled={isBusy} className="min-w-0">
+            <ProjectForm
+              document={document}
+              validationIssues={validationIssues}
+              isPending={isBusy}
+              uploadImage={stageImage}
+              onChange={updateDocument}
+              onDelete={removeProject}
+            />
+          </fieldset>
           <ProjectSidebar
             revisions={revisions}
-            isPending={isPending}
+            isPending={isBusy}
             onRestoreRevision={restoreRevision}
           />
         </div>

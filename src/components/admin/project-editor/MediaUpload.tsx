@@ -19,9 +19,9 @@ export function MediaUpload({
 
   return (
     <div>
-      <span className={labelStyles}>Upload image</span>
+      <span className={labelStyles}>Choose image</span>
       <label className={`${secondaryButton} mt-2 block text-center`}>
-        {uploading ? "Uploading\u2026" : "Choose image"}
+        {uploading ? "Preparing preview\u2026" : "Choose image"}
         <input
           type="file"
           accept="image/png,image/jpeg,image/webp,image/avif"
@@ -48,6 +48,9 @@ export function MediaUpload({
           }}
         />
       </label>
+      <p className="mt-2 text-xs light:text-muted-foreground">
+        Images are uploaded when you save the draft or publish.
+      </p>
       {error && <p className="mt-2 text-xs text-red-300 light:text-destructive">{error}</p>}
     </div>
   )

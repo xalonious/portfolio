@@ -198,8 +198,7 @@ export function ProjectForm({
         <EditorPanel eyebrow="Danger zone" title="Project deletion">
           <p className="text-sm leading-6 light:text-muted-foreground">
             This removes the project, its draft, and its revision history. Every
-            image referenced by them is also permanently deleted. Uploaded media
-            that was never attached to this project is retained.
+            image referenced by them is also permanently deleted.
           </p>
           <button
             type="button"

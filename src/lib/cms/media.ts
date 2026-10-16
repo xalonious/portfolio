@@ -33,6 +33,11 @@ type MediaRow = {
   created_at: string
 }
 
+export type PreparedImage = {
+  asset: MediaAsset
+  data: Buffer
+}
+
 const mimeTypesByExtension: Record<string, string> = {
   ".avif": "image/avif",
   ".gif": "image/gif",
@@ -77,7 +82,7 @@ export function getMediaAssetsByPublicPaths(publicPaths: Iterable<string>) {
   return [...assets.values()]
 }
 
-export async function saveUploadedImage(file: File) {
+export async function prepareUploadedImage(file: File): Promise<PreparedImage> {
   if (!file.size || file.size > MAX_UPLOAD_BYTES) {
     throw new Error(
       `Images must be smaller than ${Math.round(MAX_UPLOAD_BYTES / 1024 / 1024)} MB.`,
@@ -108,14 +113,6 @@ export async function saveUploadedImage(file: File) {
     String(now.getUTCMonth() + 1).padStart(2, "0"),
     `${id}.webp`,
   )
-  const mediaRoot = getMediaRoot()
-  const destination = path.join(mediaRoot, ...storageKey.split("/"))
-  const temporaryDestination = `${destination}.tmp-${crypto.randomUUID()}`
-
-  fs.mkdirSync(path.dirname(destination), { recursive: true })
-  fs.writeFileSync(temporaryDestination, processed.data, { flag: "wx" })
-  fs.renameSync(temporaryDestination, destination)
-
   const asset: MediaAsset = {
     id,
     storageKey,
@@ -128,26 +125,49 @@ export async function saveUploadedImage(file: File) {
     createdAt: now.toISOString(),
   }
 
-  getDatabase()
-    .prepare(
-      `INSERT INTO media (
-         id, storage_key, public_path, original_name, mime_type,
-         width, height, size_bytes, created_at
-       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    )
-    .run(
-      asset.id,
-      asset.storageKey,
-      asset.publicPath,
-      asset.originalName,
-      asset.mimeType,
-      asset.width,
-      asset.height,
-      asset.sizeBytes,
-      asset.createdAt,
-    )
+  return { asset, data: processed.data }
+}
 
-  return asset
+export function persistPreparedImage({ asset, data }: PreparedImage) {
+  const destination = resolveMediaPath(asset.storageKey.split("/"))
+  if (!destination) throw new Error("Invalid media storage key.")
+
+  const temporaryDestination = `${destination}.tmp-${crypto.randomUUID()}`
+  fs.mkdirSync(path.dirname(destination), { recursive: true })
+
+  try {
+    fs.writeFileSync(temporaryDestination, data, { flag: "wx" })
+    fs.renameSync(temporaryDestination, destination)
+  } finally {
+    fs.rmSync(temporaryDestination, { force: true })
+  }
+
+  try {
+    getDatabase()
+      .prepare(
+        `INSERT INTO media (
+           id, storage_key, public_path, original_name, mime_type,
+           width, height, size_bytes, created_at
+         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .run(
+        asset.id,
+        asset.storageKey,
+        asset.publicPath,
+        asset.originalName,
+        asset.mimeType,
+        asset.width,
+        asset.height,
+        asset.sizeBytes,
+        asset.createdAt,
+      )
+  } catch (error) {
+    const failures = deleteMediaAssetFiles([asset])
+    for (const failure of failures) {
+      console.error("Failed to roll back an image upload:", failure.error)
+    }
+    throw error
+  }
 }
 
 export function resolveMediaPath(segments: string[]) {
