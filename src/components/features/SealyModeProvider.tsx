@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import dynamic from "next/dynamic"
 import { getAchievementRuntime } from "@/lib/achievements"
-import { claimSealyRewardReveal, setSealyModeActive, syncSealyEligibility } from "@/lib/sealy-mode"
+import { claimSealyRewardReveal, resetSealyRewards, setSealyModeActive, syncSealyEligibility } from "@/lib/sealy-mode"
 import { TouchGrassCinematicProvider, useTouchGrassCinematic } from "./TouchGrassCinematicProvider"
 import { useSealyMode } from "./useSealyMode"
 
@@ -64,7 +64,9 @@ export function SealyModeProvider({ children }: { children: ReactNode }) {
     if (!runtime) return
     const sync = () => syncSealyEligibility(runtime.engine.getSnapshot())
     sync()
-    return runtime.engine.subscribe(sync)
+    const unsubscribe = runtime.engine.subscribe(sync)
+    const unsubscribeReset = runtime.engine.onReset(resetSealyRewards)
+    return () => { unsubscribe(); unsubscribeReset() }
   }, [])
   const reveal = useCallback(() => {
     if (claimSealyRewardReveal()) setRevealOpen(true)

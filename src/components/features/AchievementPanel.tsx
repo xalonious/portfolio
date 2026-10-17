@@ -4,7 +4,7 @@ import {
   createContext, useCallback, useContext, useEffect, useMemo, useRef, useState,
   useSyncExternalStore, type ReactNode,
 } from "react"
-import { FiCheck, FiLock, FiX } from "react-icons/fi"
+import { FiCheck, FiLock, FiRotateCcw, FiX } from "react-icons/fi"
 import { achievementRegistry, getAchievementRuntime } from "@/lib/achievements"
 import type { AchievementEngine } from "@/lib/achievements/engine"
 import type { AchievementDefinition, AchievementState } from "@/lib/achievements/types"
@@ -71,11 +71,25 @@ function AchievementPanelDialog({ engine, onClose }: { engine: AchievementEngine
   }
   const state = useSyncExternalStore(engine.subscribe, engine.getSnapshot, getServerSnapshot)
   const dialogRef = useRef<HTMLDialogElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+  const resetButtonRef = useRef<HTMLButtonElement>(null)
+  const wasConfirmingReset = useRef(false)
+  const [confirmingReset, setConfirmingReset] = useState(false)
+  const [resetFeedback, setResetFeedback] = useState<"success" | "error" | null>(null)
   const unlockedAchievements = achievementRegistry.filter(achievement => Object.prototype.hasOwnProperty.call(state.unlocked, achievement.id))
   const lockedAchievements = achievementRegistry.filter(achievement => !achievement.hidden && !Object.prototype.hasOwnProperty.call(state.unlocked, achievement.id))
   const earned = unlockedAchievements.length
   const total = achievementRegistry.length
   const completed = Object.prototype.hasOwnProperty.call(state.unlocked, "touch-grass")
+  const hasProgress = Object.keys(state.unlocked).length > 0 || Object.keys(state.progress).length > 0
+  const resetProgress = () => {
+    if (!engine.reset()) {
+      setResetFeedback("error")
+      return
+    }
+    setConfirmingReset(false)
+    setResetFeedback("success")
+  }
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -96,6 +110,14 @@ function AchievementPanelDialog({ engine, onClose }: { engine: AchievementEngine
     }
   }, [])
 
+  useEffect(() => {
+    if (!confirmingReset && wasConfirmingReset.current) {
+      if (resetFeedback === "success") closeButtonRef.current?.focus()
+      else resetButtonRef.current?.focus()
+    }
+    wasConfirmingReset.current = confirmingReset
+  }, [confirmingReset, resetFeedback])
+
   return (
     <dialog
       ref={dialogRef}
@@ -115,7 +137,7 @@ function AchievementPanelDialog({ engine, onClose }: { engine: AchievementEngine
             <h2 id="achievement-panel-title" className="mt-2.5 font-display text-3xl leading-tight font-semibold max-sm:text-[26px]">Achievements<span className="text-primary-ink">.</span></h2>
             {completed && <p className="mt-3 text-xs leading-relaxed text-muted-foreground">You&apos;ve unlocked all achievements. Now please, go touch some grass.</p>}
           </div>
-          <button type="button" className="grid h-9 w-9 shrink-0 place-items-center rounded-sm border border-border bg-card text-foreground hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-primary" aria-label="Close achievements" onClick={onClose} autoFocus><FiX size={20} /></button>
+          <button ref={closeButtonRef} type="button" className="grid h-9 w-9 shrink-0 place-items-center rounded-sm border border-border bg-card text-foreground hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-primary" aria-label="Close achievements" onClick={onClose} autoFocus><FiX size={20} /></button>
         </div>
         <div className="mx-6 mb-6 max-sm:mx-5">
           <p id="achievement-panel-summary" className="mb-3.5 text-xs" aria-live="polite"><strong className="text-[22px] font-medium">{earned}</strong><span className="text-foreground/65 light:text-muted-foreground"> / {total} unlocked</span></p>
@@ -143,6 +165,21 @@ function AchievementPanelDialog({ engine, onClose }: { engine: AchievementEngine
               </section>
             </div>
           ) : <p className="text-sm text-foreground/70 light:text-muted-foreground">More achievements are on the way.</p>}
+        </div>
+        <div className="shrink-0 border-t border-border px-6 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] max-sm:px-5">
+          {confirmingReset ? (
+            <div role="group" aria-labelledby="achievement-reset-title">
+              <p id="achievement-reset-title" className="text-xs font-medium">Reset your progress?</p>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">Are you sure you want to reset your progress? This can&apos;t be undone.</p>
+              <div className="mt-3 flex gap-3">
+                <button type="button" autoFocus className="min-h-11 rounded-sm border border-border px-3 text-xs hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" onClick={() => { setConfirmingReset(false); setResetFeedback(null) }}>Cancel</button>
+                <button type="button" className="min-h-11 rounded-sm bg-primary px-3 text-xs font-medium text-primary-foreground hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" onClick={resetProgress}>Reset everything</button>
+              </div>
+            </div>
+          ) : (
+            <button ref={resetButtonRef} type="button" className="flex min-h-11 items-center gap-2 text-xs text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-default disabled:opacity-40" disabled={!hasProgress} onClick={() => { setConfirmingReset(true); setResetFeedback(null) }}><FiRotateCcw size={13} aria-hidden="true" />Reset progress</button>
+          )}
+          {resetFeedback && <p role={resetFeedback === "error" ? "alert" : "status"} className="mt-2 text-xs text-muted-foreground">{resetFeedback === "error" ? "Couldn’t reset progress. Please try again." : "Progress reset. A fresh start awaits."}</p>}
         </div>
       </div>
     </dialog>

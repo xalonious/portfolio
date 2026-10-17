@@ -1,8 +1,7 @@
 import type { AchievementProgress, AchievementState, JsonValue } from "./types"
-import { achievementChecksum, serializeAchievementPayload } from "./integrity"
+import { achievementChecksum } from "./integrity"
 
 export const ACHIEVEMENT_STORAGE_KEY = "whoisxander:achievements"
-export const ACHIEVEMENT_RECOVERY_KEY = "whoisxander:achievements:trusted-snapshot"
 export const ACHIEVEMENT_STORAGE_VERSION = 2
 export const ACHIEVEMENT_TAMPER_EVENT = "achievement_save_tampered"
 
@@ -15,7 +14,7 @@ export const EMPTY_ACHIEVEMENT_STATE: AchievementState = Object.freeze({
 
 export type StorageLoadResult = {
   state: AchievementState
-  status: "missing" | "loaded" | "malformed" | "integrity-mismatch" | "tampered" | "recovered" | "unsupported-version" | "unavailable"
+  status: "missing" | "loaded" | "malformed" | "integrity-mismatch" | "tampered" | "unsupported-version" | "unavailable"
   raw: string | null
 }
 
@@ -23,6 +22,7 @@ export type AchievementStorage = {
   load: () => StorageLoadResult
   inspect?: () => StorageLoadResult | undefined
   save: (state: AchievementState) => StorageLoadResult | undefined | void
+  reset: () => boolean
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -100,23 +100,10 @@ export function decodeAchievementState(raw: string | null): StorageLoadResult {
   }
 }
 
-function recognizableProgressEdit(raw: string, reference: AchievementState): boolean {
-  try {
-    const value: unknown = JSON.parse(raw)
-    if (!isRecord(value) || value.version !== ACHIEVEMENT_STORAGE_VERSION) return false
-    if (!hasOnlyKeys(value, ["version", "unlocked", "progress", "soundMuted", "checksum"])) return false
-    if (!isRecord(value.unlocked) || !isRecord(value.progress)) return false
-    if (value.checksum !== achievementChecksum(reference) || value.soundMuted !== reference.soundMuted) return false
-    return serializeAchievementPayload({ unlocked: value.unlocked, progress: value.progress }) !==
-      serializeAchievementPayload({ unlocked: reference.unlocked, progress: reference.progress })
-  } catch { return false }
-}
-
-export function createAchievementStorage(getStorage: () => Pick<Storage, "getItem" | "setItem" | "removeItem">): AchievementStorage {
+export function createAchievementStorage(getStorage: () => Pick<Storage, "getItem" | "setItem">): AchievementStorage {
   let lastObservedRaw: string | null | undefined
   let trusted: AchievementState | undefined
   let writable = true
-  let handledSuspiciousRaw: string | undefined
 
   function writeTrusted(state: AchievementState): void {
     const payload = JSON.parse(JSON.stringify(state)) as AchievementState
@@ -126,44 +113,35 @@ export function createAchievementStorage(getStorage: () => Pick<Storage, "getIte
       const storage = getStorage()
       storage.setItem(ACHIEVEMENT_STORAGE_KEY, raw)
       lastObservedRaw = raw
-      storage.setItem(ACHIEVEMENT_RECOVERY_KEY, raw)
     } catch {
     }
-  }
-
-  function recoverySnapshot(): AchievementState | undefined {
-    try {
-      const saved = decodeAchievementState(getStorage().getItem(ACHIEVEMENT_RECOVERY_KEY))
-      return saved.status === "loaded" ? saved.state : undefined
-    } catch { return undefined }
   }
 
   function read(force = false): StorageLoadResult | undefined {
     let raw: string | null
     try { raw = getStorage().getItem(ACHIEVEMENT_STORAGE_KEY) }
     catch { return { state: EMPTY_ACHIEVEMENT_STATE, status: "unavailable", raw: null } }
-    if (!force && raw === lastObservedRaw) return undefined
+    if (raw === lastObservedRaw) {
+      if (!force) return undefined
+      return trusted ? { state: trusted, status: raw === null ? "missing" : "loaded", raw } : decodeAchievementState(raw)
+    }
+    if (trusted) {
+      lastObservedRaw = raw
+      const state = trusted
+      writeTrusted(state)
+      return { state, status: "tampered", raw }
+    }
     lastObservedRaw = raw
     const result = decodeAchievementState(raw)
     writable = result.status !== "unsupported-version"
 
     if (result.status === "missing") {
-      trusted = undefined
-      handledSuspiciousRaw = undefined
-      try { getStorage().removeItem(ACHIEVEMENT_RECOVERY_KEY) } catch {}
+      trusted = EMPTY_ACHIEVEMENT_STATE
     } else if (result.status === "loaded") {
       trusted = result.state
-      handledSuspiciousRaw = undefined
-      try { getStorage().setItem(ACHIEVEMENT_RECOVERY_KEY, encodeAchievementState(result.state)) } catch {}
     } else if (result.status === "malformed" || result.status === "integrity-mismatch") {
-      const backup = recoverySnapshot()
-      const recovered = trusted ?? backup
-      const tampered = result.status === "integrity-mismatch" && raw !== handledSuspiciousRaw &&
-        [trusted, backup].some(reference => reference && recognizableProgressEdit(raw!, reference))
-      if (tampered) handledSuspiciousRaw = raw!
-      const state = recovered ?? EMPTY_ACHIEVEMENT_STATE
-      writeTrusted(state)
-      return { state, status: tampered ? "tampered" : recovered ? "recovered" : "malformed", raw }
+      writeTrusted(EMPTY_ACHIEVEMENT_STATE)
+      return { state: EMPTY_ACHIEVEMENT_STATE, status: "tampered", raw }
     }
     return result
   }
@@ -171,6 +149,15 @@ export function createAchievementStorage(getStorage: () => Pick<Storage, "getIte
   return {
     load: () => read(true)!,
     inspect: () => read(),
+    reset() {
+      const raw = encodeAchievementState(EMPTY_ACHIEVEMENT_STATE)
+      try { getStorage().setItem(ACHIEVEMENT_STORAGE_KEY, raw) }
+      catch { return false }
+      trusted = EMPTY_ACHIEVEMENT_STATE
+      lastObservedRaw = raw
+      writable = true
+      return true
+    },
     save(state) {
       const changed = read()
       if (changed && changed.status !== "unavailable") return changed

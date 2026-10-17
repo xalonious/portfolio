@@ -1,11 +1,11 @@
 import { emitAchievementEvent } from "@/lib/achievements"
 import { ACHIEVEMENT_STORAGE_KEY } from "@/lib/achievements/storage"
-import { canRestoreSealyReceipt, readThemePreference, THEME_STORAGE_KEY, THEME_PREFERENCE_EVENT, LEGACY_SEALY_MODE_STORAGE_KEY } from "./sealy-mode-preferences"
+import { canRestoreSealyTheme, readThemePreference, THEME_STORAGE_KEY, THEME_PREFERENCE_EVENT, LEGACY_SEALY_MODE_STORAGE_KEY } from "./sealy-mode-preferences"
 
 export type Theme = "dark" | "light"
 export { THEME_STORAGE_KEY } from "./sealy-mode-preferences"
 
-export const themeBootstrap = `(()=>{let theme="dark",sealy=false;try{const raw=localStorage.getItem("${THEME_STORAGE_KEY}"),preference=(${readThemePreference.toString()})(raw),save=localStorage.getItem("${ACHIEVEMENT_STORAGE_KEY}");theme=preference.base;const restore=${canRestoreSealyReceipt.toString()};sealy=restore(raw,save);if(raw===null||raw==="dark"||raw==="light")sealy=restore(localStorage.getItem("${LEGACY_SEALY_MODE_STORAGE_KEY}"),save,true)}catch{}const root=document.documentElement;root.dataset.baseTheme=theme;root.dataset.theme=sealy?"sealy":theme;root.classList.toggle("dark",root.dataset.theme!=="light")})()`
+export const themeBootstrap = `(()=>{let theme="dark",sealy=false;try{const raw=localStorage.getItem("${THEME_STORAGE_KEY}"),preference=(${readThemePreference.toString()})(raw),save=localStorage.getItem("${ACHIEVEMENT_STORAGE_KEY}");theme=preference.base;const restore=${canRestoreSealyTheme.toString()};sealy=restore(raw,save);if(raw===null||raw==="dark"||raw==="light")sealy=restore(localStorage.getItem("${LEGACY_SEALY_MODE_STORAGE_KEY}"),save,true)}catch{}const root=document.documentElement;root.dataset.baseTheme=theme;root.dataset.theme=sealy?"sealy":theme;root.classList.toggle("dark",root.dataset.theme!=="light")})()`
 
 const subscribers = new Set<() => void>()
 export const getServerTheme = (): Theme => "dark"

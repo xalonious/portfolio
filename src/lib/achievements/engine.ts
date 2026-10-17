@@ -74,6 +74,13 @@ export class AchievementEngine {
     this.refreshStorage()
   }
 
+  reset = (): boolean => {
+    if (this.storage && !this.storage.reset()) return false
+    this.pendingIntegrityFailure = false
+    this.applyStorageResult({ state: EMPTY_ACHIEVEMENT_STATE, status: "missing", raw: null })
+    return true
+  }
+
   private applyStorageResult(result: StorageLoadResult): void {
     if (result.status === "unavailable") return
     this.state = result.state

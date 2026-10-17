@@ -1,5 +1,5 @@
 import { getAchievementRuntime } from "./achievements"
-import { ACHIEVEMENT_STORAGE_KEY, ACHIEVEMENT_TAMPER_EVENT, decodeAchievementState } from "./achievements/storage"
+import { ACHIEVEMENT_TAMPER_EVENT } from "./achievements/storage"
 import type { AchievementState } from "./achievements/types"
 import { applyBaseTheme, applySealyOverride, getTheme } from "./theme"
 import { readThemePreference, THEME_STORAGE_KEY, THEME_PREFERENCE_EVENT, LEGACY_SEALY_MODE_STORAGE_KEY, SEALY_COMPANION_STORAGE_KEY, SEALY_REVEAL_STORAGE_KEY } from "./sealy-mode-preferences"
@@ -31,10 +31,7 @@ function commit(next: SealyModeState): void {
   subscribers.forEach(listener => listener())
 }
 function persistMode(): void {
-  const raw = read(ACHIEVEMENT_STORAGE_KEY)
-  const decoded = decodeAchievementState(raw)
-  const receipt = decoded.status === "loaded" && isEligible(decoded.state) ? raw : null
-  const preference = JSON.stringify({ version: 1, base: getTheme(), sealy: state.active, eligibility: receipt })
+  const preference = JSON.stringify({ version: 1, base: getTheme(), sealy: state.active })
   if (read(THEME_STORAGE_KEY) !== preference) write(THEME_STORAGE_KEY, preference)
   lastObservedTheme = read(THEME_STORAGE_KEY)
 }
@@ -49,13 +46,11 @@ function migrateLegacyPreference(): void {
   const raw = read(THEME_STORAGE_KEY)
   if (raw === null || raw === "dark" || raw === "light") {
     let enabled = false
-    let eligibility: string | null = null
     try {
       const value = JSON.parse(legacy)
       enabled = value?.version === 1 && value.enabled === true
-      eligibility = typeof value?.eligibility === "string" ? value.eligibility : null
     } catch {}
-    if (!write(THEME_STORAGE_KEY, JSON.stringify({ ...readThemePreference(raw), sealy: enabled, eligibility }))) return
+    if (!write(THEME_STORAGE_KEY, JSON.stringify({ ...readThemePreference(raw), sealy: enabled }))) return
   }
   try { window.localStorage.removeItem(LEGACY_SEALY_MODE_STORAGE_KEY) } catch {}
 }
@@ -68,10 +63,14 @@ function refreshPreferences(): void {
     const runtime = getAchievementRuntime()
     const eligible = !!runtime && isEligible(runtime.engine.getSnapshot())
     const denied = preference.sealy && !eligible
-    applyBaseTheme(preference.base)
+    const accepted = denied && lastObservedTheme !== undefined ? readThemePreference(lastObservedTheme) : preference
+    applyBaseTheme(accepted.base)
     commit({ eligible, active: preference.sealy && eligible, companionEnabled: companionPreference() })
     persistMode()
-    if (denied) runtime?.engine.emit(ACHIEVEMENT_TAMPER_EVENT)
+    if (denied && runtime) {
+      runtime.engine.emit(ACHIEVEMENT_TAMPER_EVENT)
+      commit({ ...state, eligible: isEligible(runtime.engine.getSnapshot()), active: false })
+    }
   } finally { checkingPreferences = false }
 }
 
@@ -82,9 +81,19 @@ export function initializeSealyMode(): void {
   refreshPreferences()
 }
 
+export function resetSealyRewards(): void {
+  revealed.clear()
+  commit(DEFAULT_STATE)
+  persistMode()
+  for (const key of [LEGACY_SEALY_MODE_STORAGE_KEY, SEALY_COMPANION_STORAGE_KEY, SEALY_REVEAL_STORAGE_KEY]) {
+    try { window.localStorage.removeItem(key) } catch {}
+  }
+}
+
 export function syncSealyEligibility(achievements: AchievementState): void {
   initializeSealyMode()
-  if (!checkingPreferences && read(THEME_STORAGE_KEY) !== lastObservedTheme) {
+  if (checkingPreferences) return
+  if (read(THEME_STORAGE_KEY) !== lastObservedTheme) {
     refreshPreferences()
     return
   }
@@ -95,10 +104,12 @@ export function syncSealyEligibility(achievements: AchievementState): void {
 
 export function setSealyModeActive(active: boolean): boolean {
   initializeSealyMode()
-  const achievements = getAchievementRuntime()?.engine.getSnapshot()
+  const runtime = getAchievementRuntime()
+  const achievements = runtime?.engine.getSnapshot()
   const eligible = !!achievements && isEligible(achievements)
   commit({ ...state, eligible, active: active && eligible })
   persistMode()
+  if (active && !eligible) runtime?.engine.emit(ACHIEVEMENT_TAMPER_EVENT)
   return state.active === active
 }
 
@@ -140,7 +151,7 @@ export function subscribeToSealyMode(listener: () => void): () => void {
     window.addEventListener("focus", refreshPreferences)
     window.addEventListener("pageshow", refreshPreferences)
     document.addEventListener("visibilitychange", onVisibility)
-    themeEditTimer = window.setInterval(checkForThemeEdits, 1_000)
+    themeEditTimer = window.setInterval(checkForThemeEdits, 500)
   }
   subscribers.add(listener)
   initializeSealyMode()

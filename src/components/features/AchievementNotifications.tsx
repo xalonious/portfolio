@@ -88,12 +88,20 @@ function WebsiteTimeTracker({ engine }: { engine: AchievementEngine }) {
   const unlocked = useSyncExternalStore(engine.subscribe, () => engine.isUnlocked("no-life"), () => false)
   useEffect(() => {
     if (unlocked) return
-    const stopClock = trackVisibleTime(milliseconds => {
-      if (engine.isUnlocked("no-life")) return
+    let discardingElapsed = false
+    const startClock = () => trackVisibleTime(milliseconds => {
+      if (discardingElapsed || engine.isUnlocked("no-life")) return
       engine.emit("website_visible_time", { milliseconds })
       if (engine.isUnlocked("no-life")) stopClock()
     })
-    return stopClock
+    let stopClock = startClock()
+    const unsubscribeReset = engine.onReset(() => {
+      discardingElapsed = true
+      stopClock()
+      discardingElapsed = false
+      stopClock = startClock()
+    })
+    return () => { unsubscribeReset(); stopClock() }
   }, [engine, unlocked])
   return null
 }
@@ -101,7 +109,13 @@ function WebsiteTimeTracker({ engine }: { engine: AchievementEngine }) {
 function SSHConnectionTracker({ engine }: { engine: AchievementEngine }) {
   const unlocked = useSyncExternalStore(engine.subscribe, () => engine.isUnlocked(SSH_ACHIEVEMENT_ID), () => false)
   useEffect(() => {
-    if (!unlocked) return watchSSHPortfolio(engine)
+    if (unlocked) return
+    let stopWatching = watchSSHPortfolio(engine)
+    const unsubscribeReset = engine.onReset(() => {
+      stopWatching()
+      stopWatching = watchSSHPortfolio(engine)
+    })
+    return () => { unsubscribeReset(); stopWatching() }
   }, [engine, unlocked])
   return null
 }

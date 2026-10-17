@@ -1,4 +1,4 @@
-export function trackVisibleTime(onElapsed: (milliseconds: number) => void, intervalMs = 5_000): () => void {
+export function trackVisibleTime(onElapsed: (milliseconds: number) => void, intervalMs = 10_000): () => void {
   if (typeof document === "undefined" || typeof window === "undefined") return () => {}
   let suspended = false
   let stopped = false

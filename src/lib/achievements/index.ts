@@ -1,7 +1,7 @@
 import { AchievementEngine, EMPTY_ACHIEVEMENT_PROGRESS } from "./engine"
 import { AchievementNotificationQueue } from "./notifications"
 import { achievementRegistry, configurePublishedCaseStudies, customAchievementHandlers } from "./registry"
-import { ACHIEVEMENT_RECOVERY_KEY, ACHIEVEMENT_STORAGE_KEY, createAchievementStorage } from "./storage"
+import { ACHIEVEMENT_STORAGE_KEY, createAchievementStorage } from "./storage"
 import { getSSHVisitorToken } from "./ssh-token"
 
 export { achievementRegistry } from "./registry"
@@ -44,7 +44,7 @@ export function listenForAchievementStorage(engine: AchievementEngine): () => vo
   const onStorage = (event: StorageEvent) => {
     try {
       if (event.storageArea !== window.localStorage) return
-      if (event.key === null || event.key === ACHIEVEMENT_STORAGE_KEY || event.key === ACHIEVEMENT_RECOVERY_KEY) check()
+      if (event.key === null || event.key === ACHIEVEMENT_STORAGE_KEY) check()
     } catch {}
   }
   const onVisibility = () => { if (document.visibilityState === "visible") check() }
@@ -52,12 +52,14 @@ export function listenForAchievementStorage(engine: AchievementEngine): () => vo
   window.addEventListener("focus", check)
   window.addEventListener("pageshow", check)
   document.addEventListener("visibilitychange", onVisibility)
+  const timer = window.setInterval(check, 500)
   check()
   return () => {
     window.removeEventListener("storage", onStorage)
     window.removeEventListener("focus", check)
     window.removeEventListener("pageshow", check)
     document.removeEventListener("visibilitychange", onVisibility)
+    window.clearInterval(timer)
   }
 }
 
