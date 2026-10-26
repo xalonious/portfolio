@@ -1,4 +1,4 @@
-import { FiBookOpen, FiClock, FiCode, FiCompass, FiFeather, FiLayers, FiMessageCircle, FiMusic, FiShield, FiSun, FiTerminal, FiUserX, FiZap } from "react-icons/fi"
+import { FiBookOpen, FiClock, FiCode, FiCompass, FiFeather, FiLayers, FiMessageCircle, FiMoon, FiMusic, FiShield, FiSun, FiTerminal, FiUserX, FiZap } from "react-icons/fi"
 import { ACHIEVEMENT_TAMPER_EVENT } from "./storage"
 import { SSH_ACHIEVEMENT_ID, SSH_CONNECTED_EVENT, SSH_WATCH_EVENT, SSH_WATCH_WINDOW_MS, SSH_CONNECTION_WINDOW_MS } from "./ssh-config"
 import type { AchievementDefinition, CustomAchievementHandler } from "./types"
@@ -62,6 +62,12 @@ export function createAchievementRegistry(publishedCaseStudyIds: readonly string
       hint: "You really have nowhere else to be?",
       icon: FiClock, rarity: "rare", hidden: false,
       trigger: { type: "duration", event: "website_visible_time", targetMs: 30 * 60 * 1000 },
+    },
+    {
+      id: "whats-sleep-anyway", name: "What's sleep anyway?", description: "Visit the portfolio between 2 and 4 a.m. in your local time.",
+      hint: "Some discoveries are made well past bedtime.",
+      icon: FiMoon, rarity: "rare", hidden: false,
+      trigger: { type: "event", event: "late_night_visit" },
     },
     {
       id: "let-there-be-light", name: "Let There Be Light", description: "Get flashbanged by light mode.",

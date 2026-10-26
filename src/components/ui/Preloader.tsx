@@ -28,6 +28,7 @@ export function Preloader() {
     <AnimatePresence>
       {visible && (
         <motion.div
+          data-preloader
           className="fixed inset-0 z-[99999] flex flex-col items-center justify-center gap-4"
           style={{ backgroundColor: "var(--background)" }}
           exit={{

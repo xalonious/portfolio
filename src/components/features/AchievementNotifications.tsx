@@ -84,6 +84,31 @@ function NotificationHost({ engine, queue }: { engine: AchievementEngine; queue:
   )
 }
 
+function LateNightVisitTracker({ engine }: { engine: AchievementEngine }) {
+  const unlocked = useSyncExternalStore(engine.subscribe, () => engine.isUnlocked("whats-sleep-anyway"), () => false)
+
+  useEffect(() => {
+    if (unlocked) return
+    const check = () => {
+      if (document.visibilityState !== "visible" || document.querySelector("[data-preloader]")) return
+      const hour = new Date().getHours()
+      if (hour >= 2 && hour < 4 && !engine.isUnlocked("whats-sleep-anyway")) {
+        engine.emit("late_night_visit")
+      }
+    }
+    document.addEventListener("click", check, { passive: true })
+    document.addEventListener("scroll", check, { passive: true, capture: true })
+    document.addEventListener("keydown", check)
+    return () => {
+      document.removeEventListener("click", check)
+      document.removeEventListener("scroll", check, true)
+      document.removeEventListener("keydown", check)
+    }
+  }, [engine, unlocked])
+
+  return null
+}
+
 function WebsiteTimeTracker({ engine }: { engine: AchievementEngine }) {
   const unlocked = useSyncExternalStore(engine.subscribe, () => engine.isUnlocked("no-life"), () => false)
   useEffect(() => {
@@ -142,5 +167,5 @@ export function AchievementNotifications({ publishedCaseStudyIds }: { publishedC
     runtime?.engine.visitRoute(pathname)
   }, [pathname, runtime])
 
-  return runtime ? <><WebsiteTimeTracker engine={runtime.engine} /><SSHConnectionTracker engine={runtime.engine} /><NotificationHost engine={runtime.engine} queue={runtime.notifications} /></> : null
+  return runtime ? <><LateNightVisitTracker engine={runtime.engine} /><WebsiteTimeTracker engine={runtime.engine} /><SSHConnectionTracker engine={runtime.engine} /><NotificationHost engine={runtime.engine} queue={runtime.notifications} /></> : null
 }
