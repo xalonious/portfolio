@@ -177,13 +177,6 @@ export function PortfolioHome({
         </motion.div>
       </section>
       <Story codingYears={codingYears} />
-      <section id="stack" className="py-20 scroll-mt-24">
-        <div className="max-w-6xl mx-auto px-6 mb-10">
-          <p className="text-xs uppercase tracking-[0.2em] light:text-primary-ink font-medium mb-2">Tools of the trade</p>
-          <h2 className="font-display text-4xl sm:text-5xl font-bold light:text-foreground">Tech Stack</h2>
-        </div>
-        <TechRadar />
-      </section>
       <section id="projects" className="py-20 sm:py-28 px-6 scroll-mt-24">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-14">
@@ -208,6 +201,13 @@ export function PortfolioHome({
             </TransitionLink>
           </div>
         </div>
+      </section>
+      <section id="stack" className="py-20 scroll-mt-24">
+        <div className="max-w-6xl mx-auto px-6 mb-10">
+          <p className="text-xs uppercase tracking-[0.2em] light:text-primary-ink font-medium mb-2">Tools of the trade</p>
+          <h2 className="font-display text-4xl sm:text-5xl font-bold light:text-foreground">Tech Stack</h2>
+        </div>
+        <TechRadar />
       </section>
       <ContactSection />
     </div>

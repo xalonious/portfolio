@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react"
 import { motion } from "framer-motion"
 import { MagneticButton } from "@/components/ui/MagneticButton"
-import { FaGithub, FaDiscord } from "react-icons/fa"
+import { FaGithub, FaLinkedin } from "react-icons/fa"
 import { MdEmail } from "react-icons/md"
 import { emitAchievementEvent } from "@/lib/achievements"
 
@@ -176,16 +176,16 @@ export function ContactSection() {
               </a>
 
               <a
-                href="https://discordid.netlify.app/?id=531484240114876416"
+                href="https://www.linkedin.com/in/xander-lauwens-b42898241/"
                 onClick={() => emitAchievementEvent("contact_used")}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-3 px-4 py-3 rounded-sm border light:border-border light:bg-card light:hover:border-primary transition-colors duration-200 group"
               >
-                <FaDiscord className="w-4 h-4 shrink-0" style={{ color: "#5865F2" }} aria-hidden />
+                <FaLinkedin className="w-4 h-4 shrink-0" style={{ color: "#0A66C2" }} aria-hidden />
                 <div className="min-w-0">
-                  <p className="text-xs light:text-muted-foreground uppercase tracking-wider">Discord</p>
-                  <p className="text-sm font-medium light:text-foreground light:group-hover:text-primary-ink transition-colors duration-200">xander~!</p>
+                  <p className="text-xs light:text-muted-foreground uppercase tracking-wider">LinkedIn</p>
+                  <p className="text-sm font-medium light:text-foreground light:group-hover:text-primary-ink transition-colors duration-200">Xander Lauwens</p>
                 </div>
               </a>
               <a
@@ -341,16 +341,16 @@ export function ContactSection() {
                 </div>
               </a>
               <a
-                href="https://discordid.netlify.app/?id=531484240114876416"
+                href="https://www.linkedin.com/in/xander-lauwens-b42898241/"
                 onClick={() => emitAchievementEvent("contact_used")}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-3 px-4 py-3 rounded-sm border light:border-border light:bg-card light:hover:border-primary transition-colors duration-200 group"
               >
-                <FaDiscord className="w-4 h-4 shrink-0" style={{ color: "#5865F2" }} aria-hidden />
+                <FaLinkedin className="w-4 h-4 shrink-0" style={{ color: "#0A66C2" }} aria-hidden />
                 <div className="min-w-0">
-                  <p className="text-xs light:text-muted-foreground uppercase tracking-wider">Discord</p>
-                  <p className="text-sm font-medium light:text-foreground light:group-hover:text-primary-ink transition-colors duration-200">xander~!</p>
+                  <p className="text-xs light:text-muted-foreground uppercase tracking-wider">LinkedIn</p>
+                  <p className="text-sm font-medium light:text-foreground light:group-hover:text-primary-ink transition-colors duration-200">Xander Lauwens</p>
                 </div>
               </a>
               <a

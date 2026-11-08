@@ -6,14 +6,14 @@ const summarySchema = z.object({
   repositories: z.object({ totalCount: count }),
   contributionsCollection: z.object({ contributionYears: z.array(count) }),
 })
-const commitYearsSchema = z.record(
+const contributionYearsSchema = z.record(
   z.string(),
-  z.object({ totalCommitContributions: count }),
+  z.object({ contributionCalendar: z.object({ totalContributions: count }) }),
 )
 
 export interface GitHubStats {
   projects: number | null
-  commits: number | null
+  contributions: number | null
 }
 
 async function graphql(username: string, token: string, fields: string): Promise<unknown> {
@@ -66,7 +66,7 @@ export async function getAuthenticatedGitHubStats(
   username: string,
   token: string,
   currentYear: number,
-): Promise<{ projects: number; commits: number }> {
+): Promise<{ projects: number; contributions: number }> {
   const summary = summarySchema.parse(await graphql(username, token, `
     repositories(first: 1, ownerAffiliations: [OWNER], isFork: false) { totalCount }
     contributionsCollection { contributionYears }
@@ -78,14 +78,14 @@ export async function getAuthenticatedGitHubStats(
     year${year}: contributionsCollection(
       from: "${year}-01-01T00:00:00Z",
       to: "${year}-12-31T23:59:59Z"
-    ) { totalCommitContributions }
+    ) { contributionCalendar { totalContributions } }
   `).join("\n")
-  const contributions = commitYearsSchema.parse(await graphql(username, token, fields))
-  const commits = years.reduce((total, year) => {
-    const contribution = contributions[`year${year}`]
+  const contributionsByYear = contributionYearsSchema.parse(await graphql(username, token, fields))
+  const contributions = years.reduce((total, year) => {
+    const contribution = contributionsByYear[`year${year}`]
     if (!contribution) throw new Error("GitHub omitted a contribution year")
-    return total + contribution.totalCommitContributions
+    return total + contribution.contributionCalendar.totalContributions
   }, 0)
 
-  return { projects: summary.repositories.totalCount, commits }
+  return { projects: summary.repositories.totalCount, contributions }
 }

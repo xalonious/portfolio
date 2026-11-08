@@ -5,10 +5,10 @@ import { useEffect, useState } from "react"
 import { ContributionSnake } from "@/components/sections/ContributionSnake"
 import type { GitHubStats } from "@/lib/github-stats"
 
-const numberFormat = new Intl.NumberFormat("en-US")
+const numberFormat = new Intl.NumberFormat("en-US", { useGrouping: false })
 
 export function Story({ codingYears }: { codingYears: number }) {
-  const [githubStats, setGithubStats] = useState<GitHubStats>({ projects: null, commits: null })
+  const [githubStats, setGithubStats] = useState<GitHubStats>({ projects: null, contributions: null })
 
   useEffect(() => {
     const controller = new AbortController()
@@ -84,11 +84,11 @@ export function Story({ codingYears }: { codingYears: number }) {
               {[
                 { value: `${codingYears}+`, label: "Years coding", title: "Coding since October 23, 2018" },
                 { value: formatCount(githubStats.projects), label: "Projects", title: "GitHub repositories I own, excluding forks" },
-                { value: formatCount(githubStats.commits), label: "Commits", title: "GitHub-recorded commit contributions across all years and repositories" },
+                { value: formatCount(githubStats.contributions), label: "GitHub contributions", title: "All-time GitHub contributions, including commits, pull requests, reviews, and other qualifying activity" },
               ].map((stat) => (
                 <div key={stat.label} title={stat.title}>
-                  <p className="font-display text-2xl sm:text-3xl font-bold light:text-foreground tabular-nums" aria-label={`${stat.label}: ${stat.value === "—" ? "unavailable" : stat.value}`}>{stat.value}</p>
-                  <p className="text-xs light:text-muted-foreground uppercase tracking-wider mt-1">{stat.label}</p>
+                  <p className="font-display text-2xl sm:text-3xl font-bold light:text-foreground lining-nums tabular-nums" aria-label={`${stat.label}: ${stat.value === "—" ? "unavailable" : stat.value}`}>{stat.value}</p>
+                  <p className="text-xs light:text-muted-foreground uppercase tracking-wider mt-1 break-words">{stat.label}</p>
                 </div>
               ))}
             </div>

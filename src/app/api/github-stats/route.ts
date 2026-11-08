@@ -17,12 +17,12 @@ const publicRepositories = unstable_cache(
 export async function GET() {
   const username = process.env.GITHUB_USERNAME || "xalonious"
   const token = process.env.GITHUB_TOKEN
-  let stats: GitHubStats = { projects: null, commits: null }
+  let stats: GitHubStats = { projects: null, contributions: null }
 
   if (token) {
     const authenticatedStats = unstable_cache(
       (login: string, year: number) => getAuthenticatedGitHubStats(login, token, year),
-      ["github-portfolio-statistics-v2-no-forks", createHash("sha256").update(token).digest("hex")],
+      ["github-portfolio-statistics-v3-contributions-no-forks", createHash("sha256").update(token).digest("hex")],
       { revalidate: DAY_SECONDS },
     )
     try {
@@ -41,7 +41,7 @@ export async function GET() {
   }
 
   return NextResponse.json(stats, {
-    status: stats.projects === null && stats.commits === null ? 502 : 200,
+    status: stats.projects === null && stats.contributions === null ? 502 : 200,
     headers: { "Cache-Control": "no-store" },
   })
 }
