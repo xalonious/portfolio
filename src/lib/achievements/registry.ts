@@ -64,7 +64,7 @@ export function createAchievementRegistry(publishedCaseStudyIds: readonly string
       trigger: { type: "duration", event: "website_visible_time", targetMs: 30 * 60 * 1000 },
     },
     {
-      id: "whats-sleep-anyway", name: "What's sleep anyway?", description: "Visit the portfolio between 2 and 4 a.m. in your local time.",
+      id: "whats-sleep-anyway", name: "What's sleep anyway?", description: "Visit the portfolio between 2 and 5 a.m. in your local time.",
       hint: "Some discoveries are made well past bedtime.",
       icon: FiMoon, rarity: "rare", hidden: false,
       trigger: { type: "event", event: "late_night_visit" },

@@ -92,7 +92,7 @@ function LateNightVisitTracker({ engine }: { engine: AchievementEngine }) {
     const check = () => {
       if (document.visibilityState !== "visible" || document.querySelector("[data-preloader]")) return
       const hour = new Date().getHours()
-      if (hour >= 2 && hour < 4 && !engine.isUnlocked("whats-sleep-anyway")) {
+      if (hour >= 2 && hour < 5 && !engine.isUnlocked("whats-sleep-anyway")) {
         engine.emit("late_night_visit")
       }
     }
