@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
+import Script from "next/script"
 import { motion } from "framer-motion"
 import { MagneticButton } from "@/components/ui/MagneticButton"
 import { FaGithub, FaLinkedin } from "react-icons/fa"
@@ -14,33 +15,92 @@ interface ApiResponse {
   issues?: Array<{ path: string; message: string }>
 }
 
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (container: HTMLElement, options: {
+        sitekey: string
+        appearance: "interaction-only"
+        size: "normal" | "compact"
+        retry: "never"
+        "response-field": false
+        callback: (token: string) => void
+        "error-callback": () => void
+        "timeout-callback": () => void
+        "unsupported-callback": () => void
+      }) => string
+      remove: (widgetId: string) => void
+    }
+  }
+}
+
 const COOLDOWN_SEC = 5 * 60
 const STORAGE_KEY = "contact:lastSent"
+const TURNSTILE_SITE_KEY = process.env.NODE_ENV === "development"
+  ? "1x00000000000000000000AA"
+  : process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+const contactLinkClass = "flex items-center gap-3 px-4 py-3 rounded-sm border light:border-border light:bg-card hover:border-primary transition-colors duration-200 group"
+const contactLinkLabelClass = "text-xs light:text-muted-foreground uppercase tracking-wider"
+const contactLinkValueClass = "text-sm font-medium light:text-foreground light:group-hover:text-primary-ink transition-colors duration-200"
+
+async function getTurnstileToken(container: HTMLElement, siteKey: string) {
+  const turnstile = window.turnstile
+  if (!turnstile) return null
+
+  let widgetId: string | undefined
+  let timeoutId: number | undefined
+
+  try {
+    return await new Promise<string | null>((resolve) => {
+      const fail = () => resolve(null)
+      timeoutId = window.setTimeout(fail, 120_000)
+      widgetId = turnstile.render(container, {
+        sitekey: siteKey,
+        appearance: "interaction-only",
+        size: container.clientWidth < 300 ? "compact" : "normal",
+        retry: "never",
+        "response-field": false,
+        callback: resolve,
+        "error-callback": fail,
+        "timeout-callback": fail,
+        "unsupported-callback": fail,
+      })
+    })
+  } catch {
+    return null
+  } finally {
+    window.clearTimeout(timeoutId)
+    if (widgetId) turnstile.remove(widgetId)
+  }
+}
 
 export function ContactSection() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" })
   const [sent, setSent] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
-  const [loading, setLoading] = useState(false)
+  const [submissionStatus, setSubmissionStatus] = useState<"verifying" | "sending" | null>(null)
   const [cooldownLeft, setCooldownLeft] = useState(0)
+  const turnstileContainer = useRef<HTMLDivElement>(null)
+  const onCooldown = cooldownLeft > 0
 
   useEffect(() => {
     const last = Number(localStorage.getItem(STORAGE_KEY) || 0)
     const now = Date.now()
     const diff = Math.max(0, Math.floor((last + COOLDOWN_SEC * 1000 - now) / 1000))
     setCooldownLeft(diff)
-
-    if (diff > 0) {
-      const id = setInterval(() => {
-        setCooldownLeft((s) => {
-          if (s <= 1) { clearInterval(id); return 0 }
-          return s - 1
-        })
-      }, 1000)
-      return () => clearInterval(id)
-    }
   }, [])
+
+  useEffect(() => {
+    if (!onCooldown) return
+
+    const id = setInterval(() => {
+      const last = Number(localStorage.getItem(STORAGE_KEY) || 0)
+      setCooldownLeft(Math.max(0, Math.ceil((last + COOLDOWN_SEC * 1000 - Date.now()) / 1000)))
+    }, 1000)
+
+    return () => clearInterval(id)
+  }, [onCooldown])
 
   const cooldownLabel = useMemo(() => {
     if (cooldownLeft <= 0) return ""
@@ -49,13 +109,15 @@ export function ContactSection() {
     return `${m}:${s.toString().padStart(2, "0")}`
   }, [cooldownLeft])
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    if (submissionStatus) return
+
     setError(null)
     setFieldErrors({})
     setSent(false)
 
-    if (cooldownLeft > 0) {
+    if (onCooldown) {
       setError(`Please wait ${cooldownLabel} before sending another message.`)
       return
     }
@@ -66,8 +128,21 @@ export function ContactSection() {
       return
     }
 
-    setLoading(true)
+    if (!TURNSTILE_SITE_KEY || !turnstileContainer.current) {
+      setError("The contact form is unavailable right now. You can still reach me by email.")
+      return
+    }
+
+    const company = String(new FormData(e.currentTarget).get("company") ?? "")
+    setSubmissionStatus("verifying")
     try {
+      const turnstileToken = await getTurnstileToken(turnstileContainer.current, TURNSTILE_SITE_KEY)
+      if (!turnstileToken) {
+        setError("Verification couldn’t finish. Please try again or refresh the page.")
+        return
+      }
+
+      setSubmissionStatus("sending")
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -75,7 +150,8 @@ export function ContactSection() {
           name: name.trim(),
           email: email.trim(),
           message: message.trim(),
-          company: "",
+          company,
+          turnstileToken,
         }),
       })
 
@@ -122,7 +198,7 @@ export function ContactSection() {
     } catch {
       setError("Network error. Please check your connection and try again.")
     } finally {
-      setLoading(false)
+      setSubmissionStatus(null)
     }
   }
 
@@ -166,12 +242,12 @@ export function ContactSection() {
                 onClick={() => emitAchievementEvent("contact_used")}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-3 px-4 py-3 rounded-sm border light:border-border light:bg-card light:hover:border-primary transition-colors duration-200 group"
+                className={contactLinkClass}
               >
                 <FaGithub className="w-4 h-4 shrink-0 light:text-foreground" aria-hidden />
                 <div className="min-w-0">
-                  <p className="text-xs light:text-muted-foreground uppercase tracking-wider">GitHub</p>
-                  <p className="text-sm font-medium light:text-foreground light:group-hover:text-primary-ink transition-colors duration-200">github.com/xalonious</p>
+                  <p className={contactLinkLabelClass}>GitHub</p>
+                  <p className={contactLinkValueClass}>github.com/xalonious</p>
                 </div>
               </a>
 
@@ -180,23 +256,23 @@ export function ContactSection() {
                 onClick={() => emitAchievementEvent("contact_used")}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-3 px-4 py-3 rounded-sm border light:border-border light:bg-card light:hover:border-primary transition-colors duration-200 group"
+                className={contactLinkClass}
               >
                 <FaLinkedin className="w-4 h-4 shrink-0" style={{ color: "#0A66C2" }} aria-hidden />
                 <div className="min-w-0">
-                  <p className="text-xs light:text-muted-foreground uppercase tracking-wider">LinkedIn</p>
-                  <p className="text-sm font-medium light:text-foreground light:group-hover:text-primary-ink transition-colors duration-200">Xander Lauwens</p>
+                  <p className={contactLinkLabelClass}>LinkedIn</p>
+                  <p className={contactLinkValueClass}>Xander Lauwens</p>
                 </div>
               </a>
               <a
                 href="mailto:contact@whoisxander.dev"
                 onClick={() => emitAchievementEvent("contact_used")}
-                className="flex items-center gap-3 px-4 py-3 rounded-sm border light:border-border light:bg-card light:hover:border-primary transition-colors duration-200 group"
+                className={contactLinkClass}
               >
                 <MdEmail className="w-4 h-4 shrink-0 light:text-foreground" aria-hidden />
                 <div className="min-w-0">
-                  <p className="text-xs light:text-muted-foreground uppercase tracking-wider">Email</p>
-                  <p className="text-sm font-medium light:text-foreground light:group-hover:text-primary-ink transition-colors duration-200">contact@whoisxander.dev</p>
+                  <p className={contactLinkLabelClass}>Email</p>
+                  <p className={contactLinkValueClass}>contact@whoisxander.dev</p>
                 </div>
               </a>
             </div>
@@ -276,31 +352,43 @@ export function ContactSection() {
                 )}
               </div>
 
-              <MagneticButton
-                type="submit"
-                disabled={loading || cooldownLeft > 0}
-                className={`
-                  group relative overflow-hidden w-full py-3.5 rounded-sm
-                  light:bg-primary light:text-primary-foreground
-                  text-sm font-semibold tracking-wide
-                  transition-colors duration-200
-                  light:hover:bg-foreground
-                  disabled:opacity-50 disabled:cursor-not-allowed
-                `.trim()}
-                style={{ display: "block" }}
-              >
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-20deg] bg-white/20 transition-transform duration-500 group-hover:translate-x-[200%]"
-                />
-                <span className="relative">
-                  {loading
-                    ? "Sending…"
-                    : cooldownLeft > 0
-                    ? `Wait ${cooldownLabel}`
-                    : "Send message"}
+              <div>
+                {TURNSTILE_SITE_KEY && (
+                  <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" />
+                )}
+                <div ref={turnstileContainer} />
+                <span className="sr-only" role="status">
+                  {submissionStatus === "verifying" && "Verifying…"}
                 </span>
-              </MagneticButton>
+
+                <MagneticButton
+                  type="submit"
+                  disabled={submissionStatus !== null || onCooldown}
+                  className={`
+                    group relative overflow-hidden w-full py-3.5 rounded-sm
+                    light:bg-primary light:text-primary-foreground
+                    text-sm font-semibold tracking-wide
+                    transition-colors duration-200
+                    light:hover:bg-foreground
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                  `.trim()}
+                  style={{ display: "block" }}
+                >
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-20deg] bg-white/20 transition-transform duration-500 group-hover:translate-x-[200%]"
+                  />
+                  <span className="relative">
+                    {submissionStatus === "verifying"
+                      ? "Verifying…"
+                      : submissionStatus === "sending"
+                      ? "Sending…"
+                      : onCooldown
+                      ? `Wait ${cooldownLabel}`
+                      : "Send message"}
+                  </span>
+                </MagneticButton>
+              </div>
 
               {error && (
                 <motion.p
@@ -332,12 +420,12 @@ export function ContactSection() {
                 onClick={() => emitAchievementEvent("contact_used")}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-3 px-4 py-3 rounded-sm border light:border-border light:bg-card light:hover:border-primary transition-colors duration-200 group"
+                className={contactLinkClass}
               >
                 <FaGithub className="w-4 h-4 shrink-0 light:text-foreground" aria-hidden />
                 <div className="min-w-0">
-                  <p className="text-xs light:text-muted-foreground uppercase tracking-wider">GitHub</p>
-                  <p className="text-sm font-medium light:text-foreground light:group-hover:text-primary-ink transition-colors duration-200">github.com/xalonious</p>
+                  <p className={contactLinkLabelClass}>GitHub</p>
+                  <p className={contactLinkValueClass}>github.com/xalonious</p>
                 </div>
               </a>
               <a
@@ -345,23 +433,23 @@ export function ContactSection() {
                 onClick={() => emitAchievementEvent("contact_used")}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-3 px-4 py-3 rounded-sm border light:border-border light:bg-card light:hover:border-primary transition-colors duration-200 group"
+                className={contactLinkClass}
               >
                 <FaLinkedin className="w-4 h-4 shrink-0" style={{ color: "#0A66C2" }} aria-hidden />
                 <div className="min-w-0">
-                  <p className="text-xs light:text-muted-foreground uppercase tracking-wider">LinkedIn</p>
-                  <p className="text-sm font-medium light:text-foreground light:group-hover:text-primary-ink transition-colors duration-200">Xander Lauwens</p>
+                  <p className={contactLinkLabelClass}>LinkedIn</p>
+                  <p className={contactLinkValueClass}>Xander Lauwens</p>
                 </div>
               </a>
               <a
                 href="mailto:contact@whoisxander.dev"
                 onClick={() => emitAchievementEvent("contact_used")}
-                className="flex items-center gap-3 px-4 py-3 rounded-sm border light:border-border light:bg-card light:hover:border-primary transition-colors duration-200 group"
+                className={contactLinkClass}
               >
                 <MdEmail className="w-4 h-4 shrink-0 light:text-foreground" aria-hidden />
                 <div className="min-w-0">
-                  <p className="text-xs light:text-muted-foreground uppercase tracking-wider">Email</p>
-                  <p className="text-sm font-medium light:text-foreground light:group-hover:text-primary-ink transition-colors duration-200">contact@whoisxander.dev</p>
+                  <p className={contactLinkLabelClass}>Email</p>
+                  <p className={contactLinkValueClass}>contact@whoisxander.dev</p>
                 </div>
               </a>
             </div>

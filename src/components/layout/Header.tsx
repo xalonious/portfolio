@@ -8,6 +8,8 @@ import { useAchievementPanel } from "@/components/features/AchievementPanel"
 import { emitAchievementEvent } from "@/lib/achievements"
 import { ThemeToggle } from "@/components/ui/ThemeToggle"
 
+const headerLinkClass = "hover:text-primary-ink transition-colors duration-200"
+
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const { isOpen, openPanel } = useAchievementPanel()
@@ -31,7 +33,7 @@ export function Header() {
       <div className="max-w-6xl mx-auto h-14 px-4 sm:px-6 flex items-center justify-between">
         <TransitionLink
           href="/"
-          className="font-display text-lg font-semibold tracking-tight light:text-foreground light:hover:text-primary-ink transition-colors duration-200"
+          className={`font-display text-lg font-semibold tracking-tight light:text-foreground ${headerLinkClass}`}
         >
           xalonious
         </TransitionLink>
@@ -39,13 +41,13 @@ export function Header() {
         <nav aria-label="Main navigation" className="flex items-center gap-2 sm:gap-6 text-xs min-[360px]:text-sm font-medium light:text-muted-foreground">
           <TransitionLink
             href="/"
-            className="light:hover:text-foreground transition-colors duration-200"
+            className={headerLinkClass}
           >
             Home
           </TransitionLink>
           <TransitionLink
             href="/projects"
-            className="light:hover:text-foreground transition-colors duration-200"
+            className={headerLinkClass}
           >
             Projects
           </TransitionLink>
@@ -54,7 +56,7 @@ export function Header() {
             onClick={() => emitAchievementEvent("rickroll_opened")}
             target="_blank"
             rel="noopener noreferrer"
-            className="light:hover:text-foreground transition-colors duration-200"
+            className={headerLinkClass}
           >
             lol
           </Link>

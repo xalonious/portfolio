@@ -4,11 +4,9 @@ type Entry = {
 }
 
 const WINDOW_MS = 5 * 60 * 1000 
-const MAX_REQUESTS = 1
-
 const store = new Map<string, Entry>()
 
-export function rateLimit(key: string) {
+export function rateLimit(key: string, maxRequests = 1) {
   const now = Date.now()
   const existing = store.get(key)
 
@@ -22,12 +20,12 @@ export function rateLimit(key: string) {
 
     return {
       success: true,
-      remaining: MAX_REQUESTS - 1,
+      remaining: maxRequests - 1,
       resetAt: fresh.resetAt,
     }
   }
 
-  if (existing.count >= MAX_REQUESTS) {
+  if (existing.count >= maxRequests) {
     return {
       success: false,
       remaining: 0,
@@ -40,7 +38,7 @@ export function rateLimit(key: string) {
 
   return {
     success: true,
-    remaining: MAX_REQUESTS - existing.count,
+    remaining: maxRequests - existing.count,
     resetAt: existing.resetAt,
   }
 }

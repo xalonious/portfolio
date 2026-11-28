@@ -498,13 +498,30 @@ export const dialogue = defineDialogue({
       { label: "alright heading out",             next: "bye"              },
     ],
   },
-  // Sealy
+  // Sealy and Pixel
   "cat-intro": {
-    xander: "that's sealy. he's my cat. he's also my CTO.",
+    xander: "that's sealy. he's my cat. he's also my CTO. my other cat, pixel, runs legal.",
     replies: [
       { label: "what does sealy actually do",     next: "sealy-duties"     },
       { label: "does he get equity",              next: "equity"           },
       { label: "what's his origin story",         next: "sealy-origin"     },
+      { label: "can i speak to legal",            next: "pixel-legal"      },
+    ],
+  },
+  "pixel-legal": {
+    xander: "pixel's my chief legal officer. read the whole privacy policy and billed me two treats. i asked for an itemised invoice.",
+    claude: "it was just two paw prints",
+    replies: [
+      { label: "where's pixel's headshot",        next: "pixel-headshot"   },
+      { label: "tell me more about sealy",        next: "sealy-duties"     },
+      { label: "fair rate tbh",                   next: "bye"              },
+    ],
+  },
+  "pixel-headshot": {
+    xander: "bottom of the privacy policy. the little tongue sticking out is apparently the professional pose.",
+    replies: [
+      { label: "tell me more about sealy",        next: "sealy-duties"     },
+      { label: "i'll go look",                    next: "bye"              },
     ],
   },
   "sealy-duties": {

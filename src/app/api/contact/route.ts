@@ -11,6 +11,7 @@ const ContactSchema = z.object({
     .min(10, "Message must be at least 10 characters.")
     .max(5000, "Message is too long."),
   company: z.string().optional().default(""),
+  turnstileToken: z.string().trim().max(2048).optional(),
 })
 
 const isSpammy = (text: string) =>
@@ -33,32 +34,40 @@ function getClientIp(req: NextRequest) {
   return "unknown"
 }
 
+function tooManyRequests(resetAt: number, reason: string) {
+  const retryAfter = Math.ceil(Math.max(0, resetAt - Date.now()) / 1000)
+  const minutes = Math.ceil(retryAfter / 60)
+
+  return NextResponse.json(
+    {
+      ok: false,
+      error: `${reason} Please wait about ${minutes} minute${minutes !== 1 ? "s" : ""} before trying again.`,
+      retryAfter,
+    },
+    { status: 429, headers: { "Retry-After": String(retryAfter) } },
+  )
+}
+
+async function verifyTurnstile(token: string, secret: string) {
+  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    method: "POST",
+    body: new URLSearchParams({ secret, response: token }),
+    cache: "no-store",
+    signal: AbortSignal.timeout(5_000),
+  })
+
+  if (!response.ok) throw new Error(`Turnstile Siteverify returned ${response.status}`)
+
+  const result = await response.json()
+  return result?.success === true
+}
+
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req)
-    const now = Date.now()
-
-    const rl = rateLimit(`contact:${ip}`)
-
-    if (!rl.success) {
-      const remainingMs = Math.max(0, rl.resetAt - now)
-      const retryAfterSec = Math.ceil(remainingMs / 1000)
-      const retryAfterMin = Math.ceil(retryAfterSec / 60)
-
-      return new NextResponse(
-        JSON.stringify({
-          ok: false,
-          error: `You’ve already sent a message recently. Please wait about ${retryAfterMin} minute${retryAfterMin !== 1 ? "s" : ""} before trying again.`,
-          retryAfter: retryAfterSec,
-        }),
-        {
-          status: 429,
-          headers: {
-            "Content-Type": "application/json",
-            "Retry-After": String(retryAfterSec),
-          },
-        }
-      )
+    const attempts = rateLimit(`contact-attempt:${ip}`, 10)
+    if (!attempts.success) {
+      return tooManyRequests(attempts.resetAt, "Too many contact form attempts.")
     }
 
     const body = await req.json().catch(() => ({}))
@@ -76,7 +85,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { name, email, message, company } = parsed.data
+    const { name, email, message, company, turnstileToken } = parsed.data
 
     if (company && company.trim() !== "") {
       return NextResponse.json({ ok: true })
@@ -86,11 +95,52 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
+    if (!turnstileToken) {
+      return NextResponse.json(
+        { ok: false, error: "Please complete verification and try again." },
+        { status: 400 },
+      )
+    }
+
+    const turnstileSecret = process.env.NODE_ENV === "development"
+      ? "1x0000000000000000000000000000000AA"
+      : process.env.TURNSTILE_SECRET_KEY
+    if (!turnstileSecret) {
+      console.error("Missing TURNSTILE_SECRET_KEY for the contact form")
+      return NextResponse.json(
+        { ok: false, error: "The contact form is unavailable right now. You can still reach me by email." },
+        { status: 503 },
+      )
+    }
+
     if (!process.env.DISCORD_WEBHOOK_URL) {
       return NextResponse.json(
         { ok: false, error: "Webhook not configured." },
         { status: 500 }
       )
+    }
+
+    let verified: boolean
+    try {
+      verified = await verifyTurnstile(turnstileToken, turnstileSecret)
+    } catch (error) {
+      console.error("Contact form Turnstile verification failed:", error)
+      return NextResponse.json(
+        { ok: false, error: "Verification is temporarily unavailable. Please try again." },
+        { status: 503 },
+      )
+    }
+
+    if (!verified) {
+      return NextResponse.json(
+        { ok: false, error: "Verification failed or expired. Please try again." },
+        { status: 400 },
+      )
+    }
+
+    const delivery = rateLimit(`contact:${ip}`)
+    if (!delivery.success) {
+      return tooManyRequests(delivery.resetAt, "You’ve already sent a message recently.")
     }
 
     const payload = {
